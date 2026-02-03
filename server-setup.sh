@@ -30,7 +30,7 @@ LimitNOFILE      = 4096
 Restart          = always
 RestartSec       = 5s
 WorkingDirectory = /var/www/haugalandsved/pb
-ExecStart        = /var/www/haugalandsved/pb/pocketbase serve --http=127.0.0.1:8090
+ExecStart        = /var/www/haugalandsved/pb/pocketbase serve --http=127.0.0.1:8091
 
 [Install]
 WantedBy = multi-user.target
@@ -48,8 +48,8 @@ User=deployer
 Group=deployer
 WorkingDirectory=/var/www/haugalandsved/web
 ExecStart=/usr/bin/node build/index.js
-Environment=PORT=3000
-Environment=ORIGIN=http://localhost:3000
+Environment=PORT=3001
+Environment=ORIGIN=http://localhost:3001
 Restart=always
 
 [Install]
@@ -63,4 +63,34 @@ sudo systemctl enable pocketbase haugalandsved
 sudo systemctl start pocketbase
 # Note: haugalandsved service will fail until code is deployed via GitHub Actions
 
-echo "Setup Complete!"
+# Apache Configuration
+echo "Configuring Apache..."
+sudo a2enmod proxy proxy_http rewrite headers
+
+sudo bash -c "cat > /etc/apache2/sites-available/haugalandsved.conf <<EOF
+<VirtualHost *:80>
+    ServerName haugalandsved.no
+    ServerAdmin $EMAIL
+
+    # PocketBase API and Admin
+    ProxyPreserveHost On
+    ProxyPass /api/ http://127.0.0.1:8091/api/
+    ProxyPassReverse /api/ http://127.0.0.1:8091/api/
+    
+    ProxyPass /_/ http://127.0.0.1:8091/_/
+    ProxyPassReverse /_/ http://127.0.0.1:8091/_/
+
+    # SvelteKit App
+    ProxyPass / http://127.0.0.1:3001/
+    ProxyPassReverse / http://127.0.0.1:3001/
+
+    ErrorLog \${APACHE_LOG_DIR}/haugalandsved_error.log
+    CustomLog \${APACHE_LOG_DIR}/haugalandsved_access.log combined
+</VirtualHost>
+EOF"
+
+sudo a2dissite 000-default.conf || true
+sudo a2ensite haugalandsved.conf
+sudo systemctl reload apache2
+
+echo "Setup Complete! Domain $DOMAIN is now served via Apache."
