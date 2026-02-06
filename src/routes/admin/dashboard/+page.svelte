@@ -34,7 +34,7 @@
 		saving = true;
 		try {
 			await pb.collection('inventory').update(id, {
-				quantity: newQuantity,
+				quantity_available: newQuantity,
 				isInStock: isInStock
 			});
 
@@ -106,7 +106,7 @@
 								<input
 									type="number"
 									id="stock-{item.id}"
-									bind:value={item.quantity}
+									bind:value={item.quantity_available}
 									min="0"
 									class="w-24 rounded-md border-stone-300 shadow-sm focus:border-stone-500 focus:ring-stone-500 sm:text-sm"
 								/>
@@ -125,7 +125,7 @@
 							</div>
 
 							<button
-								onclick={() => updateStock(item.id, item.quantity, item.isInStock)}
+								onclick={() => updateStock(item.id, item.quantity_available, item.isInStock)}
 								disabled={saving}
 								class="ml-4 cursor-pointer rounded-md bg-stone-900 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-stone-800 disabled:opacity-50"
 							>

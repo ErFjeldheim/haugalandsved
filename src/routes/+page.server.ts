@@ -9,7 +9,7 @@ export const load = async () => {
         return {
             inventory: {
                 quantity: inventory.quantity_available,
-                isInStock: inventory.quantity_available > 0
+                isInStock: inventory.isInStock
             }
         };
     } catch (e) {
