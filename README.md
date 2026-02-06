@@ -1,42 +1,63 @@
-# sv
+# Haugalandsved 🪵
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Nettside og nettbutikk for salg av kortreist ved på Haugalandet.
 
-## Creating a project
+![Status](https://img.shields.io/website?url=https%3A%2F%2Fhaugalandsved.no&label=live&up_message=online&down_message=offline&style=flat-square)
+![Svelte](https://img.shields.io/badge/svelte-%23f1413d.svg?style=flat-square&logo=svelte&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=flat-square&logo=tailwind-css&logoColor=white)
+![PocketBase](https://img.shields.io/badge/PocketBase-%23B8DBE4.svg?style=flat-square&logo=pocketbase&logoColor=black)
+![Dokploy](https://img.shields.io/badge/Hosted_on-Dokploy-blue?style=flat-square)
 
-If you're seeing this, you've probably already done this step. Congrats!
+## 🚀 Deployment
 
-```sh
-# create a new project
-npx sv create my-app
-```
+Prosjektet er hostet på egen server og administreres via **Dokploy**.
 
-To recreate this project with the same configuration:
+- **Live URL:** [https://haugalandsved.no](https://haugalandsved.no)
+- **Admin Panel:** [https://haugalandsved.no/admin](https://haugalandsved.no/admin)
 
-```sh
-# recreate this project
-npx sv create --template minimal --types ts --add prettier eslint tailwindcss="plugins:typography,forms" sveltekit-adapter="adapter:node" --install npm haugalandsved
-```
+Deployment skjer automatisk via Dokploy (med Nixpacks buildpack) hver gang det pushes til `main`-branchen.
 
-## Developing
+## 🛠 Teknologistakk
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Prosjektet er bygget på følgende moderne webteknologier:
 
-```sh
-npm run dev
+*   **Frontend:** [SvelteKit](https://kit.svelte.dev/) (Svelte 5)
+*   **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+*   **Backend / Database:** [PocketBase](https://pocketbase.io/)
+*   **Kart:** [Leaflet](https://leafletjs.com/)
+*   **Betaling:** [Stripe](https://stripe.com/)
+*   **Hosting:** VPS med [Dokploy](https://dokploy.com/)
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+## 💻 Lokal utvikling
 
-## Building
+Slik kommer du i gang lokalt:
 
-To create a production version of your app:
+1.  **Klon prosjektet:**
+    ```bash
+    git clone https://github.com/DittBrukernavn/haugalandsved.git
+    cd haugalandsved
+    ```
 
-```sh
+2.  **Installer avhengigheter:**
+    ```bash
+    npm install
+    ```
+
+3.  **Konfigurer miljøvariabler:**
+    Kopier `.env.example` til `.env` og fyll inn nødvendig info (Stripe nøkler, PocketBase URL osv).
+
+4.  **Start utviklingsserver:**
+    ```bash
+    npm run dev
+    ```
+    Nettsiden er nå tilgjengelig på `http://localhost:5173`.
+
+## 📦 Bygging for produksjon
+
+Prosjektet bruker `adapter-node` og er konfigurert for Docker/Nixpacks.
+
+```bash
 npm run build
+# Start produksjonsserver
+npm run start
 ```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
