@@ -32,17 +32,17 @@
 		{
 			name: 'Furu',
 			description: 'Lettantennelig og gir rask varme. Perfekt for opptenning.',
-			image: '/images/trebit-furu.jpeg'
+			image: '/images/trebit-furu.webp'
 		},
 		{
 			name: 'Bjørk',
 			description: 'Klassikeren med høy brennverdi, pen flamme og lite gnister.',
-			image: '/images/trebit-bjørk.jpeg'
+			image: '/images/trebit-bjørk.webp'
 		},
 		{
 			name: 'Gran',
 			description: 'Gnistrer litt, men gir lun god varme og er lett å fyre med.',
-			image: '/images/trebit-gran.jpeg'
+			image: '/images/trebit-gran.webp'
 		}
 	];
 
@@ -121,7 +121,7 @@
 	<meta property="og:url" content="https://haugalandsved.no" />
 	<meta
 		property="og:image"
-		content="https://haugalandsved.no/images/flere-paller-blandingsved.jpeg"
+		content="https://haugalandsved.no/images/flere-paller-blandingsved.webp"
 	/>
 </svelte:head>
 
@@ -416,8 +416,9 @@
 			<div class="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2">
 				<div class="group relative overflow-hidden rounded-2xl bg-stone-100">
 					<img
-						src="/images/enkelt-palle-blandingsved.jpeg"
+						src="/images/enkelt-palle-blandingsved.webp"
 						alt="Storsekk med blandingsved"
+						loading="lazy"
 						class="h-96 w-full object-cover transition duration-500 group-hover:scale-105"
 					/>
 					<div
@@ -429,8 +430,9 @@
 				</div>
 				<div class="group relative overflow-hidden rounded-2xl bg-stone-100">
 					<img
-						src="/images/flere-paller-blandingsved.jpeg"
+						src="/images/flere-paller-blandingsved.webp"
 						alt="Flere paller med ved"
+						loading="lazy"
 						class="h-96 w-full object-cover transition duration-500 group-hover:scale-105"
 					/>
 					<div
