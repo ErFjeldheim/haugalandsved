@@ -4,10 +4,16 @@
 	import { goto } from '$app/navigation';
 
 	let { children } = $props();
+	let menuOpen = $state(false);
 
 	function logout() {
 		pb.authStore.clear();
+		menuOpen = false;
 		goto('/');
+	}
+
+	function toggleMenu() {
+		menuOpen = !menuOpen;
 	}
 </script>
 
@@ -34,8 +40,9 @@
 		</nav>
 
 		<div class="flex items-center gap-4">
-			{#if $currentUser}
-				<div class="flex items-center gap-4">
+			<!-- Desktop Menu -->
+			<div class="hidden items-center gap-4 md:flex">
+				{#if $currentUser}
 					<a
 						href="/profile/orders"
 						class="text-sm font-medium text-stone-600 transition hover:text-amber-700"
@@ -48,9 +55,7 @@
 					>
 						Logg ut
 					</button>
-				</div>
-			{:else}
-				<div class="flex items-center gap-4">
+				{:else}
 					<a
 						href="/auth/login"
 						class="text-sm font-medium text-stone-600 transition hover:text-amber-700"
@@ -63,10 +68,107 @@
 					>
 						Bli kunde
 					</a>
-				</div>
-			{/if}
+				{/if}
+			</div>
+
+			<!-- Mobile Menu Button -->
+			<button
+				class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg text-stone-600 transition hover:bg-stone-100 md:hidden"
+				onclick={toggleMenu}
+				aria-label="Meny"
+			>
+				{#if menuOpen}
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="h-6 w-6"
+					>
+						<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+					</svg>
+				{:else}
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="h-6 w-6"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+						/>
+					</svg>
+				{/if}
+			</button>
 		</div>
 	</div>
+
+	<!-- Mobile Menu Dropdown -->
+	{#if menuOpen}
+		<div class="border-b border-stone-200 bg-white md:hidden">
+			<nav class="flex flex-col space-y-1 p-4">
+				<a
+					href="/#om-veden"
+					onclick={() => (menuOpen = false)}
+					class="rounded-lg px-3 py-3 text-base font-medium text-stone-600 hover:bg-stone-50 hover:text-amber-700"
+				>
+					Om veden
+				</a>
+				<a
+					href="/#kalkulator"
+					onclick={() => (menuOpen = false)}
+					class="rounded-lg px-3 py-3 text-base font-medium text-stone-600 hover:bg-stone-50 hover:text-amber-700"
+				>
+					Prisliste
+				</a>
+				<a
+					href="/#kontakt"
+					onclick={() => (menuOpen = false)}
+					class="rounded-lg px-3 py-3 text-base font-medium text-stone-600 hover:bg-stone-50 hover:text-amber-700"
+				>
+					Kontakt
+				</a>
+
+				<div class="my-2 border-t border-stone-100 pt-2">
+					{#if $currentUser}
+						<a
+							href="/profile/orders"
+							onclick={() => (menuOpen = false)}
+							class="flex items-center rounded-lg px-3 py-3 text-base font-medium text-stone-600 hover:bg-stone-50 hover:text-amber-700"
+						>
+							Mine ordre
+						</a>
+						<button
+							onclick={logout}
+							class="flex w-full cursor-pointer items-center rounded-lg px-3 py-3 text-left text-base font-medium text-red-600 hover:bg-red-50"
+						>
+							Logg ut
+						</button>
+					{:else}
+						<a
+							href="/auth/login"
+							onclick={() => (menuOpen = false)}
+							class="flex items-center rounded-lg px-3 py-3 text-base font-medium text-stone-600 hover:bg-stone-50 hover:text-amber-700"
+						>
+							Logg inn
+						</a>
+						<a
+							href="/auth/register"
+							onclick={() => (menuOpen = false)}
+							class="mt-2 flex items-center justify-center rounded-full bg-amber-700 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-amber-600"
+						>
+							Bli kunde
+						</a>
+					{/if}
+				</div>
+			</nav>
+		</div>
+	{/if}
 </header>
 
 <main>
