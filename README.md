@@ -1,6 +1,6 @@
 # Haugalandsved 🪵
 
-Website and online store for selling locally sourced firewood in Haugalandet.
+Website and online store for selling locally sourced firewood from Haugalandet.
 
 ![Status](https://img.shields.io/website?url=https%3A%2F%2Fhaugalandsved.no&label=live&up_message=online&down_message=offline&style=flat-square)
 ![Svelte](https://img.shields.io/badge/svelte-%23f1413d.svg?style=flat-square&logo=svelte&logoColor=white)
@@ -13,7 +13,7 @@ Website and online store for selling locally sourced firewood in Haugalandet.
 The project is hosted on a self-built server and managed via **Dokploy**.
 
 - **Live URL:** [https://haugalandsved.no](https://haugalandsved.no)
-- **Admin Panel:** [https://haugalandsved.no/admin](https://haugalandsved.no/admin)
+- **Admin Panel:** [https://haugalandsved.no/admin/dashboard](https://haugalandsved.no/admin/dashboard)
 
 Deployment happens automatically via Dokploy (using Nixpacks buildpack) whenever changes are pushed to the `main` branch.
 
@@ -23,7 +23,7 @@ The project is built using the following modern web technologies:
 
 *   **Frontend:** [SvelteKit](https://kit.svelte.dev/) (Svelte 5)
 *   **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-*   **Backend / Database:** [PocketBase](https://pocketbase.io/)
+*   **BaaS (self hosted):** [PocketBase](https://pocketbase.io/)
 *   **Maps:** [Leaflet](https://leafletjs.com/)
 *   **Payments:** [Stripe](https://stripe.com/)
 *   **Hosting:** Self-built server with [Dokploy](https://dokploy.com/)
