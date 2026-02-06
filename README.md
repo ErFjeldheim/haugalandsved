@@ -26,7 +26,7 @@ The project is built using the following modern web technologies:
 *   **BaaS (self hosted):** [PocketBase](https://pocketbase.io/)
 *   **Maps:** [Leaflet](https://leafletjs.com/)
 *   **Payments:** [Stripe](https://stripe.com/)
-*   **Hosting:** Self-built server with [Dokploy](https://dokploy.com/)
+*   **Hosting:** [Dokploy](https://dokploy.com/)
 
 ## 💻 Local Development
 
