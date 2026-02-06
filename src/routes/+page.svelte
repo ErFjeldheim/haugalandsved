@@ -214,6 +214,7 @@
 									<input
 										type="range"
 										id="quantity-range"
+										aria-label="Justering av antall"
 										min="1"
 										max={Math.min(9, inventory.quantity)}
 										bind:value={count}
@@ -452,7 +453,7 @@
 					</p>
 				</div>
 				<div class="mt-16 sm:mt-20 lg:mt-24">
-					<dl class="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
+					<div class="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
 						{#each woodTypes as wood}
 							<div class="group flex flex-col items-center text-center">
 								<div
@@ -483,15 +484,15 @@
 										</div>
 									{/if}
 								</div>
-								<dt class="text-lg font-bold text-stone-900">
+								<h4 class="text-lg font-bold text-stone-900">
 									{wood.name}
-								</dt>
-								<dd class="mt-2 text-sm leading-6 text-stone-600">
+								</h4>
+								<p class="mt-2 text-sm leading-6 text-stone-600">
 									{wood.description}
-								</dd>
+								</p>
 							</div>
 						{/each}
-					</dl>
+					</div>
 				</div>
 			</div>
 		</div>
