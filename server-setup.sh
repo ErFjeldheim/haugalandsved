@@ -4,7 +4,7 @@ set -e
 # Configuration
 PB_VERSION="0.22.4" # Check for latest version
 DOMAIN="haugalandsved.no" # Change this to actual domain or IP if needed
-EMAIL="admin@haugalandsved.no"
+EMAIL="erik@fjelldata.com"
 
 # Install PocketBase
 echo "Installing PocketBase..."
