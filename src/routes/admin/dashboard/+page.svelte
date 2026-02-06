@@ -13,9 +13,6 @@
 			return;
 		}
 
-		console.log('Logged in as:', pb.authStore.model);
-		// alert(`Logged in: ${pb.authStore.model?.email} (Admin: ${pb.authStore.isSuperuser})`);
-
 		try {
 			// Fetch inventory items. Assuming a single global inventory for now or list of items
 			// If you have a specific collection structure, adjust here.
@@ -25,10 +22,7 @@
 			inventoryItems = records;
 		} catch (error) {
 			console.error('Failed to load inventory:', error);
-			const err = error as any;
-			alert(
-				`Kunne ikke laste lagerbeholdning: ${err.message} (${err.status}) ${JSON.stringify(err.response || {})}`
-			);
+			alert('Kunne ikke laste lagerbeholdning. Sjekk at du er logget inn som admin.');
 		} finally {
 			loading = false;
 		}
