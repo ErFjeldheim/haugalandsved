@@ -8,7 +8,7 @@
 	let saving = $state(false);
 
 	onMount(async () => {
-		if (!pb.authStore.isValid || !pb.authStore.isAdmin) {
+		if (!pb.authStore.isValid || !pb.authStore.isSuperuser) {
 			goto('/admin/login');
 			return;
 		}
