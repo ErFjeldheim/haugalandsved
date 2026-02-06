@@ -302,7 +302,7 @@
 													>1000 kr per 3 paller</span
 												>
 												<span class="mt-6 text-xs font-medium text-stone-900"
-													>Rett hjem til deg</span
+													>Levering til sone Haugalandet</span
 												>
 											</span>
 										</span>
@@ -462,6 +462,7 @@
 										<img
 											src={wood.image}
 											alt={wood.name}
+											loading="lazy"
 											class="h-full w-full object-cover transition duration-500 group-hover:scale-110"
 										/>
 									{:else}

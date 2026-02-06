@@ -26,7 +26,7 @@
 	<div class="container mx-auto flex h-16 items-center justify-between px-4">
 		<a href="/" class="group flex items-center gap-3">
 			<img
-				src="/images/haugalandved-logo-transparent.png"
+				src="/images/haugalandved-logo-transparent.webp"
 				alt="Haugalandsved logo"
 				class="h-10 w-auto transition duration-300 group-hover:scale-105"
 			/>
