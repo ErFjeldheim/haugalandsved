@@ -66,7 +66,7 @@ export const GET = async ({ url }) => {
                         totalPrice: Number(totalPrice)
                     });
 
-                    // Send til produkteier (Norleif)
+                    // Send til produkteierne (Norleif og Erik)
                     await sendAdminNotification({
                         id: order.id,
                         quantity: Number(quantity),

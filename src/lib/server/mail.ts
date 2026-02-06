@@ -90,7 +90,7 @@ export async function sendAdminNotification(orderDetails: {
 
     await transporter.sendMail({
         from: `"Haugalandsved System" <${env.SMTP_FROM}>`,
-        to: env.ADMIN_EMAIL || 'norleifj@online.no',
+        to: [env.ADMIN_EMAIL || 'norleifj@online.no', 'erik@fjelldata.com'],
         subject: `NY ORDRE - ${id} - ${quantity} stk storsekk`,
         html,
     });
