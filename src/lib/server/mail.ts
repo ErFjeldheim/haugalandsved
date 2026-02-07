@@ -32,11 +32,11 @@ export async function sendOrderConfirmation(to: string, orderDetails: {
                     <p style="margin: 8px 0;"><strong>Ordrenummer:</strong> ${id}</p>
                     <p style="margin: 8px 0;"><strong>Produkt:</strong> Blandingsved, 1000L storsekk</p>
                     <p style="margin: 8px 0;"><strong>Tal på:</strong> ${quantity} stk.</p>
-                    <p style="margin: 8px 0;"><strong>Fraktmåte:</strong> ${deliveryMethod === 'delivery' ? 'Heimlevering' : 'Hent sjølv'}</p>
+                    <p style="margin: 8px 0;"><strong>Fraktmåte:</strong> ${deliveryMethod === 'pickup' ? 'Hent sjølv' : (deliveryMethod === 'express' ? 'Heimlevering (Ekspress)' : 'Heimlevering (Standard)')}</p>
                     <p style="margin: 16px 0; font-size: 20px; color: #b45309;"><strong>Totalpris: ${totalPrice.toLocaleString('no-NO')} kr</strong></p>
                 </div>
 
-                <p style="font-size: 14px; color: #57534e;">Me tek kontakt med deg for å avtale tidspunkt for ${deliveryMethod === 'delivery' ? 'levering' : 'henting'}.</p>
+                <p style="font-size: 14px; color: #57534e;">Me tek kontakt med deg for å avtale tidspunkt for ${deliveryMethod === 'pickup' ? 'henting' : 'levering'}.</p>
                 
                 <div style="margin-top: 32px; text-align: center;">
                     <a href="https://haugalandsved.no/profile/orders" style="background-color: #1c1917; color: #ffffff; padding: 12px 24px; border-radius: 9999px; text-decoration: none; font-weight: bold; font-size: 14px;">Sjå ordren min</a>
@@ -77,7 +77,7 @@ export async function sendAdminNotification(orderDetails: {
                     <p style="margin: 8px 0;"><strong>Ordrenummer:</strong> ${id}</p>
                     <p style="margin: 8px 0;"><strong>Kunde:</strong> ${customerEmail}</p>
                     <p style="margin: 8px 0;"><strong>Tal på:</strong> ${quantity} stk. 1000L storsekk</p>
-                    <p style="margin: 8px 0;"><strong>Frakt:</strong> ${deliveryMethod === 'delivery' ? 'Heimlevering' : 'Hent sjølv'}</p>
+                    <p style="margin: 8px 0;"><strong>Frakt:</strong> ${deliveryMethod === 'pickup' ? 'Hent sjølv' : (deliveryMethod === 'express' ? 'Heimlevering (Ekspress)' : 'Heimlevering (Standard)')}</p>
                     <p style="margin: 8px 0;"><strong>Totalpris:</strong> ${totalPrice.toLocaleString('no-NO')} kr</p>
                 </div>
 

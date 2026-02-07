@@ -128,9 +128,13 @@
 							<div class="space-y-1">
 								<h3 class="text-lg font-bold text-stone-900">Blandingsved, 1000L storsekk</h3>
 								<p class="text-sm text-stone-600">
-									Tal på: {order.quantity} | Frakt: {order.delivery_method === 'delivery'
-										? 'Levering'
-										: 'Hent sjølv'}
+									Tal på: {order.quantity} | Frakt: {order.delivery_method === 'pickup' 
+										? 'Hent sjølv' 
+										: order.delivery_method === 'express' 
+											? 'Levering (Ekspress)' 
+											: order.delivery_method === 'standard' 
+												? 'Levering (Standard)' 
+												: 'Levering'}
 								</p>
 							</div>
 							<div class="mt-4 text-right sm:mt-0">

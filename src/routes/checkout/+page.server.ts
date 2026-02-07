@@ -24,7 +24,7 @@ export const actions = {
                             currency: 'nok',
                             product_data: {
                                 name: 'Blandingsved, 1000L storsekk',
-                                description: `${quantity} stk. (${deliveryMethod === 'delivery' ? 'Med levering' : 'Hent selv'})`,
+                                description: `${quantity} stk. (${deliveryMethod === 'pickup' ? 'Hent selv' : deliveryMethod === 'express' ? 'Ekspress levering' : 'Standard levering'})`,
                             },
                             unit_amount: Math.round((totalPrice / quantity) * 100),
                         },

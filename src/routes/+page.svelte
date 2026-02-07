@@ -12,7 +12,7 @@
 	let orderLoading = $state(false);
 	let orderError = $state('');
 	let count = $state(1);
-	let deliveryMethod = $state<'pickup' | 'delivery'>('pickup');
+	let deliveryMethod = $state<'pickup' | 'standard' | 'express'>('pickup');
 
 	// Sørg for at count ikke er høyere enn lagerbeholdning hvis vi har lite på lager
 	$effect(() => {
@@ -21,15 +21,27 @@
 		}
 	});
 
-	const BEFORE_PRICE = 1290;
-	const PRICE_PER_SACK = 990;
-	const DELIVERY_PRICE_PER_3 = 1000;
+	const BEFORE_PRICE = 1490;
+	const PRICE_PER_SACK = 1190;
+	const STANDARD_DELIVERY_PRICE_PER_PALLET = 300;
+	const EXPRESS_DELIVERY_PRICE_PER_3 = 1000;
 
 	let woodCost = $derived(count * PRICE_PER_SACK);
 	let shippingCost = $derived(
-		deliveryMethod === 'delivery' ? Math.ceil(count / 3) * DELIVERY_PRICE_PER_3 : 0
+		deliveryMethod === 'pickup'
+			? 0
+			: deliveryMethod === 'express'
+				? Math.ceil(count / 3) * EXPRESS_DELIVERY_PRICE_PER_3
+				: count * STANDARD_DELIVERY_PRICE_PER_PALLET
 	);
 	let totalCost = $derived(woodCost + shippingCost);
+
+	// Beregn ledig plass på henger
+	let trailerSpotInfo = $derived({
+		spotsTaken: count % 3,
+		remainingSpots: count % 3 === 0 ? 0 : 3 - (count % 3),
+		isFull: count % 3 === 0
+	});
 
 	const woodTypes = [
 		{
@@ -401,47 +413,80 @@
 										></span>
 									</label>
 
-									<!-- Levering -->
+									<!-- Standard Levering -->
 									<label
 										class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none"
-										class:border-brand-primary={deliveryMethod === 'delivery'}
-										class:ring-2={deliveryMethod === 'delivery'}
-										class:ring-brand-primary={deliveryMethod === 'delivery'}
-										class:border-stone-300={deliveryMethod !== 'delivery'}
+										class:border-brand-primary={deliveryMethod === 'standard'}
+										class:ring-2={deliveryMethod === 'standard'}
+										class:ring-brand-primary={deliveryMethod === 'standard'}
+										class:border-stone-300={deliveryMethod !== 'standard'}
 									>
 										<input
 											type="radio"
 											name="delivery-method"
-											value="delivery"
+											value="standard"
 											bind:group={deliveryMethod}
 											class="sr-only"
 										/>
 										<span class="flex flex-1">
 											<span class="flex flex-col">
-												<span class="block text-sm font-medium text-stone-900">Levering</span>
-												<span class="mt-1 flex items-center text-sm text-stone-500"
-													>1000 kr per 3 paller</span
+												<span class="block text-sm font-medium text-stone-900">Standard</span>
+												<span class="mt-1 flex items-center text-xs text-stone-500"
+													>Innan 14 dagar</span
 												>
-												<span class="mt-6 text-xs font-medium text-stone-900"
-													>Levering til sone Haugalandet</span
+												<span class="mt-2 text-[10px] text-stone-400">Levering til sone Haugalandet</span>
+												<span class="mt-4 text-sm font-bold text-stone-900"
+													>300 kr per palle</span
 												>
 											</span>
 										</span>
 										<span
 											class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-stone-300"
-											class:border-transparent={deliveryMethod === 'delivery'}
-											class:bg-brand-primary={deliveryMethod === 'delivery'}
+											class:border-transparent={deliveryMethod === 'standard'}
+											class:bg-brand-primary={deliveryMethod === 'standard'}
 										>
-											{#if deliveryMethod === 'delivery'}
+											{#if deliveryMethod === 'standard'}
 												<span class="h-1.5 w-1.5 rounded-full bg-white"></span>
 											{/if}
 										</span>
+									</label>
+
+									<!-- Ekspress Levering -->
+									<label
+										class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none"
+										class:border-brand-primary={deliveryMethod === 'express'}
+										class:ring-2={deliveryMethod === 'express'}
+										class:ring-brand-primary={deliveryMethod === 'express'}
+										class:border-stone-300={deliveryMethod !== 'express'}
+									>
+										<input
+											type="radio"
+											name="delivery-method"
+											value="express"
+											bind:group={deliveryMethod}
+											class="sr-only"
+										/>
+										<span class="flex flex-1">
+											<span class="flex flex-col">
+												<span class="block text-sm font-medium text-stone-900">Ekspress</span>
+												<span class="mt-1 flex items-center text-xs text-stone-500"
+													>Innan 48 timar</span
+												>
+												<span class="mt-2 text-[10px] text-stone-400">Levering til sone Haugalandet</span>
+												<span class="mt-4 text-sm font-bold text-stone-900"
+													>1000 kr per 3 paller</span
+												>
+											</span>
+										</span>
 										<span
-											class="pointer-events-none absolute -inset-px rounded-lg border-2"
-											aria-hidden="true"
-											class:border-brand-primary={deliveryMethod === 'delivery'}
-											class:border-transparent={deliveryMethod !== 'delivery'}
-										></span>
+											class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-stone-300"
+											class:border-transparent={deliveryMethod === 'express'}
+											class:bg-brand-primary={deliveryMethod === 'express'}
+										>
+											{#if deliveryMethod === 'express'}
+												<span class="h-1.5 w-1.5 rounded-full bg-white"></span>
+											{/if}
+										</span>
 									</label>
 								</div>
 							</fieldset>
@@ -469,7 +514,7 @@
 								<div class="flex items-center justify-between border-t border-stone-200 pt-4">
 									<dt class="flex items-center text-sm text-stone-600">
 										Frakt
-										{#if deliveryMethod === 'delivery'}
+										{#if deliveryMethod !== 'pickup'}
 											<span
 												class="ml-2 rounded-full bg-stone-200 px-2 py-0.5 text-xs text-stone-600"
 											>
@@ -481,6 +526,20 @@
 										{shippingCost.toLocaleString()} kr
 									</dd>
 								</div>
+
+								{#if deliveryMethod === 'express' && !trailerSpotInfo.isFull}
+									<div class="mt-2 rounded-lg bg-orange-50 p-3 ring-1 ring-orange-200">
+										<p class="text-xs font-medium text-orange-800">
+											💡 Me har plass til <span class="font-bold">{trailerSpotInfo.remainingSpots}</span> sekk(er) til på hengaren for samme fraktpris!
+										</p>
+										<button
+											onclick={() => (count = count + trailerSpotInfo.remainingSpots)}
+											class="mt-2 cursor-pointer text-[10px] font-bold uppercase tracking-wider text-orange-900 underline"
+										>
+											Fyll opp hengaren
+										</button>
+									</div>
+								{/if}
 								<div class="flex items-center justify-between border-t border-stone-200 pt-4">
 									<dt class="text-base font-medium text-stone-900">Total</dt>
 									<dd class="text-2xl font-bold text-brand-primary">{totalCost.toLocaleString()} kr</dd>
