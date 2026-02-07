@@ -190,7 +190,16 @@
 			</nav>
 
 			<div class="text-right text-xs text-stone-400">
-				<p>Driftes av Fjeldheim Services ENK (Fjelldata)</p>
+				<p>
+					<a
+						href="https://fjelldata.com"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="transition-colors hover:text-stone-600"
+					>
+						Nettsiden er utviklet, driftet og vedlikeholdt av Fjelldata
+					</a>
+				</p>
 				<p>© {new Date().getFullYear()} Haugalandsved</p>
 			</div>
 		</div>
