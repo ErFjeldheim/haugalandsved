@@ -129,11 +129,14 @@
 				});
 			};
 
-			// Bruk requestIdleCallback eller setTimeout for å unngå å blokkere initial pageload/LCP
+			// Bruk requestIdleCallback og ein romleg timeout for å unngå å blokkere initial pageload/LCP.
+			// hCaptcha (via Stripe) er ekstremt tungt (PoW), så vi ventar til alt anna er stabilt.
 			if ('requestIdleCallback' in window) {
-				(window as any).requestIdleCallback(() => initStripe());
+				(window as any).requestIdleCallback(() => {
+					setTimeout(initStripe, 2000);
+				});
 			} else {
-				setTimeout(initStripe, 2000);
+				setTimeout(initStripe, 5000);
 			}
 		}
 	});
@@ -617,6 +620,9 @@
 						src="/images/enkelt-palle-blandingsved.webp"
 						alt="Storsekk med blandingsved"
 						loading="lazy"
+						decoding="async"
+						width="600"
+						height="400"
 						class="h-96 w-full object-cover transition duration-500 group-hover:scale-105"
 					/>
 					<div
@@ -631,6 +637,9 @@
 						src="/images/flere-paller-blandingsved.webp"
 						alt="Fleire pallar med ved"
 						loading="lazy"
+						decoding="async"
+						width="600"
+						height="400"
 						class="h-96 w-full object-cover transition duration-500 group-hover:scale-105"
 					/>
 					<div
@@ -664,6 +673,9 @@
 											src={wood.image}
 											alt={wood.name}
 											loading="lazy"
+											decoding="async"
+											width="400"
+											height="400"
 											class="h-full w-full object-cover transition duration-500 group-hover:scale-110"
 										/>
 									{:else}

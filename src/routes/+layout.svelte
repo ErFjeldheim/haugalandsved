@@ -28,6 +28,9 @@
 			<img
 				src="/images/haugalandved-logo-transparent.webp"
 				alt="Haugalandsved logo"
+				width="120"
+				height="40"
+				fetchpriority="high"
 				class="h-10 w-auto transition duration-300 group-hover:scale-105"
 			/>
 			<span class="text-xl font-bold tracking-tight text-stone-900">Haugalandsved</span>
@@ -45,6 +48,7 @@
 				{#if $currentUser}
 					<a
 						href="/profile/orders"
+						data-sveltekit-preload-data="none"
 						class="text-sm font-medium text-text-muted transition hover:text-brand-primary"
 					>
 						Mine ordre
@@ -58,12 +62,14 @@
 				{:else}
 					<a
 						href="/auth/login"
+						data-sveltekit-preload-data="none"
 						class="text-sm font-medium text-text-muted transition hover:text-brand-primary"
 					>
 						Logg inn
 					</a>
 					<a
 						href="/auth/register"
+						data-sveltekit-preload-data="none"
 						class="rounded-full bg-brand-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-primary-hover"
 					>
 						Bli kunde
@@ -184,8 +190,8 @@
 			</div>
 
 			<nav class="flex flex-wrap justify-center gap-6 text-sm font-medium text-stone-600">
-				<a href="/salgsvilkar" class="transition hover:text-amber-700">Salsvilkår</a>
-				<a href="/personvern" class="transition hover:text-amber-700">Personvern</a>
+				<a href="/salgsvilkar" data-sveltekit-preload-data="none" class="transition hover:text-amber-700">Salsvilkår</a>
+				<a href="/personvern" data-sveltekit-preload-data="none" class="transition hover:text-amber-700">Personvern</a>
 				<a href="/#om-veden" class="transition hover:text-amber-700">Om veden</a>
 			</nav>
 
