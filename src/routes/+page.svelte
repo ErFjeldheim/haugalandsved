@@ -339,7 +339,7 @@
 						<div class="space-y-8">
 							<!-- Quantity -->
 							<div>
-								<label for="quantity" class="block text-sm font-medium text-stone-700">
+								<label for="quantity" class="block text-base font-medium text-stone-700">
 									Tal på storsekker (1000L)
 								</label>
 								<div class="mt-2 flex items-center gap-4">
@@ -368,7 +368,7 @@
 
 							<!-- Delivery Method -->
 							<fieldset>
-								<legend class="text-sm font-medium text-stone-700">Levering</legend>
+								<legend class="text-base font-medium text-stone-700">Levering</legend>
 								<div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
 									<!-- Hent selv -->
 									<label
