@@ -388,12 +388,9 @@
 										<span class="flex flex-1">
 											<span class="flex flex-col">
 												<span class="block text-sm font-medium text-stone-900">Hent sjølv </span>
-												<span class="mt-1 flex items-center text-xs text-stone-500"
-													>Etter avtale</span
-												>
-												<span class="mt-6 text-xs font-medium text-stone-900"
-													>Fjellheimsvegen 66, 5574 Skjold</span
-												>
+												<span class="mt-1 flex items-center text-xs text-stone-500">Etter avtale</span>
+												<span class="mt-2 text-xs text-stone-500 opacity-0 select-none">Henting fra lager</span>
+												<span class="mt-4 text-sm font-bold text-stone-900">Fjellheimsvegen 66, 5574 Skjold</span>
 											</span>
 										</span>
 										<span
