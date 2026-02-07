@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { pb, currentUser } from '$lib/pocketbase';
-	import { loadStripe } from '@stripe/stripe-js';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
@@ -63,72 +62,6 @@
 
 	let checkoutForm = $state<HTMLFormElement>();
 
-	let stripeElements: any;
-	let expressCheckoutElement: any;
-	let stripe: any;
-
-	const initStripe = async () => {
-		if (!browser || !data.stripeKey || stripe) return;
-
-		stripe = await loadStripe(data.stripeKey);
-		if (!stripe) return;
-
-		stripeElements = stripe.elements({
-			mode: 'payment',
-			amount: Math.round(totalCost * 100),
-			currency: 'nok'
-		});
-
-		expressCheckoutElement = stripeElements.create('expressCheckout', {
-			buttonType: {
-				applePay: 'buy',
-				googlePay: 'buy'
-			}
-		});
-
-		expressCheckoutElement.mount('#express-checkout-element');
-
-		expressCheckoutElement.on('confirm', async (event: any) => {
-			const {
-				quantity,
-				deliveryMethod: method,
-				totalPrice
-			} = {
-				quantity: count,
-				deliveryMethod,
-				totalPrice: totalCost
-			};
-
-			const response = await fetch('/api/checkout/create-intent', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					quantity,
-					deliveryMethod: method,
-					totalPrice,
-					userId: $currentUser?.id
-				})
-			});
-
-			const { clientSecret } = await response.json();
-
-			const { error: confirmError } = await stripe.confirmPayment({
-				elements: stripeElements,
-				clientSecret,
-				confirmParams: {
-					return_url: `${window.location.origin}/api/checkout/success`
-				}
-			});
-
-			if (confirmError) {
-				event.status = 'fail';
-				orderError = confirmError.message || 'Betaling feila';
-			} else {
-				event.status = 'success';
-			}
-		});
-	};
-
 	let mapElement = $state<HTMLElement>();
 	let mapInitialized = false;
 
@@ -167,20 +100,6 @@
 
 	onMount(() => {
 		if (browser) {
-			// Lazy load Stripe når brukaren nærmar seg kalkulatoren
-			const stripeObserver = new IntersectionObserver(
-				(entries) => {
-					if (entries[0].isIntersecting) {
-						initStripe();
-						stripeObserver.disconnect();
-					}
-				},
-				{ rootMargin: '400px' }
-			);
-
-			const calculator = document.getElementById('kalkulator');
-			if (calculator) stripeObserver.observe(calculator);
-
 			// Lazy load kartet når det er i nærleiken
 			const mapObserver = new IntersectionObserver(
 				(entries) => {
@@ -195,16 +114,8 @@
 			if (mapElement) mapObserver.observe(mapElement);
 
 			return () => {
-				stripeObserver.disconnect();
 				mapObserver.disconnect();
 			};
-		}
-	});
-
-	// Oppdater Stripe Elements når totalCost endres
-	$effect(() => {
-		if (stripeElements) {
-			stripeElements.update({ amount: Math.round(totalCost * 100) });
 		}
 	});
 
@@ -223,9 +134,7 @@
 <svelte:head>
 	<link rel="preconnect" href="https://js.stripe.com" />
 	<link rel="preconnect" href="https://m.stripe.com" />
-	<link rel="preconnect" href="https://api.hcaptcha.com" />
 	<link rel="dns-prefetch" href="https://js.stripe.com" />
-	<link rel="dns-prefetch" href="https://api.hcaptcha.com" />
 	<title>Haugalandsved - Kortreist kvalitet</title>
 	<meta
 		name="description"
@@ -607,11 +516,7 @@
 								{/if}
 							</button>
 
-							<div class="mt-6">
-								<div id="express-checkout-element">
-									<!-- Stripe Express Checkout Element vil vises her -->
-								</div>
-							</div>
+
 						</div>
 					</div>
 				{/if}
