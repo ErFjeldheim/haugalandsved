@@ -29,7 +29,7 @@
 			<section>
 				<h2 class="text-xl font-bold text-stone-900">3. Prisar og betaling</h2>
 				<p>
-					Alle prisar er oppgitt i norske kroner (NOK) og inkluderer merverdiavgift. Betaling
+					Alle prisar er oppgitt i norske kroner (NOK). Betaling
 					blir handtert trygt av betalingspartnaren vår <strong>Stripe</strong>. Kjøpesummen blir tredd
 					 frå kontoen til Kjøpar ved bestilling.
 				</p>

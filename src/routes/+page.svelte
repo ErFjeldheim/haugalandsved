@@ -434,7 +434,7 @@
 												<span class="mt-1 flex items-center text-xs text-stone-500"
 													>Innan 14 dagar</span
 												>
-												<span class="mt-2 text-[10px] text-stone-400">Levering til sone Haugalandet</span>
+												<span class="mt-2 text-[10px] text-stone-500">Levering til sone Haugalandet</span>
 												<span class="mt-4 text-sm font-bold text-stone-900"
 													>300 kr per palle</span
 												>
@@ -545,7 +545,6 @@
 									<dd class="text-2xl font-bold text-brand-primary">{totalCost.toLocaleString()} kr</dd>
 								</div>
 							</dl>
-							<p class="mt-2 text-xs text-stone-500 italic">Alle priser inkl. mva.</p>
 						</div>
 
 						<div class="mt-8">
