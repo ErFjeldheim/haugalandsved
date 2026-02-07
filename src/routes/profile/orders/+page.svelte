@@ -60,9 +60,9 @@
 		{#if loading}
 			<div class="flex flex-col items-center justify-center py-20">
 				<div
-					class="h-8 w-8 animate-spin rounded-full border-4 border-amber-700 border-t-transparent"
+					class="h-8 w-8 animate-spin rounded-full border-4 border-brand-primary border-t-transparent"
 				></div>
-				<p class="mt-4 text-stone-600">Laster dine bestillinger...</p>
+				<p class="mt-4 text-text-muted">Laster dine bestillinger...</p>
 			</div>
 		{:else if error}
 			<div class="rounded-lg bg-red-50 p-6 text-center text-red-700 shadow-sm">
@@ -94,7 +94,7 @@
 				<p class="mt-2 text-stone-600">Du har ikke lagt inn noen bestillinger for øyeblikket.</p>
 				<a
 					href="/#kalkulator"
-					class="mt-8 inline-block rounded-full bg-amber-700 px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-600"
+					class="mt-8 inline-block rounded-full bg-brand-primary px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-primary-hover"
 				>
 					Bestill ved nå
 				</a>
@@ -137,7 +137,7 @@
 								<p class="text-xs font-semibold tracking-wider text-stone-500 uppercase">
 									Totalpris
 								</p>
-								<p class="mt-1 text-2xl font-black text-amber-700">
+								<p class="mt-1 text-2xl font-black text-brand-primary">
 									{order.total_price.toLocaleString()} kr
 								</p>
 							</div>

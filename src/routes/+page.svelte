@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { pb, currentUser } from '$lib/pocketbase';
+	import { loadStripe } from '@stripe/stripe-js';
+	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
 	import 'leaflet/dist/leaflet.css';
@@ -19,6 +21,7 @@
 		}
 	});
 
+	const BEFORE_PRICE = 1290;
 	const PRICE_PER_SACK = 990;
 	const DELIVERY_PRICE_PER_3 = 1000;
 
@@ -48,12 +51,80 @@
 
 	let checkoutForm = $state<HTMLFormElement>();
 
-	async function placeOrder() {
-		if (!$currentUser) {
-			goto('/auth/login');
-			return;
-		}
+	let stripeElements: any;
+	let expressCheckoutElement: any;
+	let stripe: any;
 
+	onMount(async () => {
+		if (browser && data.stripeKey) {
+			stripe = await loadStripe(data.stripeKey);
+			if (!stripe) return;
+
+			stripeElements = stripe.elements({
+				mode: 'payment',
+				amount: Math.round(totalCost * 100),
+				currency: 'nok'
+			});
+
+			expressCheckoutElement = stripeElements.create('expressCheckout', {
+				buttonType: {
+					applePay: 'buy',
+					googlePay: 'buy'
+				}
+			});
+
+			expressCheckoutElement.mount('#express-checkout-element');
+
+			expressCheckoutElement.on('confirm', async (event: any) => {
+				const {
+					quantity,
+					deliveryMethod: method,
+					totalPrice
+				} = {
+					quantity: count,
+					deliveryMethod,
+					totalPrice: totalCost
+				};
+
+				const response = await fetch('/api/checkout/create-intent', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						quantity,
+						deliveryMethod: method,
+						totalPrice,
+						userId: $currentUser?.id
+					})
+				});
+
+				const { clientSecret } = await response.json();
+
+				const { error: confirmError } = await stripe.confirmPayment({
+					elements: stripeElements,
+					clientSecret,
+					confirmParams: {
+						return_url: `${window.location.origin}/api/checkout/success`
+					}
+				});
+
+				if (confirmError) {
+					event.status = 'fail';
+					orderError = confirmError.message || 'Betaling feilet';
+				} else {
+					event.status = 'success';
+				}
+			});
+		}
+	});
+
+	// Oppdater Stripe Elements når totalCost endres
+	$effect(() => {
+		if (stripeElements) {
+			stripeElements.update({ amount: Math.round(totalCost * 100) });
+		}
+	});
+
+	async function placeOrder() {
 		if (!inventory.isInStock) {
 			orderError = 'Beklager, vi er tomme på lager.';
 			return;
@@ -130,7 +201,7 @@
 	<section class="relative overflow-hidden bg-stone-900 py-20 text-white lg:py-32">
 		<!-- Abstract background pattern -->
 		<div class="absolute inset-0 opacity-20">
-			<div class="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-amber-600 blur-3xl"></div>
+			<div class="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-brand-primary-hover blur-3xl"></div>
 			<div class="absolute top-1/2 right-0 h-64 w-64 rounded-full bg-orange-900 blur-3xl"></div>
 		</div>
 
@@ -147,7 +218,7 @@
 			<div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
 				<a
 					href="#kalkulator"
-					class="rounded-full bg-amber-700 px-8 py-4 text-lg font-semibold text-white transition hover:bg-amber-600 hover:shadow-lg hover:shadow-amber-900/20 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-stone-900 focus:outline-none"
+					class="rounded-full bg-brand-primary px-8 py-4 text-lg font-semibold text-white transition hover:bg-brand-primary-hover hover:shadow-lg hover:shadow-brand-primary/20 focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-stone-900 focus:outline-none"
 				>
 					Bestill nå
 				</a>
@@ -166,7 +237,26 @@
 			>
 				<!-- Controls -->
 				<div class="p-8 lg:w-3/5 lg:p-12">
-					<h2 class="mb-6 text-2xl font-bold text-stone-900">Beregn pris</h2>
+					<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+						<h2 class="text-2xl font-bold text-stone-900">Beregn pris</h2>
+						<div class="flex flex-col items-end gap-1">
+							<span
+								class="inline-flex items-center rounded-full bg-brand-campaign-bg px-3 py-1 text-sm font-bold text-brand-campaign-text shadow-sm"
+							>
+								🔥 SESONGSLUTT!
+							</span>
+							<span class="text-[10px] font-bold text-brand-campaign-sub uppercase tracking-widest">
+								Gjelder t.o.m. 28. feb
+							</span>
+						</div>
+					</div>
+
+					<div class="mb-8 rounded-lg bg-stone-50 p-4 ring-1 ring-stone-900/5">
+						<p class="text-sm font-medium text-stone-600">
+							Kun <span class="text-lg font-bold text-stone-900">{inventory.quantity}</span> storsekker
+							igjen på lager.
+						</p>
+					</div>
 
 					{#if !inventory.isInStock}
 						<div class="rounded-xl border border-red-100 bg-red-50 p-6 text-center">
@@ -198,18 +288,9 @@
 						<div class="space-y-8">
 							<!-- Quantity -->
 							<div>
-								<div class="flex items-center justify-between">
-									<label for="quantity" class="block text-sm font-medium text-stone-700">
-										Antall storsekker (1000L)
-									</label>
-									{#if inventory.quantity < 5}
-										<span
-											class="inline-flex animate-pulse items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800"
-										>
-											Kun {inventory.quantity} igjen på lager!
-										</span>
-									{/if}
-								</div>
+								<label for="quantity" class="block text-sm font-medium text-stone-700">
+									Antall storsekker (1000L)
+								</label>
 								<div class="mt-2 flex items-center gap-4">
 									<input
 										type="range"
@@ -218,7 +299,7 @@
 										min="1"
 										max={Math.min(9, inventory.quantity)}
 										bind:value={count}
-										class="h-2 w-full cursor-pointer appearance-none rounded-lg bg-stone-200 accent-amber-700"
+										class="h-2 w-full cursor-pointer appearance-none rounded-lg bg-stone-200 accent-brand-primary"
 									/>
 									<input
 										type="number"
@@ -226,7 +307,7 @@
 										min="1"
 										max={Math.min(9, inventory.quantity)}
 										bind:value={count}
-										class="block w-20 rounded-md border-0 py-1.5 text-center text-stone-900 shadow-sm ring-1 ring-stone-300 ring-inset placeholder:text-stone-400 focus:ring-2 focus:ring-amber-600 focus:ring-inset sm:text-sm sm:leading-6"
+										class="block w-20 rounded-md border-0 py-1.5 text-center text-stone-900 shadow-sm ring-1 ring-stone-300 ring-inset placeholder:text-stone-400 focus:ring-2 focus:ring-brand-primary focus:ring-inset sm:text-sm sm:leading-6"
 									/>
 								</div>
 								<p class="mt-2 text-sm text-stone-500">
@@ -241,9 +322,9 @@
 									<!-- Hent selv -->
 									<label
 										class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none"
-										class:border-amber-600={deliveryMethod === 'pickup'}
+										class:border-brand-primary={deliveryMethod === 'pickup'}
 										class:ring-2={deliveryMethod === 'pickup'}
-										class:ring-amber-600={deliveryMethod === 'pickup'}
+										class:ring-brand-primary={deliveryMethod === 'pickup'}
 										class:border-stone-300={deliveryMethod !== 'pickup'}
 									>
 										<input
@@ -257,7 +338,7 @@
 											<span class="flex flex-col">
 												<span class="block text-sm font-medium text-stone-900">Hent selv</span>
 												<span class="mt-1 flex items-center text-sm text-stone-500"
-													>Gratis frakt</span
+													>Avtal henting</span
 												>
 												<span class="mt-6 text-xs font-medium text-stone-900"
 													>Fjellheimsvegen 66, 5574 Skjold</span
@@ -267,7 +348,7 @@
 										<span
 											class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-stone-300"
 											class:border-transparent={deliveryMethod === 'pickup'}
-											class:bg-amber-600={deliveryMethod === 'pickup'}
+											class:bg-brand-primary={deliveryMethod === 'pickup'}
 										>
 											{#if deliveryMethod === 'pickup'}
 												<span class="h-1.5 w-1.5 rounded-full bg-white"></span>
@@ -276,7 +357,7 @@
 										<span
 											class="pointer-events-none absolute -inset-px rounded-lg border-2"
 											aria-hidden="true"
-											class:border-amber-600={deliveryMethod === 'pickup'}
+											class:border-brand-primary={deliveryMethod === 'pickup'}
 											class:border-transparent={deliveryMethod !== 'pickup'}
 										></span>
 									</label>
@@ -284,9 +365,9 @@
 									<!-- Levering -->
 									<label
 										class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none"
-										class:border-amber-600={deliveryMethod === 'delivery'}
+										class:border-brand-primary={deliveryMethod === 'delivery'}
 										class:ring-2={deliveryMethod === 'delivery'}
-										class:ring-amber-600={deliveryMethod === 'delivery'}
+										class:ring-brand-primary={deliveryMethod === 'delivery'}
 										class:border-stone-300={deliveryMethod !== 'delivery'}
 									>
 										<input
@@ -310,7 +391,7 @@
 										<span
 											class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-stone-300"
 											class:border-transparent={deliveryMethod === 'delivery'}
-											class:bg-amber-600={deliveryMethod === 'delivery'}
+											class:bg-brand-primary={deliveryMethod === 'delivery'}
 										>
 											{#if deliveryMethod === 'delivery'}
 												<span class="h-1.5 w-1.5 rounded-full bg-white"></span>
@@ -319,7 +400,7 @@
 										<span
 											class="pointer-events-none absolute -inset-px rounded-lg border-2"
 											aria-hidden="true"
-											class:border-amber-600={deliveryMethod === 'delivery'}
+											class:border-brand-primary={deliveryMethod === 'delivery'}
 											class:border-transparent={deliveryMethod !== 'delivery'}
 										></span>
 									</label>
@@ -338,7 +419,12 @@
 							<h2 class="text-lg font-medium text-stone-900">Oversikt</h2>
 							<dl class="mt-6 space-y-4">
 								<div class="flex items-center justify-between">
-									<dt class="text-sm text-stone-600">Ved ({count} x {PRICE_PER_SACK},-)</dt>
+									<dt class="text-sm text-stone-600">
+										Ved ({count} x {PRICE_PER_SACK},-)
+										<span class="ml-1 text-xs text-stone-400 line-through">
+											({count} x {BEFORE_PRICE},-)
+										</span>
+									</dt>
 									<dd class="text-sm font-medium text-stone-900">{woodCost.toLocaleString()} kr</dd>
 								</div>
 								<div class="flex items-center justify-between border-t border-stone-200 pt-4">
@@ -358,7 +444,7 @@
 								</div>
 								<div class="flex items-center justify-between border-t border-stone-200 pt-4">
 									<dt class="text-base font-medium text-stone-900">Totalt</dt>
-									<dd class="text-2xl font-bold text-amber-700">{totalCost.toLocaleString()} kr</dd>
+									<dd class="text-2xl font-bold text-brand-primary">{totalCost.toLocaleString()} kr</dd>
 								</div>
 							</dl>
 							<p class="mt-2 text-xs text-stone-500 italic">Alle priser inkl. mva.</p>
@@ -386,12 +472,24 @@
 									Behandler...
 								{:else if !inventory.isInStock}
 									Utsolgt
-								{:else if !$currentUser}
-									Logg inn for å bestille
 								{:else}
-									Gå til betaling
+									Betaling
 								{/if}
 							</button>
+
+							<div class="mt-6">
+								<div class="relative mb-4">
+									<div class="absolute inset-0 flex items-center" aria-hidden="true">
+										<div class="w-full border-t border-stone-200"></div>
+									</div>
+									<div class="relative flex justify-center text-sm leading-6 font-medium">
+										<span class="bg-stone-50 px-4 text-stone-400">eller Hurtigbetaling</span>
+									</div>
+								</div>
+								<div id="express-checkout-element">
+									<!-- Stripe Express Checkout Element vil vises her -->
+								</div>
+							</div>
 						</div>
 					</div>
 				{/if}
@@ -471,7 +569,7 @@
 									{:else}
 										<div class="flex h-full w-full items-center justify-center">
 											<svg
-												class="h-12 w-12 text-amber-700 opacity-20"
+												class="h-12 w-12 text-brand-primary opacity-20"
 												fill="none"
 												viewBox="0 0 24 24"
 												stroke-width="1.5"

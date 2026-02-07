@@ -1,4 +1,5 @@
 import { pb } from '$lib/pocketbase';
+import { PUBLIC_STRIPE_PUBLISHABLE_KEY } from '$env/static/public';
 
 export const load = async () => {
     try {
@@ -10,7 +11,8 @@ export const load = async () => {
             inventory: {
                 quantity: inventory.quantity_available,
                 isInStock: inventory.isInStock
-            }
+            },
+            stripeKey: PUBLIC_STRIPE_PUBLISHABLE_KEY
         };
     } catch (e) {
         console.error('Kunne ikke laste lagerstatus:', e);

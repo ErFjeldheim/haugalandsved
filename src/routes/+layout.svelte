@@ -1,5 +1,5 @@
 <script lang="ts">
-	import './layout.css';
+	import './globals.css';
 	import { currentUser, pb } from '$lib/pocketbase';
 	import { goto } from '$app/navigation';
 
@@ -33,10 +33,10 @@
 			<span class="text-xl font-bold tracking-tight text-stone-900">Haugalandsved</span>
 		</a>
 
-		<nav class="hidden items-center gap-8 text-sm font-medium text-stone-600 md:flex">
-			<a href="/#om-veden" class="transition hover:text-amber-700">Om veden</a>
-			<a href="/#kalkulator" class="transition hover:text-amber-700">Prisliste</a>
-			<a href="/#kontakt" class="transition hover:text-amber-700">Kontakt</a>
+		<nav class="hidden items-center gap-8 text-sm font-medium text-text-muted md:flex">
+			<a href="/#om-veden" class="transition hover:text-brand-primary">Om veden</a>
+			<a href="/#kalkulator" class="transition hover:text-brand-primary">Prisliste</a>
+			<a href="/#kontakt" class="transition hover:text-brand-primary">Kontakt</a>
 		</nav>
 
 		<div class="flex items-center gap-4">
@@ -45,7 +45,7 @@
 				{#if $currentUser}
 					<a
 						href="/profile/orders"
-						class="text-sm font-medium text-stone-600 transition hover:text-amber-700"
+						class="text-sm font-medium text-text-muted transition hover:text-brand-primary"
 					>
 						Mine ordre
 					</a>
@@ -58,13 +58,13 @@
 				{:else}
 					<a
 						href="/auth/login"
-						class="text-sm font-medium text-stone-600 transition hover:text-amber-700"
+						class="text-sm font-medium text-text-muted transition hover:text-brand-primary"
 					>
 						Logg inn
 					</a>
 					<a
 						href="/auth/register"
-						class="rounded-full bg-amber-700 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-600"
+						class="rounded-full bg-brand-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-primary-hover"
 					>
 						Bli kunde
 					</a>

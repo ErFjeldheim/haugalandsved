@@ -11,9 +11,7 @@ export const actions = {
         const userId = data.get('userId');
         const email = data.get('email');
 
-        if (!userId) {
-            throw error(401, 'Du må være logget inn for å bestille');
-        }
+
 
         let checkoutUrl: string;
 
