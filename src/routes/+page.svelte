@@ -67,77 +67,137 @@
 	let expressCheckoutElement: any;
 	let stripe: any;
 
-	onMount(() => {
-		if (browser && data.stripeKey) {
-			const initStripe = async () => {
-				stripe = await loadStripe(data.stripeKey);
-				if (!stripe) return;
+	const initStripe = async () => {
+		if (!browser || !data.stripeKey || stripe) return;
 
-				stripeElements = stripe.elements({
-					mode: 'payment',
-					amount: Math.round(totalCost * 100),
-					currency: 'nok'
-				});
+		stripe = await loadStripe(data.stripeKey);
+		if (!stripe) return;
 
-				expressCheckoutElement = stripeElements.create('expressCheckout', {
-					buttonType: {
-						applePay: 'buy',
-						googlePay: 'buy'
-					}
-				});
+		stripeElements = stripe.elements({
+			mode: 'payment',
+			amount: Math.round(totalCost * 100),
+			currency: 'nok'
+		});
 
-				expressCheckoutElement.mount('#express-checkout-element');
+		expressCheckoutElement = stripeElements.create('expressCheckout', {
+			buttonType: {
+				applePay: 'buy',
+				googlePay: 'buy'
+			}
+		});
 
-				expressCheckoutElement.on('confirm', async (event: any) => {
-					const {
-						quantity,
-						deliveryMethod: method,
-						totalPrice
-					} = {
-						quantity: count,
-						deliveryMethod,
-						totalPrice: totalCost
-					};
+		expressCheckoutElement.mount('#express-checkout-element');
 
-					const response = await fetch('/api/checkout/create-intent', {
-						method: 'POST',
-						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify({
-							quantity,
-							deliveryMethod: method,
-							totalPrice,
-							userId: $currentUser?.id
-						})
-					});
-
-					const { clientSecret } = await response.json();
-
-					const { error: confirmError } = await stripe.confirmPayment({
-						elements: stripeElements,
-						clientSecret,
-						confirmParams: {
-							return_url: `${window.location.origin}/api/checkout/success`
-						}
-					});
-
-					if (confirmError) {
-						event.status = 'fail';
-						orderError = confirmError.message || 'Betaling feila';
-					} else {
-						event.status = 'success';
-					}
-				});
+		expressCheckoutElement.on('confirm', async (event: any) => {
+			const {
+				quantity,
+				deliveryMethod: method,
+				totalPrice
+			} = {
+				quantity: count,
+				deliveryMethod,
+				totalPrice: totalCost
 			};
 
-			// Bruk requestIdleCallback og ein romleg timeout for å unngå å blokkere initial pageload/LCP.
-			// hCaptcha (via Stripe) er ekstremt tungt (PoW), så vi ventar til alt anna er stabilt.
-			if ('requestIdleCallback' in window) {
-				(window as any).requestIdleCallback(() => {
-					setTimeout(initStripe, 2000);
-				});
+			const response = await fetch('/api/checkout/create-intent', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					quantity,
+					deliveryMethod: method,
+					totalPrice,
+					userId: $currentUser?.id
+				})
+			});
+
+			const { clientSecret } = await response.json();
+
+			const { error: confirmError } = await stripe.confirmPayment({
+				elements: stripeElements,
+				clientSecret,
+				confirmParams: {
+					return_url: `${window.location.origin}/api/checkout/success`
+				}
+			});
+
+			if (confirmError) {
+				event.status = 'fail';
+				orderError = confirmError.message || 'Betaling feila';
 			} else {
-				setTimeout(initStripe, 5000);
+				event.status = 'success';
 			}
+		});
+	};
+
+	let mapElement = $state<HTMLElement>();
+	let mapInitialized = false;
+
+	const initMap = async () => {
+		if (!browser || !mapElement || mapInitialized) return;
+		mapInitialized = true;
+
+		let map: any;
+		const L = (await import('leaflet')).default;
+
+		// Fix Leaflet's default icon paths in Vite
+		const markerIcon = (await import('leaflet/dist/images/marker-icon.png')).default;
+		const markerIcon2x = (await import('leaflet/dist/images/marker-icon-2x.png')).default;
+		const markerShadow = (await import('leaflet/dist/images/marker-shadow.png')).default;
+
+		delete (L.Icon.Default.prototype as any)._getIconUrl;
+		L.Icon.Default.mergeOptions({
+			iconUrl: markerIcon,
+			iconRetinaUrl: markerIcon2x,
+			shadowUrl: markerShadow
+		});
+
+		map = L.map(mapElement!).setView([59.482409, 5.517026], 15);
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution:
+				'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+		}).addTo(map);
+
+		L.marker([59.482409, 5.517026])
+			.addTo(map)
+			.bindPopup('<b>Haugalandsved</b><br>Fjellheimsvegen 66')
+			.openPopup();
+
+		return map;
+	};
+
+	onMount(() => {
+		if (browser) {
+			// Lazy load Stripe når brukaren nærmar seg kalkulatoren
+			const stripeObserver = new IntersectionObserver(
+				(entries) => {
+					if (entries[0].isIntersecting) {
+						initStripe();
+						stripeObserver.disconnect();
+					}
+				},
+				{ rootMargin: '400px' }
+			);
+
+			const calculator = document.getElementById('kalkulator');
+			if (calculator) stripeObserver.observe(calculator);
+
+			// Lazy load kartet når det er i nærleiken
+			const mapObserver = new IntersectionObserver(
+				(entries) => {
+					if (entries[0].isIntersecting) {
+						initMap();
+						mapObserver.disconnect();
+					}
+				},
+				{ rootMargin: '200px' }
+			);
+
+			if (mapElement) mapObserver.observe(mapElement);
+
+			return () => {
+				stripeObserver.disconnect();
+				mapObserver.disconnect();
+			};
 		}
 	});
 
@@ -158,47 +218,6 @@
 		// Vi bruker en standard form for å unngå CORS-problemer med Stripe-redirects
 		setTimeout(() => checkoutForm?.submit(), 0);
 	}
-
-	let mapElement = $state<HTMLElement>();
-
-	$effect(() => {
-		if (browser && mapElement) {
-			let map: any;
-
-			const initMap = async () => {
-				const L = (await import('leaflet')).default;
-
-				// Fix Leaflet's default icon paths in Vite
-				const markerIcon = (await import('leaflet/dist/images/marker-icon.png')).default;
-				const markerIcon2x = (await import('leaflet/dist/images/marker-icon-2x.png')).default;
-				const markerShadow = (await import('leaflet/dist/images/marker-shadow.png')).default;
-
-				delete (L.Icon.Default.prototype as any)._getIconUrl;
-				L.Icon.Default.mergeOptions({
-					iconUrl: markerIcon,
-					iconRetinaUrl: markerIcon2x,
-					shadowUrl: markerShadow
-				});
-
-				map = L.map(mapElement!).setView([59.482409, 5.517026], 15);
-				L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-					attribution:
-						'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-				}).addTo(map);
-
-				L.marker([59.482409, 5.517026])
-					.addTo(map)
-					.bindPopup('<b>Haugalandsved</b><br>Fjellheimsvegen 66')
-					.openPopup();
-			};
-
-			initMap();
-
-			return () => {
-				if (map) map.remove();
-			};
-		}
-	});
 </script>
 
 <svelte:head>
