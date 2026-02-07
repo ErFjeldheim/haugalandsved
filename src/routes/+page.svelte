@@ -260,7 +260,7 @@
 			<h1
 				class="mb-6 font-serif text-4xl font-bold tracking-tight text-amber-50 sm:text-6xl lg:text-7xl"
 			>
-				Varme fra Haugalandet
+				Varme frå Haugalandet
 			</h1>
 			<p class="mx-auto mb-10 max-w-2xl text-lg text-stone-300 sm:text-xl">
 				Kortreist blandingsved i 1000L storsekker. Furu, bjørk, gran, rogn og selje – ferdig kappa
@@ -389,7 +389,7 @@
 											<span class="flex flex-col">
 												<span class="block text-sm font-medium text-stone-900">Hent sjølv </span>
 												<span class="mt-1 flex items-center text-xs text-stone-500">Etter avtale</span>
-												<span class="mt-2 text-xs text-stone-500 opacity-0 select-none">Henting fra lager</span>
+												<span class="mt-2 text-xs text-stone-500 opacity-0 select-none">Henting frå lager</span>
 												<span class="mt-4 text-sm font-bold text-stone-900">Fjellheimsvegen 66, 5574 Skjold</span>
 											</span>
 										</span>
