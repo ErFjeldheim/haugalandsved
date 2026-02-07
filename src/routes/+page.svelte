@@ -67,65 +67,74 @@
 	let expressCheckoutElement: any;
 	let stripe: any;
 
-	onMount(async () => {
+	onMount(() => {
 		if (browser && data.stripeKey) {
-			stripe = await loadStripe(data.stripeKey);
-			if (!stripe) return;
+			const initStripe = async () => {
+				stripe = await loadStripe(data.stripeKey);
+				if (!stripe) return;
 
-			stripeElements = stripe.elements({
-				mode: 'payment',
-				amount: Math.round(totalCost * 100),
-				currency: 'nok'
-			});
-
-			expressCheckoutElement = stripeElements.create('expressCheckout', {
-				buttonType: {
-					applePay: 'buy',
-					googlePay: 'buy'
-				}
-			});
-
-			expressCheckoutElement.mount('#express-checkout-element');
-
-			expressCheckoutElement.on('confirm', async (event: any) => {
-				const {
-					quantity,
-					deliveryMethod: method,
-					totalPrice
-				} = {
-					quantity: count,
-					deliveryMethod,
-					totalPrice: totalCost
-				};
-
-				const response = await fetch('/api/checkout/create-intent', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						quantity,
-						deliveryMethod: method,
-						totalPrice,
-						userId: $currentUser?.id
-					})
+				stripeElements = stripe.elements({
+					mode: 'payment',
+					amount: Math.round(totalCost * 100),
+					currency: 'nok'
 				});
 
-				const { clientSecret } = await response.json();
-
-				const { error: confirmError } = await stripe.confirmPayment({
-					elements: stripeElements,
-					clientSecret,
-					confirmParams: {
-						return_url: `${window.location.origin}/api/checkout/success`
+				expressCheckoutElement = stripeElements.create('expressCheckout', {
+					buttonType: {
+						applePay: 'buy',
+						googlePay: 'buy'
 					}
 				});
 
-				if (confirmError) {
-					event.status = 'fail';
-					orderError = confirmError.message || 'Betaling feila';
-				} else {
-					event.status = 'success';
-				}
-			});
+				expressCheckoutElement.mount('#express-checkout-element');
+
+				expressCheckoutElement.on('confirm', async (event: any) => {
+					const {
+						quantity,
+						deliveryMethod: method,
+						totalPrice
+					} = {
+						quantity: count,
+						deliveryMethod,
+						totalPrice: totalCost
+					};
+
+					const response = await fetch('/api/checkout/create-intent', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({
+							quantity,
+							deliveryMethod: method,
+							totalPrice,
+							userId: $currentUser?.id
+						})
+					});
+
+					const { clientSecret } = await response.json();
+
+					const { error: confirmError } = await stripe.confirmPayment({
+						elements: stripeElements,
+						clientSecret,
+						confirmParams: {
+							return_url: `${window.location.origin}/api/checkout/success`
+						}
+					});
+
+					if (confirmError) {
+						event.status = 'fail';
+						orderError = confirmError.message || 'Betaling feila';
+					} else {
+						event.status = 'success';
+					}
+				});
+			};
+
+			// Bruk requestIdleCallback eller setTimeout for å unngå å blokkere initial pageload/LCP
+			if ('requestIdleCallback' in window) {
+				(window as any).requestIdleCallback(() => initStripe());
+			} else {
+				setTimeout(initStripe, 2000);
+			}
 		}
 	});
 
@@ -190,6 +199,11 @@
 </script>
 
 <svelte:head>
+	<link rel="preconnect" href="https://js.stripe.com" />
+	<link rel="preconnect" href="https://m.stripe.com" />
+	<link rel="preconnect" href="https://api.hcaptcha.com" />
+	<link rel="dns-prefetch" href="https://js.stripe.com" />
+	<link rel="dns-prefetch" href="https://api.hcaptcha.com" />
 	<title>Haugalandsved - Kortreist kvalitet</title>
 	<meta
 		name="description"
