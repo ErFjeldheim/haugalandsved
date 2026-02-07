@@ -22,6 +22,6 @@ export const POST = async ({ request }) => {
         return json({ clientSecret: paymentIntent.client_secret });
     } catch (err: any) {
         console.error('Error creating payment intent:', err);
-        throw error(500, 'Kunne ikke opprette betaling');
+        throw error(500, 'Kunne ikkje opprette betaling');
     }
 };

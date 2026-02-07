@@ -19,7 +19,7 @@
 			});
 			orders = records;
 		} catch (e: any) {
-			error = 'Kunne ikke laste ordreoversikt.';
+			error = 'Kunne ikkje laste inn ordre.';
 		} finally {
 			loading = false;
 		}
@@ -39,9 +39,9 @@
 		switch (status.toLowerCase()) {
 			case 'levert':
 				return 'bg-green-100 text-green-700';
-			case 'behandles':
+			case 'vert handsama':
 				return 'bg-blue-100 text-blue-700';
-			case 'avbrutt':
+			case 'avbrote':
 				return 'bg-red-100 text-red-700';
 			default:
 				return 'bg-stone-100 text-stone-700';
@@ -62,13 +62,13 @@
 				<div
 					class="h-8 w-8 animate-spin rounded-full border-4 border-brand-primary border-t-transparent"
 				></div>
-				<p class="mt-4 text-text-muted">Laster dine bestillinger...</p>
+				<p class="mt-4 text-text-muted">Lastar inn bestillingane dine...</p>
 			</div>
 		{:else if error}
 			<div class="rounded-lg bg-red-50 p-6 text-center text-red-700 shadow-sm">
 				<p>{error}</p>
 				<button onclick={() => window.location.reload()} class="mt-4 font-medium underline"
-					>Prøv igjen</button
+					>Prøv på nytt</button
 				>
 			</div>
 		{:else if orders.length === 0}
@@ -90,13 +90,13 @@
 						/>
 					</svg>
 				</div>
-				<h2 class="text-xl font-semibold text-stone-900">Ingen ordre ennå</h2>
-				<p class="mt-2 text-stone-600">Du har ikke lagt inn noen bestillinger for øyeblikket.</p>
+				<h2 class="text-xl font-semibold text-stone-900">Ingen ordrar enno</h2>
+				<p class="mt-2 text-stone-600">Du har ikkje lagt inn nokon bestillingar for augeblikket.</p>
 				<a
 					href="/#kalkulator"
 					class="mt-8 inline-block rounded-full bg-brand-primary px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-primary-hover"
 				>
-					Bestill ved nå
+					Bestill ved no
 				</a>
 			</div>
 		{:else}
@@ -128,9 +128,9 @@
 							<div class="space-y-1">
 								<h3 class="text-lg font-bold text-stone-900">Blandingsved, 1000L storsekk</h3>
 								<p class="text-sm text-stone-600">
-									Antall: {order.quantity} | Frakt: {order.delivery_method === 'delivery'
+									Tal på: {order.quantity} | Frakt: {order.delivery_method === 'delivery'
 										? 'Levering'
-										: 'Hent selv'}
+										: 'Hent sjølv'}
 								</p>
 							</div>
 							<div class="mt-4 text-right sm:mt-0">

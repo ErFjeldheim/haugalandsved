@@ -11,7 +11,7 @@
 
 	async function register() {
 		if (password !== passwordConfirm) {
-			error = 'Passordene er ikke like';
+			error = 'Passorda er ikkje like';
 			return;
 		}
 
@@ -29,7 +29,7 @@
 			await pb.collection('users').authWithPassword(email, password);
 			goto('/');
 		} catch (e: any) {
-			error = e.message || 'Kunne ikke registrere bruker';
+			error = e.message || 'Kunne ikkje registrera brukar';
 		} finally {
 			loading = false;
 		}
@@ -60,11 +60,11 @@
 					d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
 				/>
 			</svg>
-			Tilbake til forsiden
+			Tilbake til forsida
 		</a>
 
 		<div class="rounded-2xl bg-white p-8 shadow-xl ring-1 ring-stone-900/5">
-			<h1 class="mb-6 text-3xl font-bold text-stone-900">Lag bruker</h1>
+			<h1 class="mb-6 text-3xl font-bold text-stone-900">Lag brukar</h1>
 
 			{#if error}
 				<div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-700">
@@ -80,7 +80,7 @@
 				class="space-y-4"
 			>
 				<div>
-					<label for="name" class="block text-sm font-medium text-stone-700">Navn</label>
+					<label for="name" class="block text-sm font-medium text-stone-700">Namn</label>
 					<input
 						type="text"
 						id="name"
@@ -114,7 +114,7 @@
 
 				<div>
 					<label for="passwordConfirm" class="block text-sm font-medium text-stone-700"
-						>Bekreft passord</label
+						>Stadfest passord</label
 					>
 					<input
 						type="password"
@@ -135,7 +135,7 @@
 			</form>
 
 			<div class="mt-6 text-center text-sm text-stone-500">
-				Har du allerede en konto?
+				Har du ein konto frå før?
 				<a href="/auth/login" class="font-medium text-amber-700 hover:text-amber-600"
 					>Logg inn her</a
 				>

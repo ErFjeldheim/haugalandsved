@@ -34,17 +34,17 @@
 	const woodTypes = [
 		{
 			name: 'Furu',
-			description: 'Lettantennelig og gir rask varme. Perfekt for opptenning.',
+			description: 'Lettantenneleg og gjev rask varme. Perfekt for opptenning.',
 			image: '/images/trebit-furu.webp'
 		},
 		{
 			name: 'Bjørk',
-			description: 'Klassikeren med høy brennverdi, pen flamme og lite gnister.',
+			description: 'Klassikaren med høg brennverdi, pen flamme og lite gneister.',
 			image: '/images/trebit-bjørk.webp'
 		},
 		{
 			name: 'Gran',
-			description: 'Gnistrer litt, men gir lun god varme og er lett å fyre med.',
+			description: 'Gnistrar litt, men gjev lun og god varme og er lett å fyre med.',
 			image: '/images/trebit-gran.webp'
 		}
 	];
@@ -109,7 +109,7 @@
 
 				if (confirmError) {
 					event.status = 'fail';
-					orderError = confirmError.message || 'Betaling feilet';
+					orderError = confirmError.message || 'Betaling feila';
 				} else {
 					event.status = 'success';
 				}
@@ -126,7 +126,7 @@
 
 	async function placeOrder() {
 		if (!inventory.isInStock) {
-			orderError = 'Beklager, vi er tomme på lager.';
+			orderError = 'Diverre, me er tomme på lager.';
 			return;
 		}
 
@@ -181,12 +181,12 @@
 	<title>Haugalandsved - Kortreist kvalitet</title>
 	<meta
 		name="description"
-		content="Kjøp kortreist blandingsved av høy kvalitet fra Haugalandet. Levering rett hjem eller hent selv."
+		content="Kjøp kortreist blandingsved av høg kvalitet frå Haugalandet. Levering rett heim eller hent sjølv."
 	/>
 	<meta property="og:title" content="Haugalandsved - Kortreist kvalitet" />
 	<meta
 		property="og:description"
-		content="Kjøp kortreist blandingsved av høy kvalitet fra Haugalandet. Levering rett hjem eller hent selv."
+		content="Kjøp kortreist blandingsved av høg kvalitet frå Haugalandet. Levering rett heim eller hent sjølv."
 	/>
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://haugalandsved.no" />
@@ -212,8 +212,8 @@
 				Varme fra Haugalandet
 			</h1>
 			<p class="mx-auto mb-10 max-w-2xl text-lg text-stone-300 sm:text-xl">
-				Kortreist blandingsved i 1000L storsekker. Furu, bjørk, gran, rogn og selje – ferdig kappet
-				og kløyvd, klar til å varme hjemmet ditt.
+				Kortreist blandingsved i 1000L storsekker. Furu, bjørk, gran, rogn og selje – ferdig kappa
+				og kløyvd, klar til å varme heimen din.
 			</p>
 			<div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
 				<a
@@ -223,7 +223,7 @@
 					Bestill nå
 				</a>
 				<a href="#om-veden" class="text-sm font-medium text-stone-400 transition hover:text-white">
-					Les mer om veden &rarr;
+					Les meir om veden &rarr;
 				</a>
 			</div>
 		</div>
@@ -238,7 +238,7 @@
 				<!-- Controls -->
 				<div class="p-8 lg:w-3/5 lg:p-12">
 					<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
-						<h2 class="text-2xl font-bold text-stone-900">Beregn pris</h2>
+						<h2 class="text-2xl font-bold text-stone-900">Rekne ut pris</h2>
 						<div class="flex flex-col items-end gap-1">
 							<span
 								class="inline-flex items-center rounded-full bg-brand-campaign-bg px-3 py-1 text-sm font-bold text-brand-campaign-text shadow-sm"
@@ -246,15 +246,15 @@
 								🔥 SESONGSLUTT!
 							</span>
 							<span class="text-[10px] font-bold text-brand-campaign-sub uppercase tracking-widest">
-								Gjelder t.o.m. 28. feb
+								Gjeld t.o.m. 28. feb
 							</span>
 						</div>
 					</div>
 
 					<div class="mb-8 rounded-lg bg-stone-50 p-4 ring-1 ring-stone-900/5">
 						<p class="text-sm font-medium text-stone-600">
-							Kun <span class="text-lg font-bold text-stone-900">{inventory.quantity}</span> storsekker
-							igjen på lager.
+							Berre <span class="text-lg font-bold text-stone-900">{inventory.quantity}</span> storsekker
+							att på lager.
 						</p>
 					</div>
 
@@ -278,10 +278,10 @@
 									/>
 								</svg>
 							</div>
-							<h3 class="text-lg font-bold text-red-900">Utsolgt</h3>
+							<h3 class="text-lg font-bold text-red-900">Utselt</h3>
 							<p class="mt-2 text-sm text-red-700">
-								Vi er dessverre tomme for storsekker for øyeblikket. Følg med her for oppdateringer
-								om når vi får inn mer ved!
+								Me er diverre tomme for storsekker for augeblikket. Følg med her for oppdateringar
+								om når me får inn meir ved!
 							</p>
 						</div>
 					{:else}
@@ -289,7 +289,7 @@
 							<!-- Quantity -->
 							<div>
 								<label for="quantity" class="block text-sm font-medium text-stone-700">
-									Antall storsekker (1000L)
+									Tal på storsekker (1000L)
 								</label>
 								<div class="mt-2 flex items-center gap-4">
 									<input
@@ -336,7 +336,7 @@
 										/>
 										<span class="flex flex-1">
 											<span class="flex flex-col">
-												<span class="block text-sm font-medium text-stone-900">Hent selv</span>
+												<span class="block text-sm font-medium text-stone-900">Hent sjølv</span>
 												<span class="mt-1 flex items-center text-sm text-stone-500"
 													>Avtal henting</span
 												>
@@ -416,7 +416,7 @@
 						class="flex flex-col justify-between border-t border-stone-200 bg-stone-50 p-8 lg:w-2/5 lg:border-t-0 lg:border-l lg:p-12"
 					>
 						<div>
-							<h2 class="text-lg font-medium text-stone-900">Oversikt</h2>
+							<h2 class="text-lg font-medium text-stone-900">Oversyn</h2>
 							<dl class="mt-6 space-y-4">
 								<div class="flex items-center justify-between">
 									<dt class="text-sm text-stone-600">
@@ -443,7 +443,7 @@
 									</dd>
 								</div>
 								<div class="flex items-center justify-between border-t border-stone-200 pt-4">
-									<dt class="text-base font-medium text-stone-900">Totalt</dt>
+									<dt class="text-base font-medium text-stone-900">Total</dt>
 									<dd class="text-2xl font-bold text-brand-primary">{totalCost.toLocaleString()} kr</dd>
 								</div>
 							</dl>
@@ -469,9 +469,9 @@
 								class="w-full cursor-pointer rounded-md bg-stone-900 px-3.5 py-3.5 text-center text-sm font-semibold text-white shadow-sm transition-colors hover:bg-stone-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-900 disabled:opacity-50"
 							>
 								{#if orderLoading}
-									Behandler...
+									Handsamar...
 								{:else if !inventory.isInStock}
-									Utsolgt
+									Utselt
 								{:else}
 									Betaling
 								{/if}
@@ -493,12 +493,12 @@
 	<section id="om-veden" class="bg-white py-16 lg:py-24">
 		<div class="container mx-auto px-4">
 			<div class="mx-auto max-w-2xl text-center">
-				<h2 class="text-3xl font-bold tracking-tight text-pretty text-stone-900 sm:text-4xl">
-					Kvalitet i hver sekk
+				<h2 class="text-pretty text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">
+					Kvalitet i kvar sekk
 				</h2>
 				<p class="mt-4 text-lg leading-8 text-stone-600">
-					Vår blandingsved består av de beste tresortene fra lokale skoger. Pakket i 1000L sekker på
-					europall for enkel håndtering.
+					Blandingsveden vår består av dei beste treslaga frå lokale skogar. Pakka i 1000L sekker på
+					europall for enkel handtering.
 				</p>
 			</div>
 
@@ -515,7 +515,7 @@
 						class="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-stone-900/80 via-stone-900/20 to-transparent p-8"
 					>
 						<h3 class="text-xl font-bold text-white">1000L Storsekk</h3>
-						<p class="mt-2 text-stone-200">Vårt mest populære valg. Pakket og klar for lagring.</p>
+						<p class="mt-2 text-stone-200">Vårt mest populære val. Pakka og klar for lagring.</p>
 					</div>
 				</div>
 				<div class="group relative overflow-hidden rounded-2xl bg-stone-100">
@@ -530,7 +530,7 @@
 					>
 						<h3 class="text-xl font-bold text-white">Leveringsklar</h3>
 						<p class="mt-2 text-stone-200">
-							Vi har god kapasitet og leverer raskt til hele Haugalandet.
+							Me har god kapasitet og leverer raskt til heile Haugalandet.
 						</p>
 					</div>
 				</div>
@@ -538,10 +538,10 @@
 
 			<div class="mt-24">
 				<div class="mx-auto max-w-2xl text-center">
-					<h3 class="text-2xl font-bold text-stone-900">Hva inneholder blandingen?</h3>
+					<h3 class="text-2xl font-bold text-stone-900">Kva inneheld blandinga?</h3>
 					<p class="mt-4 text-stone-600">
-						Vår blandingsved inneholder en god miks av forskjellige tresorter for optimal
-						forbrenning. Storsekker kan også inneholde rogn og selje.
+						Blandingsveden vår inneheld ein god miks av ulike treslag for optimal
+						forbrenning. Storsekker kan også innehalde rogn og selje.
 					</p>
 				</div>
 				<div class="mt-16 sm:mt-20 lg:mt-24">
@@ -586,6 +586,53 @@
 						{/each}
 					</div>
 				</div>
+
+				<!-- Tips & Origin Section -->
+				<div class="mt-24 grid grid-cols-1 gap-12 lg:grid-cols-2">
+					<div class="rounded-2xl bg-stone-50 p-8 ring-1 ring-stone-900/5 lg:p-10">
+						<div class="flex items-center gap-4">
+							<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-amber-900">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+								</svg>
+							</div>
+							<h3 class="text-xl font-bold text-stone-900">Lagra i 2 år</h3>
+						</div>
+						<p class="mt-6 text-stone-600 leading-relaxed">
+							Me har ved som har vore lagra tørt innandørs i over 2 år. Dette sikrar ein stabil og god tørrgrad. 
+							Veden er resultatet av rydding i skogen og langs gardsvegen for å gjera det fint og ryddig rundt oss.
+						</p>
+						<p class="mt-4 text-stone-600 leading-relaxed">
+							<strong class="text-stone-900">Visste du?</strong> All ved har om lag same brennverdi rekna i tørrstoff pr. kg. Granveden er noko lettare, og har difor litt større volum pr. kg enn tyngre treslag som bjørk.
+						</p>
+					</div>
+
+					<div class="rounded-2xl bg-amber-50 p-8 ring-1 ring-amber-900/5 lg:p-10">
+						<div class="flex items-center gap-4">
+							<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-200 text-amber-900">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
+									<path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-3.333-2.328 3.75 3.75 0 003.11 6.249z" />
+								</svg>
+							</div>
+							<h3 class="text-xl font-bold text-stone-900">Tips for betre fyring</h3>
+						</div>
+						<ul class="mt-6 space-y-4">
+							<li class="flex gap-3 text-stone-600">
+								<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-200 text-xs font-bold text-amber-900">1</span>
+								<span>Syt for god trekk for å få komplett forbrenning og minimalt med aske.</span>
+							</li>
+							<li class="flex gap-3 text-stone-600">
+								<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-200 text-xs font-bold text-amber-900">2</span>
+								<span>Reguler varmen med <strong class="text-stone-900">mengda ved</strong> meir enn med trekken.</span>
+							</li>
+							<li class="flex gap-3 text-stone-600">
+								<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-200 text-xs font-bold text-amber-900">3</span>
+								<span>Godt oppkløyvd ved gjev ein reinare og betre forbrenning i omnen din.</span>
+							</li>
+						</ul>
+					</div>
+				</div>
 			</div>
 		</div>
 	</section>
@@ -599,7 +646,7 @@
 					<div>
 						<h2 class="text-3xl font-bold tracking-tight text-stone-900">Kontakt oss</h2>
 						<p class="mt-4 text-stone-600">
-							Lurer du på noe om levering, vedkvalitet eller ønsker du å bestille større mengder? Ta
+							Lurer du på noko om levering, vedkvalitet eller ønsker du å bestille større mengder? Ta
 							gjerne kontakt med oss.
 						</p>
 
@@ -661,7 +708,7 @@
 					>
 						<h3 class="font-bold text-stone-900">Lokasjon</h3>
 						<p class="mt-2 text-sm text-stone-600">
-							Vi holder til i Skjold i Vindafjord. Ved kan hentes på vår gård etter avtale.
+							Me held til i Skjold i Vindafjord. Ved kan hentast på garden vår etter avtale.
 						</p>
 						<div
 							class="mt-4 overflow-hidden rounded-lg bg-stone-200 shadow-inner ring-1 ring-stone-900/10"
@@ -677,9 +724,9 @@
 	<!-- CALL TO ACTION (Footer-like) -->
 	<section class="bg-orange-900 py-16 text-center text-white">
 		<div class="container mx-auto px-4">
-			<h2 class="text-3xl font-bold tracking-tight text-pretty sm:text-4xl">Klar for vinteren?</h2>
+			<h2 class="text-pretty text-3xl font-bold tracking-tight sm:text-4xl">Klar for vinteren?</h2>
 			<p class="mx-auto mt-6 max-w-xl text-lg text-orange-100">
-				Sikre deg tørr og fin ved i dag. Vi leverer raskt og effektivt.
+				Sikre deg tørr og fin ved i dag. Me leverer raskt og effektivt.
 			</p>
 			<div class="mt-10 flex items-center justify-center gap-x-6">
 				<a

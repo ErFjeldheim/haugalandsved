@@ -2,7 +2,7 @@
 </script>
 
 <svelte:head>
-	<title>Takk for din bestilling! - Haugalandsved</title>
+	<title>Takk for bestillinga di! - Haugalandsved</title>
 </svelte:head>
 
 <div class="flex min-h-screen items-center justify-center bg-brand-background px-4 py-20">
@@ -17,7 +17,7 @@
 
 		<h1 class="mb-4 text-3xl font-black text-brand-text md:text-4xl">Takk for handelen!</h1>
 		<p class="mb-8 text-lg leading-relaxed text-brand-text-light">
-			Din bestilling er nå bekreftet. En ordrebekreftelse har blitt sendt til din e-postadresse.
+			Bestillinga di er no stadfest. Ei ordrestadfesting er sendt til e-postadressa di.
 		</p>
 
 		<div class="space-y-4">
@@ -25,7 +25,7 @@
 				href="/"
 				class="block w-full rounded-xl bg-brand-primary px-6 py-4 text-center text-sm font-bold text-white shadow-lg transition hover:bg-brand-primary-hover"
 			>
-				Tilbake til forsiden
+				Tilbake til forsida
 			</a>
 			<p class="text-xs text-brand-text-lighter">
 				Har du spørsmål? Kontakt oss på <a href="mailto:norleifj@online.no" class="underline"

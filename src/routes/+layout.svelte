@@ -184,7 +184,7 @@
 			</div>
 
 			<nav class="flex flex-wrap justify-center gap-6 text-sm font-medium text-stone-600">
-				<a href="/salgsvilkar" class="transition hover:text-amber-700">Salgsvilkår</a>
+				<a href="/salgsvilkar" class="transition hover:text-amber-700">Salsvilkår</a>
 				<a href="/personvern" class="transition hover:text-amber-700">Personvern</a>
 				<a href="/#om-veden" class="transition hover:text-amber-700">Om veden</a>
 			</nav>
@@ -197,7 +197,7 @@
 						rel="noopener noreferrer"
 						class="transition-colors hover:text-stone-600"
 					>
-						Nettsiden er utviklet, driftet og vedlikeholdt av Fjelldata
+						Nettsida er utvikla, drifta og vedlikehalden av Fjelldata
 					</a>
 				</p>
 				<p>© {new Date().getFullYear()} Haugalandsved</p>

@@ -10,73 +10,73 @@
 			<section>
 				<h2 class="text-xl font-bold text-stone-900">1. Generelt</h2>
 				<p>
-					Denne personvernerklæringen beskriver hvordan Din Jakt AS (org. nr. 993278408) samler inn
-					og bruker personopplysninger. Vi er opptatt av å beskytte ditt personvern og behandler
-					data i samsvar med personopplysningsloven og GDPR.
+					Denne personvernerklæringa skildrar korleis Din Jakt AS (org. nr. 993278408) samlar inn
+					og brukar personopplysningar. Me er opptekne av å verna om personvernet ditt og behandlar
+					data i samsvar med personopplysningslova og GDPR.
 				</p>
 			</section>
 
 			<section>
-				<h2 class="text-xl font-bold text-stone-900">2. Behandlingsansvarlig og teknisk drift</h2>
+				<h2 class="text-xl font-bold text-stone-900">2. Behandlingsansvarleg og teknisk drift</h2>
 				<p>
-					<strong>Din Jakt AS</strong> er behandlingsansvarlig for personopplysningene som behandles i
-					forbindelse med bestillinger på denne nettsiden.
+					<strong>Din Jakt AS</strong> er behandlingsansvarleg for personopplysningane som blir behandla i
+					samband med bestillingar på denne nettsida.
 				</p>
 				<p>
-					<strong>Fjeldheim Services ENK (Fjelldata)</strong> er ansvarlig for teknisk drift av nettsiden
-					og databasen. De fungerer som databehandler og sørger for at dataene lagres trygt.
+					<strong>Fjeldheim Services ENK (Fjelldata)</strong> er ansvarleg for teknisk drift av nettsida
+					og databasen. Dei fungerer som databehandlar og sørger for at dataa blir lagra trygt.
 				</p>
 			</section>
 
 			<section>
-				<h2 class="text-xl font-bold text-stone-900">3. Hvilke opplysninger vi samler inn</h2>
-				<p>Når du handler eller registrerer deg hos oss, samler vi inn:</p>
+				<h2 class="text-xl font-bold text-stone-900">3. Kva opplysningar vi samlar inn</h2>
+				<p>Når du handlar eller registrerer deg hos oss, samlar vi inn:</p>
 				<ul class="list-disc space-y-2 pl-5">
-					<li>Navn</li>
+					<li>Namn</li>
 					<li>E-postadresse</li>
-					<li>Telefonnummer (valgfritt)</li>
+					<li>Telefonnummer (valfritt)</li>
 					<li>Leveringsadresse</li>
 					<li>Kjøpshistorikk</li>
 				</ul>
 			</section>
 
 			<section>
-				<h2 class="text-xl font-bold text-stone-900">4. Formål med behandlingen</h2>
-				<p>Vi bruker opplysningene dine til å:</p>
+				<h2 class="text-xl font-bold text-stone-900">4. Føremål med behandlinga</h2>
+				<p>Me brukar opplysningane dine til å:</p>
 				<ul class="list-disc space-y-2 pl-5">
-					<li>Gjennomføre og levere din bestilling.</li>
-					<li>Sende ordrebekreftelser og viktig informasjon om levering.</li>
-					<li>Oppfylle lovpålagte krav til bokføring og regnskap.</li>
+					<li>Gjennomføra og levera bestillinga di.</li>
+					<li>Senda ordrestadfestingar og viktig informasjon om levering.</li>
+					<li>Oppfylla lovpålagte krav til bokføring og rekneskap.</li>
 				</ul>
 			</section>
 
 			<section>
-				<h2 class="text-xl font-bold text-stone-900">5. Deling av opplysninger</h2>
+				<h2 class="text-xl font-bold text-stone-900">5. Deling av opplysningar</h2>
 				<p>
-					Vi deler kun dine opplysninger med tredjeparter som er nødvendige for å fullføre handelen:
+					Me deler berre opplysningane dine med tredjepartar som er nødvendige for å fullføra handelen:
 				</p>
 				<ul class="list-disc space-y-2 pl-5">
 					<li>
-						<strong>Stripe:</strong> Håndterer betalingstransaksjoner. Dine kortdetaljer lagres aldri
+						<strong>Stripe:</strong> Handterer betalingstransaksjonar. Kortdetaljane dine blir aldri lagra
 						hos oss.
 					</li>
-					<li><strong>Fjelldata:</strong> Drifter systemene hvor dataene lagres.</li>
+					<li><strong>Fjelldata:</strong> Drifter systema der dataa blir lagra.</li>
 				</ul>
 			</section>
 
 			<section>
-				<h2 class="text-xl font-bold text-stone-900">6. Dine rettigheter</h2>
+				<h2 class="text-xl font-bold text-stone-900">6. Dine rettar</h2>
 				<p>
-					Du har rett til innsyn i hvilke personopplysninger vi har lagret om deg. Du kan også kreve
-					retting eller sletting av mangelfulle eller unødvendige opplysninger, så fremt dette ikke
-					strider mot lovpålagte plikter (som bokføringsloven).
+					Du har rett til innsyn i kva personopplysningar vi har lagra om deg. Du kan også krevja
+					retting eller sletting av mangelfulle eller unødvendige opplysningar, så framt dette ikkje
+					strir mot lovpålagte plikter (som bokføringslova).
 				</p>
 			</section>
 
 			<section>
 				<h2 class="text-xl font-bold text-stone-900">7. Kontakt</h2>
 				<p>
-					Hvis du har spørsmål om personvern, kan du kontakte teknisk ansvarlig på
+					Om du har spørsmål om personvern, kan du kontakta teknisk ansvarleg på
 					erik@fjelldata.com.
 				</p>
 			</section>
@@ -84,7 +84,7 @@
 
 		<div class="mt-12 border-t border-stone-200 pt-8">
 			<a href="/" class="font-semibold text-amber-700 transition hover:text-amber-600"
-				>&larr; Tilbake til forsiden</a
+				>&larr; Tilbake til forsida</a
 			>
 		</div>
 	</div>

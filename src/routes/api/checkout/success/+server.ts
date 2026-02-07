@@ -8,7 +8,7 @@ export const GET = async ({ url }) => {
     const paymentIntentId = url.searchParams.get('payment_intent_id') || url.searchParams.get('payment_intent');
 
     if (!sessionId && !paymentIntentId) {
-        throw error(400, 'Mangler session_id eller payment_intent_id');
+        throw error(400, 'Manglar session_id eller payment_intent_id');
     }
 
     try {
@@ -104,10 +104,10 @@ export const GET = async ({ url }) => {
             throw redirect(303, '/checkout/success');
         }
 
-        throw error(400, 'Betalingen ble ikke fullført');
+        throw error(400, 'Betalinga vart ikkje fullført');
     } catch (err: any) {
         if (err.status === 303) throw err;
         console.error('Success handler error:', err);
-        throw error(500, 'Kunne ikke bekrefte ordren');
+        throw error(500, 'Kunne ikkje stadfesta ordren');
     }
 };

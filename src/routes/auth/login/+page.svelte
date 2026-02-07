@@ -46,11 +46,11 @@
 					d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
 				/>
 			</svg>
-			Tilbake til forsiden
+			Tilbake til forsida
 		</a>
 
 		<div class="rounded-2xl bg-white p-8 shadow-xl ring-1 ring-stone-900/5">
-			<h1 class="mb-6 text-3xl font-bold text-stone-900">Velkommen tilbake</h1>
+			<h1 class="mb-6 text-3xl font-bold text-stone-900">Velkomen tilbake</h1>
 
 			{#if error}
 				<div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-700">
@@ -80,7 +80,7 @@
 					<div class="flex items-center justify-between">
 						<label for="password" class="block text-sm font-medium text-stone-700">Passord</label>
 						<a href="/auth/forgot-password" class="text-xs text-amber-700 hover:text-amber-600"
-							>Glemt passord?</a
+							>Gløymt passord?</a
 						>
 					</div>
 					<input
@@ -97,14 +97,14 @@
 					disabled={loading}
 					class="w-full cursor-pointer rounded-full bg-amber-700 py-3 text-sm font-semibold text-white transition hover:bg-amber-600 focus:ring-2 focus:ring-amber-500 focus:outline-none disabled:opacity-50"
 				>
-					{loading ? 'Logger inn...' : 'Logg inn'}
+					{loading ? 'Loggar inn...' : 'Logg inn'}
 				</button>
 			</form>
 
 			<div class="mt-6 text-center text-sm text-stone-500">
-				Har du ikke en konto?
+				Har du ikkje ein konto?
 				<a href="/auth/register" class="font-medium text-amber-700 hover:text-amber-600"
-					>Lag en bruker her</a
+					>Lag ein brukar her</a
 				>
 			</div>
 		</div>

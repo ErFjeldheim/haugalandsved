@@ -22,24 +22,24 @@ export async function sendOrderConfirmation(to: string, orderDetails: {
     const html = `
         <div style="font-family: sans-serif; color: #1c1917; max-width: 600px; margin: 0 auto; border: 1px solid #e7e5e4; border-radius: 12px; overflow: hidden;">
             <div style="background-color: #1c1917; padding: 32px; text-align: center;">
-                <h1 style="color: #fef3c7; margin: 0; font-size: 24px;">Ordrebekreftelse</h1>
+                <h1 style="color: #fef3c7; margin: 0; font-size: 24px;">Ordrestadfesting</h1>
             </div>
             <div style="padding: 32px; background-color: #ffffff;">
-                <p style="font-size: 16px; line-height: 1.5;">Takk for din bestilling hos Haugalandsved! Vi har mottatt din betaling og ordren er nå under behandling.</p>
+                <p style="font-size: 16px; line-height: 1.5;">Takk for bestillinga di hjå Haugalandsved! Me har motteke betalinga di og ordren er no til behandling.</p>
                 
                 <div style="margin: 32px 0; padding: 24px; background-color: #f5f5f4; border-radius: 8px;">
-                    <h2 style="font-size: 18px; margin-top: 0;">Ordredetaljer</h2>
+                    <h2 style="font-size: 18px; margin-top: 0;">Ordredetaljar</h2>
                     <p style="margin: 8px 0;"><strong>Ordrenummer:</strong> ${id}</p>
                     <p style="margin: 8px 0;"><strong>Produkt:</strong> Blandingsved, 1000L storsekk</p>
-                    <p style="margin: 8px 0;"><strong>Antall:</strong> ${quantity} stk.</p>
-                    <p style="margin: 8px 0;"><strong>Fraktmetode:</strong> ${deliveryMethod === 'delivery' ? 'Levering hjem' : 'Hent selv'}</p>
+                    <p style="margin: 8px 0;"><strong>Tal på:</strong> ${quantity} stk.</p>
+                    <p style="margin: 8px 0;"><strong>Fraktmåte:</strong> ${deliveryMethod === 'delivery' ? 'Heimlevering' : 'Hent sjølv'}</p>
                     <p style="margin: 16px 0; font-size: 20px; color: #b45309;"><strong>Totalpris: ${totalPrice.toLocaleString('no-NO')} kr</strong></p>
                 </div>
 
-                <p style="font-size: 14px; color: #57534e;">Vi tar kontakt med deg for å avtale nærmere tidspunkt for ${deliveryMethod === 'delivery' ? 'levering' : 'henting'}.</p>
+                <p style="font-size: 14px; color: #57534e;">Me tek kontakt med deg for å avtale tidspunkt for ${deliveryMethod === 'delivery' ? 'levering' : 'henting'}.</p>
                 
                 <div style="margin-top: 32px; text-align: center;">
-                    <a href="https://haugalandsved.no/profile/orders" style="background-color: #1c1917; color: #ffffff; padding: 12px 24px; border-radius: 9999px; text-decoration: none; font-weight: bold; font-size: 14px;">Se min ordre</a>
+                    <a href="https://haugalandsved.no/profile/orders" style="background-color: #1c1917; color: #ffffff; padding: 12px 24px; border-radius: 9999px; text-decoration: none; font-weight: bold; font-size: 14px;">Sjå ordren min</a>
                 </div>
             </div>
             <div style="padding: 24px; background-color: #f9fafb; text-align: center; border-top: 1px solid #e5e7eb;">
@@ -51,7 +51,7 @@ export async function sendOrderConfirmation(to: string, orderDetails: {
     await transporter.sendMail({
         from: `"Haugalandsved" <${env.SMTP_FROM}>`,
         to,
-        subject: `Ordrebekreftelse - ${id}`,
+        subject: `Ordrestadfesting - ${id}`,
         html,
     });
 }
@@ -68,21 +68,21 @@ export async function sendAdminNotification(orderDetails: {
     const html = `
         <div style="font-family: sans-serif; color: #1c1917; max-width: 600px; margin: 0 auto; border: 1px solid #e7e5e4; border-radius: 12px; overflow: hidden;">
             <div style="background-color: #b45309; padding: 24px; text-align: center;">
-                <h1 style="color: #ffffff; margin: 0; font-size: 20px;">Ny bestilling mottatt!</h1>
+                <h1 style="color: #ffffff; margin: 0; font-size: 20px;">Ny bestilling motteken!</h1>
             </div>
             <div style="padding: 32px; background-color: #ffffff;">
-                <p style="font-size: 16px;">Det har kommet inn en ny bestilling på haugalandsved.no.</p>
+                <p style="font-size: 16px;">Det har kome inn ei ny bestilling på haugalandsved.no.</p>
                 
                 <div style="margin: 24px 0; padding: 20px; background-color: #f5f5f4; border-radius: 8px; border-left: 4px solid #b45309;">
                     <p style="margin: 8px 0;"><strong>Ordrenummer:</strong> ${id}</p>
                     <p style="margin: 8px 0;"><strong>Kunde:</strong> ${customerEmail}</p>
-                    <p style="margin: 8px 0;"><strong>Antall:</strong> ${quantity} stk. 1000L storsekk</p>
-                    <p style="margin: 8px 0;"><strong>Frakt:</strong> ${deliveryMethod === 'delivery' ? 'Levering hjem' : 'Hent selv'}</p>
+                    <p style="margin: 8px 0;"><strong>Tal på:</strong> ${quantity} stk. 1000L storsekk</p>
+                    <p style="margin: 8px 0;"><strong>Frakt:</strong> ${deliveryMethod === 'delivery' ? 'Heimlevering' : 'Hent sjølv'}</p>
                     <p style="margin: 8px 0;"><strong>Totalpris:</strong> ${totalPrice.toLocaleString('no-NO')} kr</p>
                 </div>
 
                 <div style="margin-top: 32px; text-align: center;">
-                    <a href="https://db.haugalandsved.no/_/#/collections/orders/records/${id}" style="background-color: #1c1917; color: #ffffff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">Se ordren i PocketBase</a>
+                    <a href="https://db.haugalandsved.no/_/#/collections/orders/records/${id}" style="background-color: #1c1917; color: #ffffff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">Sjå ordren i PocketBase</a>
                 </div>
             </div>
         </div>
