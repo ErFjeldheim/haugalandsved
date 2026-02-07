@@ -388,7 +388,7 @@
 										<span class="flex flex-1">
 											<span class="flex flex-col">
 												<span class="block text-sm font-medium text-stone-900">Hent sjølv </span>
-												<span class="mt-1 flex items-center text-sm text-stone-500"
+												<span class="mt-1 flex items-center text-xs text-stone-500"
 													>Etter avtale</span
 												>
 												<span class="mt-6 text-xs font-medium text-stone-900"
