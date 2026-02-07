@@ -306,7 +306,7 @@
 										class="block w-20 rounded-md border-0 py-1.5 text-center text-stone-900 shadow-sm ring-1 ring-stone-300 ring-inset placeholder:text-stone-400 focus:ring-2 focus:ring-brand-primary focus:ring-inset sm:text-sm sm:leading-6"
 									/>
 								</div>
-								<p class="mt-2 text-sm text-stone-500">
+								<p class="mt-2 text-sm text-stone-600">
 									Maks {Math.min(9, inventory.quantity)} sekker per bestilling.
 								</p>
 							</div>
@@ -333,8 +333,8 @@
 										<span class="flex flex-1">
 											<span class="flex flex-col">
 												<span class="block text-sm font-medium text-stone-900">Hent sjølv </span>
-												<span class="mt-1 flex items-center text-xs text-stone-500">Etter avtale</span>
-												<span class="mt-2 text-xs text-stone-500 opacity-0 select-none">Henting frå lager</span>
+												<span class="mt-1 flex items-center text-xs text-stone-600">Etter avtale</span>
+												<span class="mt-2 text-xs text-stone-600 opacity-0 select-none">Henting frå lager</span>
 												<span class="mt-4 text-sm font-bold text-stone-900">Fjellheimsvegen 66, 5574 Skjold</span>
 											</span>
 										</span>
@@ -373,10 +373,10 @@
 										<span class="flex flex-1">
 											<span class="flex flex-col">
 												<span class="block text-sm font-medium text-stone-900">Standard</span>
-												<span class="mt-1 flex items-center text-xs text-stone-500"
+												<span class="mt-1 flex items-center text-xs text-stone-600"
 													>Innan 14 dagar</span
 												>
-												<span class="mt-2 text-xs text-stone-500">Levering til sone Haugalandet</span>
+												<span class="mt-2 text-xs text-stone-600">Levering til sone Haugalandet</span>
 												<span class="mt-4 text-sm font-bold text-stone-900"
 													>300 kr per palle</span
 												>
@@ -411,10 +411,10 @@
 										<span class="flex flex-1">
 											<span class="flex flex-col">
 												<span class="block text-sm font-medium text-stone-900">Ekspress</span>
-												<span class="mt-1 flex items-center text-xs text-stone-500"
+												<span class="mt-1 flex items-center text-xs text-stone-600"
 													>Innan 48 timar</span
 												>
-												<span class="mt-2 text-xs text-stone-500">Levering til sone Haugalandet</span>
+												<span class="mt-2 text-xs text-stone-600">Levering til sone Haugalandet</span>
 												<span class="mt-4 text-sm font-bold text-stone-900"
 													>1000 kr per 3 paller</span
 												>
@@ -447,7 +447,7 @@
 								<div class="flex items-center justify-between">
 									<dt class="text-sm text-stone-600">
 										Ved ({count} x {PRICE_PER_SACK},-)
-										<span class="ml-1 text-xs text-stone-400 line-through">
+										<span class="ml-1 text-xs text-stone-500 line-through">
 											({count} x {BEFORE_PRICE},-)
 										</span>
 									</dt>
@@ -715,7 +715,7 @@
 									</svg>
 								</div>
 								<div>
-									<p class="text-xs font-semibold text-stone-500 uppercase">Telefon</p>
+									<p class="text-xs font-semibold text-stone-600 uppercase">Telefon</p>
 									<p class="text-stone-900">916 36 186</p>
 								</div>
 							</div>
@@ -740,7 +740,7 @@
 									</svg>
 								</div>
 								<div>
-									<p class="text-xs font-semibold text-stone-500 uppercase">E-post</p>
+									<p class="text-xs font-semibold text-stone-600 uppercase">E-post</p>
 									<p class="text-stone-900">norleifj@online.no</p>
 								</div>
 							</div>

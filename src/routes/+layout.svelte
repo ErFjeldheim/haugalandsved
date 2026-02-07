@@ -186,7 +186,7 @@
 		<div class="flex flex-col items-center justify-between gap-6 md:flex-row">
 			<div class="text-left">
 				<p class="text-sm font-bold text-stone-900">Din Jakt AS</p>
-				<p class="text-xs text-stone-500">Org. nr: 993278408</p>
+				<p class="text-xs text-stone-600">Org. nr: 993278408</p>
 			</div>
 
 			<nav class="flex flex-wrap justify-center gap-6 text-sm font-medium text-stone-600">
@@ -195,13 +195,13 @@
 				<a href="/#om-veden" class="transition hover:text-amber-700">Om veden</a>
 			</nav>
 
-			<div class="text-right text-xs text-stone-400">
+			<div class="text-right text-xs text-stone-600">
 				<p>
 					<a
 						href="https://fjelldata.com"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="transition-colors hover:text-stone-600"
+						class="transition-colors hover:text-stone-900"
 					>
 						Nettsida er utvikla, drifta og vedlikehalden av Fjelldata
 					</a>

@@ -36,7 +36,7 @@
   --color-brand-campaign-sub: var(--color-amber-700);
   --color-bg-main: var(--color-stone-50);
   --color-text-main: var(--color-stone-800);
-  --color-text-muted: var(--color-stone-500);
+  --color-text-muted: var(--color-stone-600);
 }
 
 :root {
