@@ -194,6 +194,45 @@
 		property="og:image"
 		content="https://haugalandsved.no/images/flere-paller-blandingsved.webp"
 	/>
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "LocalBusiness",
+			"name": "Haugalandsved",
+			"image": "https://haugalandsved.no/images/flere-paller-blandingsved.webp",
+			"@id": "https://haugalandsved.no",
+			"url": "https://haugalandsved.no",
+			"telephone": "+4791636186",
+			"address": {
+				"@type": "PostalAddress",
+				"streetAddress": "Fjellheimsvegen 66",
+				"addressLocality": "Skjold",
+				"postalCode": "5574",
+				"addressRegion": "Vindafjord",
+				"addressCountry": "NO"
+			},
+			"geo": {
+				"@type": "GeoCoordinates",
+				"latitude": 59.482409,
+				"longitude": 5.517026
+			},
+			"openingHoursSpecification": {
+				"@type": "OpeningHoursSpecification",
+				"dayOfWeek": [
+					"Monday",
+					"Tuesday",
+					"Wednesday",
+					"Thursday",
+					"Friday",
+					"Saturday",
+					"Sunday"
+				],
+				"opens": "00:00",
+				"closes": "23:59"
+			},
+			"sameAs": []
+		}
+	</script>
 </svelte:head>
 
 <div class="min-h-screen bg-stone-50 font-sans text-stone-800">
@@ -521,7 +560,7 @@
 				<div class="group relative overflow-hidden rounded-2xl bg-stone-100">
 					<img
 						src="/images/flere-paller-blandingsved.webp"
-						alt="Flere paller med ved"
+						alt="Fleire pallar med ved"
 						loading="lazy"
 						class="h-96 w-full object-cover transition duration-500 group-hover:scale-105"
 					/>
@@ -541,7 +580,7 @@
 					<h3 class="text-2xl font-bold text-stone-900">Kva inneheld blandinga?</h3>
 					<p class="mt-4 text-stone-600">
 						Blandingsveden vår inneheld ein god miks av ulike treslag for optimal
-						forbrenning. Storsekker kan også innehalde rogn og selje.
+						forbrenning. Storsekker kan også innehalda rogn og selje.
 					</p>
 				</div>
 				<div class="mt-16 sm:mt-20 lg:mt-24">

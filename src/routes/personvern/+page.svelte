@@ -1,5 +1,6 @@
 <svelte:head>
 	<title>Personvernerklæring - Haugalandsved</title>
+	<meta name="description" content="Informasjon om korleis me behandlar personopplysningane dine hjå Haugalandsved." />
 </svelte:head>
 
 <div class="min-h-screen bg-stone-50 py-16 lg:py-24">

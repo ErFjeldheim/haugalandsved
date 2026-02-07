@@ -1,5 +1,6 @@
 <svelte:head>
 	<title>Salsvilkår - Haugalandsved</title>
+	<meta name="description" content="Salsvilkår for kjøp av ved frå Haugalandsved." />
 </svelte:head>
 
 <div class="min-h-screen bg-stone-50 py-16 lg:py-24">
