@@ -478,14 +478,6 @@
 							</button>
 
 							<div class="mt-6">
-								<div class="relative mb-4">
-									<div class="absolute inset-0 flex items-center" aria-hidden="true">
-										<div class="w-full border-t border-stone-200"></div>
-									</div>
-									<div class="relative flex justify-center text-sm leading-6 font-medium">
-										<span class="bg-stone-50 px-4 text-stone-400">eller Hurtigbetaling</span>
-									</div>
-								</div>
 								<div id="express-checkout-element">
 									<!-- Stripe Express Checkout Element vil vises her -->
 								</div>
