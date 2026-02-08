@@ -442,11 +442,11 @@
 						class="flex flex-col justify-between border-t border-stone-200 bg-stone-50 p-8 lg:w-2/5 lg:border-t-0 lg:border-l lg:p-12"
 					>
 						<div>
-							<h2 class="text-lg font-medium text-stone-900">Oversyn</h2>
+							<h2 class="text-lg font-medium text-stone-900">Oversikt</h2>
 							<dl class="mt-6 space-y-4">
 								<div class="flex items-center justify-between">
 									<dt class="text-sm text-stone-600">
-										Ved ({count} x {PRICE_PER_SACK},-)
+										Storsekk ({count} x {PRICE_PER_SACK},-)
 										<span class="ml-1 text-xs text-stone-500 line-through">
 											({count} x {BEFORE_PRICE},-)
 										</span>
