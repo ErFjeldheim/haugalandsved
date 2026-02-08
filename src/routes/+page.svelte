@@ -90,10 +90,7 @@
 				'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 		}).addTo(map);
 
-		L.marker([59.482409, 5.517026])
-			.addTo(map)
-			.bindPopup('<b>Haugalandsved</b><br>Fjellheimsvegen 66')
-			.openPopup();
+		L.marker([59.482409, 5.517026]).addTo(map);
 
 		return map;
 	};
@@ -754,6 +751,31 @@
 						<p class="mt-2 text-sm text-stone-600">
 							Me held til i Skjold i Vindafjord. Ved kan hentast på garden vår etter avtale.
 						</p>
+						<p class="mt-4 text-sm font-bold text-stone-900">
+							Adresse: Fjellheimsvegen 66, 5574 Skjold
+						</p>
+						<a
+							href="https://maps.app.goo.gl/TEnXy82faxrr75Xi7"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-primary transition-colors hover:text-brand-primary-hover"
+						>
+							<span>Åpne i Google Maps</span>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="2"
+								stroke="currentColor"
+								class="h-4 w-4"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+								/>
+							</svg>
+						</a>
 						<div
 							class="mt-4 overflow-hidden rounded-lg bg-stone-200 shadow-inner ring-1 ring-stone-900/10"
 						>
