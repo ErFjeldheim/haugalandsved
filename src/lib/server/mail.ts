@@ -68,7 +68,7 @@ export async function sendAdminNotification(orderDetails: {
     const html = `
         <div style="font-family: sans-serif; color: #1c1917; max-width: 600px; margin: 0 auto; border: 1px solid #e7e5e4; border-radius: 12px; overflow: hidden;">
             <div style="background-color: #b45309; padding: 24px; text-align: center;">
-                <h1 style="color: #ffffff; margin: 0; font-size: 20px;">Ny bestilling motteken!</h1>
+                <h1 style="color: #ffffff; margin: 0; font-size: 20px;">Ny bestilling mottatt!</h1>
             </div>
             <div style="padding: 32px; background-color: #ffffff;">
                 <p style="font-size: 16px;">Det har kome inn ei ny bestilling på haugalandsved.no.</p>
