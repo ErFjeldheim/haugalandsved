@@ -1,32 +1,14 @@
 <script lang="ts">
-	import { pb, currentUser } from '$lib/pocketbase';
-	import { onMount } from 'svelte';
-	import { goto } from '$app/navigation';
+	let { data } = $props();
 
-	let orders = $state<any[]>([]);
-	let loading = $state(true);
-	let error = $state('');
-
-	onMount(async () => {
-		if (!$currentUser) {
-			goto('/auth/login');
-			return;
-		}
-
-		try {
-			const records = await pb.collection('orders').getFullList({
-				sort: '-created'
-			});
-			orders = records;
-		} catch (e: any) {
-			error = 'Kunne ikkje laste inn ordre.';
-		} finally {
-			loading = false;
-		}
-	});
+	let orders = $derived(data.orders ?? []);
+	let error = $derived(data.error ?? '');
 
 	function formatDate(dateStr: string) {
-		return new Date(dateStr).toLocaleDateString('no-NO', {
+		if (!dateStr) return 'Ukjent dato';
+		const date = new Date(dateStr);
+		if (isNaN(date.getTime())) return 'Ukjent dato';
+		return date.toLocaleDateString('nn-NO', {
 			year: 'numeric',
 			month: 'long',
 			day: 'numeric',
@@ -57,14 +39,7 @@
 	<div class="container mx-auto max-w-4xl">
 		<h1 class="mb-8 text-3xl font-bold text-stone-900">Mine ordre</h1>
 
-		{#if loading}
-			<div class="flex flex-col items-center justify-center py-20">
-				<div
-					class="h-8 w-8 animate-spin rounded-full border-4 border-brand-primary border-t-transparent"
-				></div>
-				<p class="mt-4 text-text-muted">Lastar inn bestillingane dine...</p>
-			</div>
-		{:else if error}
+		{#if error}
 			<div class="rounded-lg bg-red-50 p-6 text-center text-red-700 shadow-sm">
 				<p>{error}</p>
 				<button onclick={() => window.location.reload()} class="mt-4 font-medium underline"

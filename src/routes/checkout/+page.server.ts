@@ -1,9 +1,9 @@
 import type { Actions } from './$types';
 import { error, redirect } from '@sveltejs/kit';
 import { stripe } from '$lib/server/stripe';
-import { pb } from '$lib/pocketbase';
+import PocketBase from 'pocketbase';
+import { env as publicEnv } from '$env/dynamic/public';
 
-// SECURITY: Prisar MÅ vera server-side – klienten kan ikkje påverke dei
 const PRICE_PER_SACK = 1190;
 const STANDARD_DELIVERY_PRICE_PER_PALLET = 300;
 const EXPRESS_DELIVERY_PRICE_PER_3 = 1000;
@@ -24,7 +24,7 @@ function calculateTotal(quantity: number, deliveryMethod: DeliveryMethod) {
 }
 
 export const actions: Actions = {
-    default: async ({ request, url, cookies }) => {
+    default: async ({ request, url, locals }) => {
         const data = await request.formData();
         const quantity = Number(data.get('quantity'));
         const deliveryMethod = data.get('deliveryMethod') as string;
@@ -38,6 +38,7 @@ export const actions: Actions = {
             throw error(400, 'Ugyldig leveringsmetode');
         }
 
+        const pb = new PocketBase(publicEnv.PUBLIC_PB_URL);
         try {
             const inventory = await pb.collection('inventory').getOne('6svgilvrehzayhb');
             if (!inventory.isInStock || inventory.quantity_available < quantity) {
@@ -46,18 +47,12 @@ export const actions: Actions = {
         } catch (err: any) {
             if (err.status === 400) throw err;
             console.error('Kunne ikkje sjekke lagerbehaldning:', err);
+            throw error(503, 'Kunne ikkje stadfeste lagerstatus. Prøv igjen seinare.');
         }
 
         const { total: totalPrice } = calculateTotal(quantity, deliveryMethod as DeliveryMethod);
 
-        const pbAuthCookie = cookies.get('pb_auth');
-        let userId = '';
-        if (pbAuthCookie) {
-            try {
-                const parsed = JSON.parse(pbAuthCookie);
-                userId = parsed?.record?.id || parsed?.model?.id || '';
-            } catch { /* gjestekjøp */ }
-        }
+        const userId = locals.user?.id || '';
 
         let checkoutUrl: string;
 
