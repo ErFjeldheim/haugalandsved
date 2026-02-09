@@ -491,13 +491,11 @@
 								<p class="mb-4 text-center text-xs text-red-600">{orderError}</p>
 							{/if}
 
-							<form action="/checkout" method="POST" bind:this={checkoutForm} class="hidden">
-								<input type="hidden" name="quantity" value={count} />
-								<input type="hidden" name="deliveryMethod" value={deliveryMethod} />
-								<input type="hidden" name="totalPrice" value={totalCost} />
-								<input type="hidden" name="userId" value={$currentUser?.id} />
-								<input type="hidden" name="email" value={$currentUser?.email} />
-							</form>
+						<form action="/checkout" method="POST" bind:this={checkoutForm} class="hidden">
+							<input type="hidden" name="quantity" value={count} />
+							<input type="hidden" name="deliveryMethod" value={deliveryMethod} />
+							<input type="hidden" name="email" value={$currentUser?.email} />
+						</form>
 
 							<button
 								onclick={placeOrder}
