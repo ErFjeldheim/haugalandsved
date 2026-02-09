@@ -25,7 +25,7 @@
 	const STANDARD_DELIVERY_PRICE_PER_PALLET = 300;
 	const EXPRESS_DELIVERY_PRICE_PER_3 = 1000;
 
-	const CAMPAIGN_END = new Date('2025-02-28T23:59:59');
+	const CAMPAIGN_END = new Date('2026-02-28T23:59:59');
 	const CAMPAIGN_LABEL = 'SESONGSLUTT!';
 	let campaignActive = $derived(new Date() <= CAMPAIGN_END);
 	let campaignEndFormatted = $derived(
