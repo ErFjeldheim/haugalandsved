@@ -545,7 +545,7 @@
 								{:else if !inventory.isInStock}
 									Utselt
 								{:else}
-									Gå til betaling – {totalCost.toLocaleString()} kr
+									Gå til betaling
 								{/if}
 							</button>
 
