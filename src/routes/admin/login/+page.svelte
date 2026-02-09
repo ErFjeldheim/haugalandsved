@@ -12,7 +12,7 @@
 		error = '';
 
 		try {
-			await pb.admins.authWithPassword(email, password);
+			await pb.collection('_superusers').authWithPassword(email, password);
 			goto('/admin/dashboard');
 		} catch (e: any) {
 			error = 'Feil e-post eller passord (kun admin)';
@@ -35,7 +35,7 @@
 		</div>
 
 		{#if error}
-			<div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-700">
+			<div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-700" role="alert">
 				{error}
 			</div>
 		{/if}

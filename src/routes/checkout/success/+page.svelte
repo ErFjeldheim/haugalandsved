@@ -17,7 +17,7 @@
 
 		<h1 class="mb-4 text-3xl font-black text-stone-900 md:text-4xl">Takk for handelen!</h1>
 		<p class="mb-8 text-lg leading-relaxed text-stone-600">
-			Bestillinga di er no stadfest. Ei ordrestadfesting er sendt til e-postadressa di.
+			Bestillingen din er mottatt. Ein ordrebekreftelse er sendt til e-postadressen din.
 		</p>
 
 		<div class="space-y-4">

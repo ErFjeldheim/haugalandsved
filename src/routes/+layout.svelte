@@ -23,6 +23,12 @@
 </svelte:head>
 
 <header class="sticky top-0 z-50 w-full border-b border-stone-200 bg-white/80 backdrop-blur-md">
+	<a
+		href="#hovudinnhald"
+		class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-2 focus:z-[60] focus:rounded-md focus:bg-brand-primary focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
+	>
+		Hopp til hovudinnhald
+	</a>
 	<div class="container mx-auto flex h-16 items-center justify-between px-4">
 		<a href="/" class="group flex items-center gap-3">
 			<img
@@ -177,7 +183,7 @@
 	{/if}
 </header>
 
-<main>
+<main id="hovudinnhald">
 	{@render children()}
 </main>
 

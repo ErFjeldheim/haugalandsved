@@ -44,7 +44,6 @@
 		"vite": "^7.3.1"
 	},
 	"dependencies": {
-		"@stripe/stripe-js": "^8.7.0",
 		"@types/nodemailer": "^7.0.9",
 		"leaflet": "^1.9.4",
 		"nodemailer": "^8.0.0",

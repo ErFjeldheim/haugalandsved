@@ -194,6 +194,24 @@
 			"sameAs": []
 		}
 	</script>
+	{#if inventory.isInStock}
+		{@html `<script type="application/ld+json">${JSON.stringify({
+			"@context": "https://schema.org",
+			"@type": "Product",
+			"name": "Blandingsved, 1000L storsekk",
+			"description": "Kortreist blandingsved av furu, bjørk, gran, rogn og selje. Ferdig kappa og kløyvd i 1000L storsekk på europall.",
+			"image": "https://haugalandsved.no/images/enkelt-palle-blandingsved.webp",
+			"brand": { "@type": "Brand", "name": "Haugalandsved" },
+			"offers": {
+				"@type": "Offer",
+				"url": "https://haugalandsved.no/#kalkulator",
+				"priceCurrency": "NOK",
+				"price": PRICE_PER_SACK,
+				"availability": "https://schema.org/InStock",
+				"seller": { "@type": "Organization", "name": "Haugalandsved" }
+			}
+		})}</script>`}
+	{/if}
 </svelte:head>
 
 <div class="min-h-screen bg-stone-50 font-sans text-stone-800">
@@ -520,7 +538,7 @@
 
 						<div class="mt-8">
 							{#if orderError}
-								<p class="mb-4 text-center text-xs text-red-600">{orderError}</p>
+								<p class="mb-4 text-center text-xs text-red-600" role="alert" aria-live="assertive">{orderError}</p>
 							{/if}
 
 						<form action="/checkout" method="POST" bind:this={checkoutForm} class="hidden">

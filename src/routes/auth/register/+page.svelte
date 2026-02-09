@@ -67,7 +67,7 @@
 			<h1 class="mb-6 text-3xl font-bold text-stone-900">Lag brukar</h1>
 
 			{#if error}
-				<div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-700">
+				<div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-700" role="alert">
 					{error}
 				</div>
 			{/if}

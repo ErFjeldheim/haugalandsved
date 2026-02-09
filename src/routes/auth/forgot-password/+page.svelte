@@ -41,7 +41,7 @@
 			</p>
 
 			{#if error}
-				<div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-700">
+				<div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-700" role="alert">
 					{error}
 				</div>
 			{/if}

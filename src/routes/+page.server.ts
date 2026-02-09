@@ -14,8 +14,8 @@ export const load = async () => {
         console.error('Kunne ikkje laste lagerstatus:', e);
         return {
             inventory: {
-                quantity: 40,
-                isInStock: true
+                quantity: 0,
+                isInStock: false
             }
         };
     }
