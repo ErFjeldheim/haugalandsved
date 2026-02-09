@@ -2,16 +2,16 @@ import { error, redirect } from '@sveltejs/kit';
 import { stripe } from '$lib/server/stripe';
 import PocketBase from 'pocketbase';
 import { env } from '$env/dynamic/private';
+import { env as publicEnv } from '$env/dynamic/public';
 
 const INVENTORY_ID = '6svgilvrehzayhb';
-const PB_URL = 'https://db.haugalandsved.no';
 
 /**
  * Autentiser ein server-side PocketBase-instans som superbrukar.
  * PB SDK 0.23+ brukar `_superusers`-samlinga i staden for utdatert `pb.admins`.
  */
 async function getAdminPb(): Promise<PocketBase> {
-    const pb = new PocketBase(PB_URL);
+    const pb = new PocketBase(publicEnv.PUBLIC_PB_URL);
     if (!env.PB_ADMIN_EMAIL || !env.PB_ADMIN_PASSWORD) {
         throw new Error('PB_ADMIN_EMAIL eller PB_ADMIN_PASSWORD manglar i miljøvariablar');
     }
