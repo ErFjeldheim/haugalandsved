@@ -73,12 +73,12 @@
 
 		{#if loading}
 			<div class="flex justify-center p-12">
-				<span class="loading-spinner text-stone-400">Laster...</span>
+				<span class="loading-spinner text-stone-500">Laster...</span>
 			</div>
 		{:else if inventoryItems.length === 0}
 			<div class="rounded-lg bg-white p-6 text-center shadow-sm ring-1 ring-stone-900/5">
 				<p class="text-stone-500">Ingen varelager-poster funnet.</p>
-				<p class="mt-2 text-xs text-stone-400">
+				<p class="mt-2 text-xs text-stone-500">
 					Opprett en post i "inventory"-samlingen i PocketBase først.
 				</p>
 			</div>
@@ -91,7 +91,7 @@
 						<div>
 							<h3 class="text-lg font-medium text-stone-900">Blandingsved (1000L)</h3>
 							<p class="text-sm text-stone-500">ID: {item.id}</p>
-							<p class="mt-1 text-xs text-stone-400">
+							<p class="mt-1 text-xs text-stone-500">
 								Sist oppdatert: {new Date(item.updated).toLocaleString()}
 							</p>
 						</div>

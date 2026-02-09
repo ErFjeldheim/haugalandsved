@@ -27,7 +27,7 @@
 			>
 				Tilbake til forsida
 			</a>
-			<p class="text-xs text-stone-400">
+			<p class="text-xs text-stone-500">
 				Har du spørsmål? Kontakt oss på <a href="mailto:norleifj@online.no" class="underline"
 					>norleifj@online.no</a
 				>

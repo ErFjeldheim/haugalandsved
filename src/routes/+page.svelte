@@ -25,6 +25,13 @@
 	const STANDARD_DELIVERY_PRICE_PER_PALLET = 300;
 	const EXPRESS_DELIVERY_PRICE_PER_3 = 1000;
 
+	const CAMPAIGN_END = new Date('2025-02-28T23:59:59');
+	const CAMPAIGN_LABEL = 'SESONGSLUTT!';
+	let campaignActive = $derived(new Date() <= CAMPAIGN_END);
+	let campaignEndFormatted = $derived(
+		CAMPAIGN_END.toLocaleDateString('nn-NO', { day: 'numeric', month: 'short' })
+	);
+
 	let woodCost = $derived(count * PRICE_PER_SACK);
 	let shippingCost = $derived(
 		deliveryMethod === 'pickup'
@@ -232,24 +239,37 @@
 				<div class="p-8 lg:w-3/5 lg:p-12">
 					<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
 						<h2 class="text-2xl font-bold text-stone-900">Rekne ut pris</h2>
-						<div class="flex flex-col items-end gap-1">
-							<span
-								class="inline-flex items-center rounded-full bg-brand-campaign-bg px-3 py-1 text-sm font-bold text-brand-campaign-text shadow-sm"
-							>
-								🔥 SESONGSLUTT!
-							</span>
-							<span class="text-[10px] font-bold text-brand-campaign-sub uppercase tracking-widest">
-								Gjeld t.o.m. 28. feb
-							</span>
-						</div>
+						{#if campaignActive}
+							<div class="flex flex-col items-end gap-1">
+								<span
+									class="inline-flex items-center rounded-full bg-brand-campaign-bg px-3 py-1 text-sm font-bold text-brand-campaign-text shadow-sm"
+								>
+									{CAMPAIGN_LABEL}
+								</span>
+								<span class="text-[10px] font-bold text-brand-campaign-sub uppercase tracking-widest">
+									Gjeld t.o.m. {campaignEndFormatted}
+								</span>
+							</div>
+						{/if}
 					</div>
 
-					<div class="mb-8 rounded-lg bg-stone-50 p-4 ring-1 ring-stone-900/5">
-						<p class="text-sm font-medium text-stone-600">
-							Berre <span class="text-lg font-bold text-stone-900">{inventory.quantity}</span> storsekker
-							att på lager.
-						</p>
-					</div>
+					{#if inventory.quantity <= 5}
+						<div class="mb-8 rounded-lg bg-red-50 p-4 ring-1 ring-red-200">
+							<p class="flex items-center gap-2 text-sm font-medium text-red-800">
+								<span class="relative flex h-2.5 w-2.5 shrink-0">
+									<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75"></span>
+									<span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-600"></span>
+								</span>
+								Berre <span class="text-lg font-bold">{inventory.quantity}</span> storsekker att på lager – snart utselt!
+							</p>
+						</div>
+					{:else}
+						<div class="mb-8 rounded-lg bg-stone-50 p-4 ring-1 ring-stone-900/5">
+							<p class="text-sm font-medium text-stone-600">
+								<span class="text-lg font-bold text-stone-900">{inventory.quantity}</span> storsekker på lager.
+							</p>
+						</div>
+					{/if}
 
 					{#if !inventory.isInStock}
 						<div class="rounded-xl border border-red-100 bg-red-50 p-6 text-center">
@@ -305,6 +325,7 @@
 								</div>
 								<p class="mt-2 text-sm text-stone-600">
 									Maks {Math.min(9, inventory.quantity)} sekker per bestilling.
+									<a href="#kontakt" class="font-medium text-brand-primary hover:text-brand-primary-hover">Kontakt oss</a> for større mengder.
 								</p>
 							</div>
 
@@ -336,6 +357,7 @@
 											</span>
 										</span>
 										<span
+											aria-hidden="true"
 											class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-stone-300"
 											class:border-transparent={deliveryMethod === 'pickup'}
 											class:bg-brand-primary={deliveryMethod === 'pickup'}
@@ -380,6 +402,7 @@
 											</span>
 										</span>
 										<span
+											aria-hidden="true"
 											class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-stone-300"
 											class:border-transparent={deliveryMethod === 'standard'}
 											class:bg-brand-primary={deliveryMethod === 'standard'}
@@ -418,6 +441,7 @@
 											</span>
 										</span>
 										<span
+											aria-hidden="true"
 											class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-stone-300"
 											class:border-transparent={deliveryMethod === 'express'}
 											class:bg-brand-primary={deliveryMethod === 'express'}
@@ -444,9 +468,11 @@
 								<div class="flex items-center justify-between">
 									<dt class="text-sm text-stone-600">
 										Storsekk ({count} x {PRICE_PER_SACK},-)
-										<span class="ml-1 text-xs text-stone-500 line-through">
-											({count} x {BEFORE_PRICE},-)
-										</span>
+										{#if campaignActive}
+											<span class="ml-1 text-xs text-stone-500 line-through">
+												({count} x {BEFORE_PRICE},-)
+											</span>
+										{/if}
 									</dt>
 									<dd class="text-sm font-medium text-stone-900">{woodCost.toLocaleString()} kr</dd>
 								</div>
@@ -469,7 +495,7 @@
 								{#if deliveryMethod === 'express' && !trailerSpotInfo.isFull}
 									<div class="mt-2 rounded-lg bg-orange-50 p-3 ring-1 ring-orange-200">
 										<p class="text-xs font-medium text-orange-800">
-											💡 Me har plass til <span class="font-bold">{trailerSpotInfo.remainingSpots}</span> sekk(er) til på hengaren for samme fraktpris!
+											Me har plass til <span class="font-bold">{trailerSpotInfo.remainingSpots}</span> sekk(er) til på hengaren for same fraktpris!
 										</p>
 										<button
 											onclick={() => (count = count + trailerSpotInfo.remainingSpots)}
@@ -477,6 +503,12 @@
 										>
 											Fyll opp hengaren
 										</button>
+									</div>
+								{:else if deliveryMethod === 'standard' && count >= 3}
+									<div class="mt-2 rounded-lg bg-amber-50 p-3 ring-1 ring-amber-200">
+										<p class="text-xs font-medium text-amber-800">
+											Treng du veden raskt? Med ekspress-levering får du den innan 48 timar.
+										</p>
 									</div>
 								{/if}
 								<div class="flex items-center justify-between border-t border-stone-200 pt-4">
@@ -500,16 +532,43 @@
 							<button
 								onclick={placeOrder}
 								disabled={orderLoading || !inventory.isInStock}
-								class="w-full cursor-pointer rounded-md bg-stone-900 px-3.5 py-3.5 text-center text-sm font-semibold text-white shadow-sm transition-colors hover:bg-stone-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-900 disabled:opacity-50"
+								class="w-full cursor-pointer rounded-xl bg-brand-primary px-3.5 py-4 text-center text-base font-bold text-white shadow-lg transition-all hover:bg-brand-primary-hover hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary disabled:opacity-50"
 							>
 								{#if orderLoading}
-									Handsamar...
+									<span class="inline-flex items-center gap-2">
+										<svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+											<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+											<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+										</svg>
+										Handsamar...
+									</span>
 								{:else if !inventory.isInStock}
 									Utselt
 								{:else}
-									Betaling
+									Gå til betaling – {totalCost.toLocaleString()} kr
 								{/if}
 							</button>
+
+							<div class="mt-4 space-y-2">
+								<div class="flex items-center justify-center gap-2 text-xs text-stone-500">
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4 text-green-600">
+										<path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+									</svg>
+									<span>Trygg betaling med Stripe</span>
+								</div>
+								<div class="flex items-center justify-center gap-2 text-xs text-stone-500">
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4 text-green-600">
+										<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+									</svg>
+									<span>14 dagars angrerett</span>
+								</div>
+								<div class="flex items-center justify-center gap-2 text-xs text-stone-500">
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4 text-green-600">
+										<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0H6.375c-.621 0-1.125-.504-1.125-1.125V14.25m0 0h11.25m0 0V11.625m0 2.625h2.25m0 0V8.25a1.125 1.125 0 00-1.125-1.125h-1.5m2.625 7.875h.375a.375.375 0 00.375-.375V14.25m0 0h-2.625" />
+									</svg>
+									<span>Lokal levering på Haugalandet</span>
+								</div>
+							</div>
 
 
 						</div>
@@ -777,7 +836,7 @@
 						<div
 							class="mt-4 overflow-hidden rounded-lg bg-stone-200 shadow-inner ring-1 ring-stone-900/10"
 						>
-							<div bind:this={mapElement} class="z-0 aspect-video w-full"></div>
+							<div bind:this={mapElement} role="img" aria-label="Kart som viser plasseringa til Haugalandsved i Skjold, Vindafjord" class="z-0 aspect-video w-full"></div>
 						</div>
 					</div>
 				</div>
