@@ -4,19 +4,6 @@
 	let orders = $derived(data.orders ?? []);
 	let error = $derived(data.error ?? '');
 
-	function formatDate(dateStr: string) {
-		if (!dateStr) return 'Ukjent dato';
-		const date = new Date(dateStr);
-		if (isNaN(date.getTime())) return 'Ukjent dato';
-		return date.toLocaleDateString('nn-NO', {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric',
-			hour: '2-digit',
-			minute: '2-digit'
-		});
-	}
-
 	function getStatusColor(status: string) {
 		switch (status.toLowerCase()) {
 			case 'levert':
@@ -89,7 +76,7 @@
 							</div>
 							<div>
 								<p class="text-xs font-semibold tracking-wider text-stone-500 uppercase">Dato</p>
-								<p class="mt-1 text-sm font-medium text-stone-900">{formatDate(order.created)}</p>
+								<p class="mt-1 text-sm font-medium text-stone-900">{order.formattedDate}</p>
 							</div>
 							<div>
 								<span
@@ -117,7 +104,7 @@
 									Totalpris
 								</p>
 								<p class="mt-1 text-2xl font-black text-brand-primary">
-									{order.total_price.toLocaleString()} kr
+									{order.formattedPrice}
 								</p>
 							</div>
 						</div>
