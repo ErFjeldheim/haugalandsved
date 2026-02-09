@@ -3,7 +3,23 @@ import { stripe } from '$lib/server/stripe';
 import PocketBase from 'pocketbase';
 import { env } from '$env/dynamic/private';
 
-export const GET = async ({ url }) => {
+const INVENTORY_ID = '6svgilvrehzayhb';
+const PB_URL = 'https://db.haugalandsved.no';
+
+/**
+ * Autentiser ein server-side PocketBase-instans som superbrukar.
+ * PB SDK 0.23+ brukar `_superusers`-samlinga i staden for utdatert `pb.admins`.
+ */
+async function getAdminPb(): Promise<PocketBase> {
+    const pb = new PocketBase(PB_URL);
+    if (!env.PB_ADMIN_EMAIL || !env.PB_ADMIN_PASSWORD) {
+        throw new Error('PB_ADMIN_EMAIL eller PB_ADMIN_PASSWORD manglar i miljøvariablar');
+    }
+    await pb.collection('_superusers').authWithPassword(env.PB_ADMIN_EMAIL, env.PB_ADMIN_PASSWORD);
+    return pb;
+}
+
+export const GET = async ({ url }: { url: URL }) => {
     const sessionId = url.searchParams.get('session_id');
     const paymentIntentId = url.searchParams.get('payment_intent_id') || url.searchParams.get('payment_intent');
 
@@ -12,101 +28,97 @@ export const GET = async ({ url }) => {
     }
 
     try {
-        let metadata: any;
+        let metadata: Record<string, string>;
         let customerEmail: string | undefined | null;
         let paymentStatus: string;
 
         if (sessionId) {
             const session = await stripe.checkout.sessions.retrieve(sessionId);
-            metadata = session.metadata;
+            metadata = (session.metadata ?? {}) as Record<string, string>;
             customerEmail = session.customer_details?.email;
             paymentStatus = session.payment_status === 'paid' ? 'paid' : 'failed';
         } else {
             const intent = await stripe.paymentIntents.retrieve(paymentIntentId!);
-            metadata = intent.metadata;
-            customerEmail = intent.receipt_email || metadata.customer_email; // PaymentIntents might not have receipt_email yet
+            metadata = (intent.metadata ?? {}) as Record<string, string>;
+            customerEmail = intent.receipt_email || metadata.customer_email;
             paymentStatus = intent.status === 'succeeded' ? 'paid' : 'failed';
 
-            // For PaymentIntents via Express Checkout, we might need to get the email from the charge
+            // Express Checkout fallback: email may only exist on the charge object
             if (!customerEmail && intent.latest_charge) {
                 const charge = await stripe.charges.retrieve(intent.latest_charge as string);
                 customerEmail = charge.billing_details.email;
             }
         }
 
-        if (paymentStatus === 'paid') {
-            const { userId, quantity, deliveryMethod, totalPrice } = metadata || {};
-
-            // Vi bruker en ny PB-instans for server-side operasjoner
-            const pb = new PocketBase('https://db.haugalandsved.no');
-
-            // Opprett ordren i PocketBase
-            const order = await pb.collection('orders').create({
-                user: userId || null,
-                guest_email: !userId ? customerEmail : null,
-                quantity: Number(quantity),
-                delivery_method: deliveryMethod,
-                total_price: Number(totalPrice),
-                status: 'Betalt'
-            });
-
-            // Oppdater lagerbeholdning
-            try {
-                const inventoryId = '6svgilvrehzayhb';
-
-                // Vi må logge inn som admin for å kunne oppdatere lageret fra serveren
-                if (env.PB_ADMIN_EMAIL && env.PB_ADMIN_PASSWORD) {
-                    await pb.admins.authWithPassword(env.PB_ADMIN_EMAIL, env.PB_ADMIN_PASSWORD);
-
-                    const inventory = await pb.collection('inventory').getOne(inventoryId);
-                    const newQuantity = Math.max(0, inventory.quantity_available - Number(quantity));
-
-                    console.log(`Oppdaterer lager: ${inventory.quantity_available} -> ${newQuantity}`);
-
-                    await pb.collection('inventory').update(inventoryId, {
-                        quantity_available: newQuantity
-                    });
-                } else {
-                    console.error('PB_ADMIN_EMAIL eller PB_ADMIN_PASSWORD mangler i .env');
-                }
-            } catch (invErr) {
-                console.error('Kunne ikke oppdatere lagerbeholdning:', invErr);
-            }
-
-            // Send ordrebekreftelse på e-post
-            try {
-                if (customerEmail) {
-                    const { sendOrderConfirmation, sendAdminNotification } = await import('$lib/server/mail');
-
-                    // Send til kunde
-                    await sendOrderConfirmation(customerEmail, {
-                        id: order.id,
-                        quantity: Number(quantity),
-                        deliveryMethod: String(deliveryMethod),
-                        totalPrice: Number(totalPrice)
-                    });
-
-                    // Send til produkteierne (Norleif og Erik)
-                    await sendAdminNotification({
-                        id: order.id,
-                        quantity: Number(quantity),
-                        deliveryMethod: String(deliveryMethod),
-                        totalPrice: Number(totalPrice),
-                        customerEmail: customerEmail
-                    });
-                } else {
-                    console.warn('Ingen e-postadresse funnet i Stripe for ordre:', order.id);
-                }
-            } catch (mailErr) {
-                console.error('Kunne ikke sende ordrebekreftelse:', mailErr);
-            }
-
-            throw redirect(303, '/checkout/success');
+        if (paymentStatus !== 'paid') {
+            throw error(400, 'Betalinga vart ikkje fullført');
         }
 
-        throw error(400, 'Betalinga vart ikkje fullført');
-    } catch (err: any) {
-        if (err.status === 303) throw err;
+        const { userId, quantity, deliveryMethod, totalPrice } = metadata;
+
+        const pb = await getAdminPb();
+
+        const order = await pb.collection('orders').create({
+            user: userId || null,
+            guest_email: !userId ? customerEmail : null,
+            quantity: Number(quantity),
+            delivery_method: deliveryMethod,
+            total_price: Number(totalPrice),
+            status: 'Betalt'
+        });
+
+        // Retry-loop: les → skriv mønster er sårbart for samtidige kjøp.
+        // Ved feil les vi fersk data og prøver på nytt.
+        const MAX_RETRIES = 3;
+        for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+            try {
+                const inventory = await pb.collection('inventory').getOne(INVENTORY_ID);
+                const currentQty = inventory.quantity_available;
+                const newQuantity = Math.max(0, currentQty - Number(quantity));
+
+                console.log(`Oppdaterer lager (forsøk ${attempt + 1}): ${currentQty} -> ${newQuantity}`);
+
+                await pb.collection('inventory').update(INVENTORY_ID, {
+                    quantity_available: newQuantity
+                });
+
+                break;
+            } catch (invErr) {
+                if (attempt === MAX_RETRIES - 1) {
+                    console.error('Kunne ikkje oppdatere lagerbehaldning etter fleire forsøk:', invErr);
+                }
+                await new Promise((r) => setTimeout(r, 100 * (attempt + 1)));
+            }
+        }
+
+        try {
+            if (customerEmail) {
+                const { sendOrderConfirmation, sendAdminNotification } = await import('$lib/server/mail');
+
+                await sendOrderConfirmation(customerEmail, {
+                    id: order.id,
+                    quantity: Number(quantity),
+                    deliveryMethod: String(deliveryMethod),
+                    totalPrice: Number(totalPrice)
+                });
+
+                await sendAdminNotification({
+                    id: order.id,
+                    quantity: Number(quantity),
+                    deliveryMethod: String(deliveryMethod),
+                    totalPrice: Number(totalPrice),
+                    customerEmail: customerEmail
+                });
+            } else {
+                console.warn('Ingen e-postadresse funnen i Stripe for ordre:', order.id);
+            }
+        } catch (mailErr) {
+            console.error('Kunne ikkje sende ordrestadfesting:', mailErr);
+        }
+
+        throw redirect(303, '/checkout/success');
+    } catch (err: unknown) {
+        if (err && typeof err === 'object' && 'status' in err && (err as { status: number }).status === 303) throw err;
         console.error('Success handler error:', err);
         throw error(500, 'Kunne ikkje stadfesta ordren');
     }
