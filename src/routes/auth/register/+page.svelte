@@ -37,7 +37,7 @@
 </script>
 
 <svelte:head>
-	<title>Registrer deg - Haugalandsved</title>
+	<title>Lag brukar - Haugalandsved</title>
 </svelte:head>
 
 <div class="min-h-screen bg-stone-50 px-4 py-20">

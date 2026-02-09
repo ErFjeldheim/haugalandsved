@@ -15,7 +15,7 @@
 			await pb.collection('users').requestPasswordReset(email);
 			success = true;
 		} catch (e: any) {
-			error = 'Kunne ikke sende tilbakestillings-e-post. Sjekk at adressen er riktig.';
+			error = 'Kunne ikkje sende e-post for tilbakestilling. Sjekk at adressa er rett.';
 		} finally {
 			loading = false;
 		}
@@ -23,21 +23,21 @@
 </script>
 
 <svelte:head>
-	<title>Glemt passord - Haugalandsved</title>
+	<title>Gløymt passord - Haugalandsved</title>
 </svelte:head>
 
 <div class="min-h-screen bg-stone-50 px-4 py-20">
 	<div class="mx-auto max-w-md rounded-2xl bg-white p-8 shadow-xl ring-1 ring-stone-900/5">
-		<h1 class="mb-6 text-3xl font-bold text-stone-900">Glemt passord?</h1>
+		<h1 class="mb-6 text-3xl font-bold text-stone-900">Gløymt passord?</h1>
 
 		{#if success}
 			<div class="mb-4 rounded-lg bg-green-50 p-4 text-sm text-green-700">
-				Vi har sendt en e-post med instruksjoner for å tilbakestille passordet ditt. Vennligst sjekk
+				Vi har sendt ein e-post med instruksjonar for å tilbakestille passordet ditt. Sjekk
 				innboksen din.
 			</div>
 		{:else}
 			<p class="mb-6 text-sm text-stone-600">
-				Skriv inn e-postadressen din under, så sender vi deg en lenke for å velge et nytt passord.
+				Skriv inn e-postadressa di under, så sender vi deg ei lenkje for å velje eit nytt passord.
 			</p>
 
 			{#if error}
@@ -69,14 +69,14 @@
 					disabled={loading}
 					class="w-full rounded-full bg-amber-700 py-3 text-sm font-semibold text-white transition hover:bg-amber-600 focus:ring-2 focus:ring-amber-500 focus:outline-none disabled:opacity-50"
 				>
-					{loading ? 'Sender...' : 'Send tilbakestillings-lenke'}
+					{loading ? 'Sender...' : 'Send tilbakestillingslenkje'}
 				</button>
 			</form>
 		{/if}
 
 		<div class="mt-6 text-center text-sm text-stone-500">
 			<a href="/auth/login" class="font-medium text-amber-700 hover:text-amber-600"
-				>&larr; Tilbake til logg inn</a
+				>&larr; Tilbake til innlogging</a
 			>
 		</div>
 	</div>

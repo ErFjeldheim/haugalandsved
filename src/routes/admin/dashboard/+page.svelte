@@ -22,7 +22,7 @@
 			inventoryItems = records;
 		} catch (error) {
 			console.error('Failed to load inventory:', error);
-			alert('Kunne ikke laste lagerbeholdning. Sjekk at du er logget inn som admin.');
+			alert('Kunne ikkje laste lagerbehaldning. Sjekk at du er logga inn som admin.');
 		} finally {
 			loading = false;
 		}
