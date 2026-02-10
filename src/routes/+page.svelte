@@ -215,6 +215,27 @@
 </svelte:head>
 
 <div class="min-h-screen bg-stone-50 font-sans text-stone-800">
+	<!-- URGENCY BANNER -->
+	{#if campaignActive && inventory.isInStock}
+		<div class="bg-brand-campaign-bg">
+			<div class="container mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-2 px-4 py-3 text-center">
+				<p class="text-sm font-bold text-brand-campaign-text">
+					{CAMPAIGN_LABEL} Spar {BEFORE_PRICE - PRICE_PER_SACK} kr per sekk
+					<span class="mx-2 text-brand-campaign-sub">|</span>
+					<span class="text-brand-campaign-sub">Berre {inventory.quantity} sekker att</span>
+					<span class="mx-2 text-brand-campaign-sub">|</span>
+					<span class="text-brand-campaign-sub">Gjeld t.o.m. {campaignEndFormatted}</span>
+				</p>
+				<a
+					href="#kalkulator"
+					class="rounded-full bg-brand-campaign-text px-4 py-1.5 text-xs font-bold text-white transition hover:opacity-90"
+				>
+					Bestill nå
+				</a>
+			</div>
+		</div>
+	{/if}
+
 	<!-- HERO SECTION -->
 	<section class="relative overflow-hidden bg-stone-900 py-20 text-white lg:py-32">
 		<!-- Abstract background pattern -->
