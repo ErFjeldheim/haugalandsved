@@ -4,16 +4,33 @@ import { stripe } from '$lib/server/stripe';
 import PocketBase from 'pocketbase';
 import { env as publicEnv } from '$env/dynamic/public';
 
-const PRICE_PER_SACK = 1190;
+const DEFAULT_STANDARD_PRICE = 1490;
 const STANDARD_DELIVERY_PRICE_PER_PALLET = 300;
 const EXPRESS_DELIVERY_PRICE_PER_3 = 1000;
 const MAX_QUANTITY = 9;
 
+async function getActiveCampaignPrice(pb: PocketBase): Promise<{ price: number; standardPrice: number }> {
+    try {
+        const campaigns = await pb.collection('campaigns').getFullList({
+            filter: 'isActive = true',
+            sort: '-created',
+            requestKey: null
+        });
+        const now = new Date();
+        const active = campaigns.find((c) => new Date(c.endDate) >= now);
+        if (active) {
+            return { price: active.campaignPrice, standardPrice: active.standardPrice };
+        }
+    } catch {
+    }
+    return { price: DEFAULT_STANDARD_PRICE, standardPrice: DEFAULT_STANDARD_PRICE };
+}
+
 const VALID_DELIVERY_METHODS = ['pickup', 'standard', 'express'] as const;
 type DeliveryMethod = (typeof VALID_DELIVERY_METHODS)[number];
 
-function calculateTotal(quantity: number, deliveryMethod: DeliveryMethod) {
-    const woodCost = quantity * PRICE_PER_SACK;
+function calculateTotal(quantity: number, deliveryMethod: DeliveryMethod, pricePerSack: number) {
+    const woodCost = quantity * pricePerSack;
     const shippingCost =
         deliveryMethod === 'pickup'
             ? 0
@@ -50,7 +67,8 @@ export const actions: Actions = {
             throw error(503, 'Kunne ikkje stadfeste lagerstatus. Prøv igjen seinare.');
         }
 
-        const { total: totalPrice } = calculateTotal(quantity, deliveryMethod as DeliveryMethod);
+        const { price: pricePerSack } = await getActiveCampaignPrice(pb);
+        const { total: totalPrice } = calculateTotal(quantity, deliveryMethod as DeliveryMethod, pricePerSack);
 
         const userId = locals.user?.id || '';
 
@@ -67,7 +85,7 @@ export const actions: Actions = {
                                 name: 'Blandingsved, 1000L storsekk',
                                 description: `${quantity} stk. (${deliveryMethod === 'pickup' ? 'Hent sjølv' : deliveryMethod === 'express' ? 'Ekspress levering' : 'Standard levering'})`,
                             },
-                            unit_amount: PRICE_PER_SACK * 100,
+                            unit_amount: pricePerSack * 100,
                         },
                         quantity: quantity,
                     },

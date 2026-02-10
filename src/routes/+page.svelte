@@ -7,6 +7,7 @@
 
 	let { data } = $props();
 	let inventory = $derived(data.inventory);
+	let campaign = $derived(data.campaign);
 
 	let orderLoading = $state(false);
 	let orderError = $state('');
@@ -20,16 +21,20 @@
 		}
 	});
 
-	const BEFORE_PRICE = 1490;
-	const PRICE_PER_SACK = 1190;
 	const STANDARD_DELIVERY_PRICE_PER_PALLET = 300;
 	const EXPRESS_DELIVERY_PRICE_PER_3 = 1000;
 
-	const CAMPAIGN_END = new Date('2026-02-28T23:59:59');
-	const CAMPAIGN_LABEL = 'SESONGSLUTT!';
-	let campaignActive = $derived(new Date() <= CAMPAIGN_END);
+	let campaignActive = $derived(
+		campaign != null && campaign.isActive && new Date() <= new Date(campaign.endDate)
+	);
+	let STANDARD_PRICE = $derived(campaign?.standardPrice ?? 1490);
+	let CAMPAIGN_PRICE = $derived(campaign?.campaignPrice ?? 1190);
+	let CAMPAIGN_LABEL = $derived(campaign?.label ?? '');
+	let PRICE_PER_SACK = $derived(campaignActive ? CAMPAIGN_PRICE : STANDARD_PRICE);
 	let campaignEndFormatted = $derived(
-		CAMPAIGN_END.toLocaleDateString('nn-NO', { day: 'numeric', month: 'short' })
+		campaign
+			? new Date(campaign.endDate).toLocaleDateString('nn-NO', { day: 'numeric', month: 'short' })
+			: ''
 	);
 
 	let woodCost = $derived(count * PRICE_PER_SACK);
@@ -220,7 +225,7 @@
 		<div class="bg-brand-campaign-bg">
 			<div class="container mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-2 px-4 py-3 text-center">
 				<p class="text-sm font-bold text-brand-campaign-text">
-					{CAMPAIGN_LABEL} Spar {BEFORE_PRICE - PRICE_PER_SACK} kr per sekk
+					{CAMPAIGN_LABEL} Spar {STANDARD_PRICE - CAMPAIGN_PRICE} kr per sekk
 					<span class="mx-2 text-brand-campaign-sub">|</span>
 					<span class="text-brand-campaign-sub">Berre {inventory.quantity} sekker att</span>
 					<span class="mx-2 text-brand-campaign-sub">|</span>
@@ -509,7 +514,7 @@
 										Storsekk ({count} x {PRICE_PER_SACK},-)
 										{#if campaignActive}
 											<span class="ml-1 text-xs text-stone-500 line-through">
-												({count} x {BEFORE_PRICE},-)
+												({count} x {STANDARD_PRICE},-)
 											</span>
 										{/if}
 									</dt>
