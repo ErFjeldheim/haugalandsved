@@ -62,8 +62,13 @@ export async function sendAdminNotification(orderDetails: {
     deliveryMethod: string;
     totalPrice: number;
     customerEmail: string;
+    customerName?: string;
+    customerPhone?: string;
+    address?: string;
+    zip?: string;
+    city?: string;
 }) {
-    const { id, quantity, deliveryMethod, totalPrice, customerEmail } = orderDetails;
+    const { id, quantity, deliveryMethod, totalPrice, customerEmail, customerName, customerPhone, address, zip, city } = orderDetails;
 
     const html = `
         <div style="font-family: sans-serif; color: #1c1917; max-width: 600px; margin: 0 auto; border: 1px solid #e7e5e4; border-radius: 12px; overflow: hidden;">
@@ -75,7 +80,9 @@ export async function sendAdminNotification(orderDetails: {
                 
                 <div style="margin: 24px 0; padding: 20px; background-color: #f5f5f4; border-radius: 8px; border-left: 4px solid #b45309;">
                     <p style="margin: 8px 0;"><strong>Ordrenummer:</strong> ${id}</p>
-                    <p style="margin: 8px 0;"><strong>Kunde:</strong> ${customerEmail}</p>
+                    <p style="margin: 8px 0;"><strong>Kunde:</strong> ${customerName ? `${customerName} (` : ''}${customerEmail}${customerName ? ')' : ''}</p>
+                    ${customerPhone ? `<p style="margin: 8px 0;"><strong>Telefon:</strong> ${customerPhone}</p>` : ''}
+                    ${address ? `<p style="margin: 8px 0;"><strong>Adresse:</strong> ${address}, ${zip} ${city}</p>` : ''}
                     <p style="margin: 8px 0;"><strong>Tal på:</strong> ${quantity} stk. 1000L storsekk</p>
                     <p style="margin: 8px 0;"><strong>Frakt:</strong> ${deliveryMethod === 'pickup' ? 'Hent sjølv' : (deliveryMethod === 'express' ? 'Heimlevering (Ekspress)' : 'Heimlevering (Standard)')}</p>
                     <p style="margin: 8px 0;"><strong>Totalpris:</strong> ${totalPrice.toLocaleString('no-NO')} kr</p>

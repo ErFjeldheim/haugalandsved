@@ -30,12 +30,33 @@ export const GET = async ({ url }: { url: URL }) => {
     try {
         let metadata: Record<string, string>;
         let customerEmail: string | undefined | null;
+        let customerName: string | undefined | null;
+        let customerPhone: string | undefined | null;
+        let address: string | undefined | null;
+        let zip: string | undefined | null;
+        let city: string | undefined | null;
         let paymentStatus: string;
 
         if (sessionId) {
             const session = await stripe.checkout.sessions.retrieve(sessionId);
             metadata = (session.metadata ?? {}) as Record<string, string>;
             customerEmail = session.customer_details?.email;
+            customerName = session.customer_details?.name;
+            customerPhone = session.customer_details?.phone;
+
+            const shippingAddress = session.collected_information?.shipping_details?.address;
+            const customerAddress = session.customer_details?.address;
+
+            if (shippingAddress) {
+                address = shippingAddress.line1;
+                zip = shippingAddress.postal_code;
+                city = shippingAddress.city;
+            } else if (customerAddress) {
+                address = customerAddress.line1;
+                zip = customerAddress.postal_code;
+                city = customerAddress.city;
+            }
+
             paymentStatus = session.payment_status === 'paid' ? 'paid' : 'failed';
         } else {
             const intent = await stripe.paymentIntents.retrieve(paymentIntentId!);
@@ -64,11 +85,14 @@ export const GET = async ({ url }: { url: URL }) => {
             quantity: Number(quantity),
             delivery_method: deliveryMethod,
             total_price: Number(totalPrice),
-            status: 'Betalt'
+            status: 'Betalt',
+            customer_name: customerName,
+            phone: customerPhone,
+            address: address,
+            zip: zip,
+            city: city
         });
 
-        // Retry-loop: les → skriv mønster er sårbart for samtidige kjøp.
-        // Ved feil les vi fersk data og prøver på nytt.
         const MAX_RETRIES = 3;
         for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
             try {
@@ -107,7 +131,12 @@ export const GET = async ({ url }: { url: URL }) => {
                     quantity: Number(quantity),
                     deliveryMethod: String(deliveryMethod),
                     totalPrice: Number(totalPrice),
-                    customerEmail: customerEmail
+                    customerEmail: customerEmail,
+                    customerName: customerName || undefined,
+                    customerPhone: customerPhone || undefined,
+                    address: address || undefined,
+                    zip: zip || undefined,
+                    city: city || undefined
                 });
             } else {
                 console.warn('Ingen e-postadresse funnen i Stripe for ordre:', order.id);

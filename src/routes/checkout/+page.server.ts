@@ -77,6 +77,14 @@ export const actions: Actions = {
         try {
             const session = await stripe.checkout.sessions.create({
                 customer_email: email ? String(email) : undefined,
+                phone_number_collection: {
+                    enabled: true,
+                },
+                shipping_address_collection: deliveryMethod !== 'pickup'
+                    ? {
+                        allowed_countries: ['NO'],
+                    }
+                    : undefined,
                 line_items: [
                     {
                         price_data: {
