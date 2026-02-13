@@ -16,8 +16,12 @@ export async function sendOrderConfirmation(to: string, orderDetails: {
     quantity: number;
     deliveryMethod: string;
     totalPrice: number;
+    customerName?: string;
+    address?: string;
+    zip?: string;
+    city?: string;
 }) {
-    const { id, quantity, deliveryMethod, totalPrice } = orderDetails;
+    const { id, quantity, deliveryMethod, totalPrice, customerName, address, zip, city } = orderDetails;
 
     const html = `
         <div style="font-family: sans-serif; color: #1c1917; max-width: 600px; margin: 0 auto; border: 1px solid #e7e5e4; border-radius: 12px; overflow: hidden;">
@@ -33,6 +37,7 @@ export async function sendOrderConfirmation(to: string, orderDetails: {
                     <p style="margin: 8px 0;"><strong>Produkt:</strong> Blandingsved, 1000L storsekk</p>
                     <p style="margin: 8px 0;"><strong>Tal på:</strong> ${quantity} stk.</p>
                     <p style="margin: 8px 0;"><strong>Fraktmåte:</strong> ${deliveryMethod === 'pickup' ? 'Hent sjølv' : (deliveryMethod === 'express' ? 'Heimlevering (Ekspress)' : 'Heimlevering (Standard)')}</p>
+                    ${address ? `<p style="margin: 8px 0;"><strong>Leveringsadresse:</strong> ${address}, ${zip} ${city}</p>` : ''}
                     <p style="margin: 16px 0; font-size: 20px; color: #b45309;"><strong>Totalpris: ${totalPrice.toLocaleString('no-NO')} kr</strong></p>
                 </div>
 

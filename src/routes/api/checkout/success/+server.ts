@@ -123,7 +123,11 @@ export const GET = async ({ url }: { url: URL }) => {
                     id: order.id,
                     quantity: Number(quantity),
                     deliveryMethod: String(deliveryMethod),
-                    totalPrice: Number(totalPrice)
+                    totalPrice: Number(totalPrice),
+                    customerName: customerName || undefined,
+                    address: address || undefined,
+                    zip: zip || undefined,
+                    city: city || undefined
                 });
 
                 await sendAdminNotification({
