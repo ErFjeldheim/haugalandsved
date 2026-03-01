@@ -1,4 +1,4 @@
-# Haugalandsved 🪵
+# Haugalandsved
 
 Website and online store for selling locally sourced firewood from Haugalandet.
 
@@ -8,7 +8,7 @@ Website and online store for selling locally sourced firewood from Haugalandet.
 ![PocketBase](https://img.shields.io/badge/PocketBase-%23B8DBE4.svg?style=flat-square&logo=pocketbase&logoColor=black)
 ![Dokploy](https://img.shields.io/badge/Hosted_on-Dokploy-blue?style=flat-square)
 
-## 🚀 Deployment
+## Deployment
 
 The project is hosted on a self-built server and managed via **Dokploy**.
 
@@ -17,7 +17,7 @@ The project is hosted on a self-built server and managed via **Dokploy**.
 
 Deployment happens automatically via Dokploy (using Nixpacks buildpack) whenever changes are pushed to the `main` branch.
 
-## 🛠 Tech Stack
+## Tech Stack
 
 The project is built using the following modern web technologies:
 
@@ -28,7 +28,7 @@ The project is built using the following modern web technologies:
 *   **Payments:** [Stripe](https://stripe.com/)
 *   **Hosting:** [Dokploy](https://dokploy.com/)
 
-## 💻 Local Development
+## Local Development
 
 How to get started locally:
 
@@ -52,7 +52,7 @@ How to get started locally:
     ```
     The website is now available at `http://localhost:5173`.
 
-## 📦 Building for Production
+## Building for Production
 
 The project uses `adapter-node` and is configured for Docker/Nixpacks.
 
