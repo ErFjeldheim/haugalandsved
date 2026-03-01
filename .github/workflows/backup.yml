@@ -104,6 +104,9 @@ jobs:
           echo "Created archive: $ARCHIVE_NAME ($(du -h "$ARCHIVE_NAME" | cut -f1))"
 
       - name: Upload to Backblaze B2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.B2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.B2_SECRET_ACCESS_KEY }}
         run: |
           ARCHIVE_NAME="${{ steps.export.outputs.archive_name }}"
           
@@ -122,17 +125,20 @@ jobs:
 
       - name: Backup summary
         run: |
+          ARCHIVE_NAME="${{ steps.export.outputs.archive_name }}"
+          BACKUP_DIR="${{ steps.export.outputs.backup_dir }}"
+          
           echo "### 📦 Backup Complete" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Item | Value |" >> $GITHUB_STEP_SUMMARY
           echo "|------|-------|" >> $GITHUB_STEP_SUMMARY
-          echo "| **Archive** | \`${{ steps.export.outputs.archive_name }}\` |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Size** | $(du -h ${{ steps.export.outputs.archive_name }} | cut -f1) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Archive** | \`${ARCHIVE_NAME}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Size** | $(du -h ${ARCHIVE_NAME} | cut -f1) |" >> $GITHUB_STEP_SUMMARY
           echo "| **Bucket** | \`${{ secrets.B2_BUCKET_NAME }}\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **Timestamp** | $(date -Iseconds) |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Collections backed up:**" >> $GITHUB_STEP_SUMMARY
-          for JSON in ${{ steps.export.outputs.backup_dir }}/*.json; do
+          for JSON in ${BACKUP_DIR}/*.json; do
             NAME=$(basename "$JSON" .json)
             COUNT=$(jq 'length' "$JSON" 2>/dev/null || echo "N/A")
             echo "- \`$NAME\`: $COUNT records" >> $GITHUB_STEP_SUMMARY
