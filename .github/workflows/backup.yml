@@ -1,0 +1,144 @@
+name: PocketBase Backup
+
+on:
+  schedule:
+    # Run daily at 2:00 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    # Allow manual trigger
+    inputs:
+      include_env:
+        description: 'Include .env file in backup'
+        required: false
+        default: 'false'
+        type: boolean
+
+env:
+  PB_URL: https://db.haugalandsved.no
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+          pip install awscli
+
+      - name: Authenticate with PocketBase
+        id: auth
+        run: |
+          RESPONSE=$(curl -s -X POST \
+            "${{ env.PB_URL }}/api/collections/_superusers/auth-with-password" \
+            -H "Content-Type: application/json" \
+            -d '{"identity":"${{ secrets.PB_ADMIN_EMAIL }}","password":"${{ secrets.PB_ADMIN_PASSWORD }}"}')
+          
+          TOKEN=$(echo "$RESPONSE" | jq -r '.token')
+          
+          if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
+            echo "Failed to authenticate with PocketBase"
+            echo "Response: $RESPONSE"
+            exit 1
+          fi
+          
+          echo "token=$TOKEN" >> $GITHUB_OUTPUT
+          echo "Successfully authenticated with PocketBase"
+
+      - name: Export PocketBase collections
+        id: export
+        run: |
+          TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
+          BACKUP_DIR="backup-${TIMESTAMP}"
+          mkdir -p "$BACKUP_DIR"
+          
+          TOKEN="${{ steps.auth.outputs.token }}"
+          
+          # Export collection schemas
+          curl -s "${{ env.PB_URL }}/api/collections" \
+            -H "Authorization: $TOKEN" | jq '.' > "$BACKUP_DIR/_collections.json"
+          
+          # Export each collection
+          COLLECTIONS=("users" "orders" "inventory" "campaigns" "_superusers")
+          
+          for COLLECTION in "${COLLECTIONS[@]}"; do
+            echo "Exporting collection: $COLLECTION"
+            
+            # Paginate through all records
+            PAGE=1
+            PER_PAGE=500
+            ALL_RECORDS="[]"
+            TOTAL_PAGES=1
+            
+            while [ $PAGE -le $TOTAL_PAGES ]; do
+              RESPONSE=$(curl -s "${{ env.PB_URL }}/api/collections/${COLLECTION}/records?page=${PAGE}&perPage=${PER_PAGE}" \
+                -H "Authorization: $TOKEN")
+              
+              if [ $PAGE -eq 1 ]; then
+                TOTAL_ITEMS=$(echo "$RESPONSE" | jq -r '.totalItems // 0')
+                TOTAL_PAGES=$(( (TOTAL_ITEMS + PER_PAGE - 1) / PER_PAGE ))
+                echo "Collection '$COLLECTION' has $TOTAL_ITEMS records"
+              fi
+              
+              PAGE_RECORDS=$(echo "$RESPONSE" | jq -c '.items // []')
+              ALL_RECORDS=$(echo "$ALL_RECORDS $PAGE_RECORDS" | jq -s 'add')
+              
+              ((PAGE++))
+            done
+            
+            echo "$ALL_RECORDS" | jq '.' > "$BACKUP_DIR/${COLLECTION}.json"
+            RECORD_COUNT=$(jq 'length' "$BACKUP_DIR/${COLLECTION}.json")
+            echo "Exported $RECORD_COUNT records from '$COLLECTION'"
+          done
+          
+          # Create archive
+          ARCHIVE_NAME="haugalandsved-backup-${TIMESTAMP}.tar.gz"
+          tar -czf "$ARCHIVE_NAME" "$BACKUP_DIR"
+          
+          echo "archive_name=$ARCHIVE_NAME" >> $GITHUB_OUTPUT
+          echo "backup_dir=$BACKUP_DIR" >> $GITHUB_OUTPUT
+          echo "Created archive: $ARCHIVE_NAME ($(du -h "$ARCHIVE_NAME" | cut -f1))"
+
+      - name: Upload to Backblaze B2
+        run: |
+          ARCHIVE_NAME="${{ steps.export.outputs.archive_name }}"
+          
+          aws s3 cp "$ARCHIVE_NAME" \
+            "s3://${{ secrets.B2_BUCKET_NAME }}/$ARCHIVE_NAME" \
+            --endpoint-url "${{ secrets.B2_ENDPOINT }}"
+          
+          echo "Uploaded $ARCHIVE_NAME to B2"
+
+      - name: Create artifact (7-day retention)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.export.outputs.archive_name }}
+          path: ${{ steps.export.outputs.archive_name }}
+          retention-days: 7
+
+      - name: Backup summary
+        run: |
+          echo "### 📦 Backup Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Item | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| **Archive** | \`${{ steps.export.outputs.archive_name }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Size** | $(du -h ${{ steps.export.outputs.archive_name }} | cut -f1) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Bucket** | \`${{ secrets.B2_BUCKET_NAME }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Timestamp** | $(date -Iseconds) |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Collections backed up:**" >> $GITHUB_STEP_SUMMARY
+          for JSON in ${{ steps.export.outputs.backup_dir }}/*.json; do
+            NAME=$(basename "$JSON" .json)
+            COUNT=$(jq 'length' "$JSON" 2>/dev/null || echo "N/A")
+            echo "- \`$NAME\`: $COUNT records" >> $GITHUB_STEP_SUMMARY
+          done
+
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -rf backup-* *.tar.gz

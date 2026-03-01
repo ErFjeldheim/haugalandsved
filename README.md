@@ -21,24 +21,26 @@ Deployment happens automatically via Dokploy (using Nixpacks buildpack) whenever
 
 The project is built using the following modern web technologies:
 
-*   **Frontend:** [SvelteKit](https://kit.svelte.dev/) (Svelte 5)
-*   **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-*   **BaaS (self hosted):** [PocketBase](https://pocketbase.io/)
-*   **Maps:** [Leaflet](https://leafletjs.com/)
-*   **Payments:** [Stripe](https://stripe.com/)
-*   **Hosting:** [Dokploy](https://dokploy.com/)
+- **Frontend:** [SvelteKit](https://kit.svelte.dev/) (Svelte 5)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **BaaS (self hosted):** [PocketBase](https://pocketbase.io/)
+- **Maps:** [Leaflet](https://leafletjs.com/)
+- **Payments:** [Stripe](https://stripe.com/)
+- **Hosting:** [Dokploy](https://dokploy.com/)
 
 ## Local Development
 
 How to get started locally:
 
 1.  **Clone the project:**
+
     ```bash
     git clone https://github.com/YourUsername/haugalandsved.git
     cd haugalandsved
     ```
 
 2.  **Install dependencies:**
+
     ```bash
     npm install
     ```
@@ -51,6 +53,14 @@ How to get started locally:
     npm run dev
     ```
     The website is now available at `http://localhost:5173`.
+
+## Backup Solution
+
+Automated daily backups of PocketBase data via GitHub Actions.
+
+- **Schedule:** Daily at 02:00
+- **Storage:** Backblaze B2 + GitHub Artifacts (7-day retention)
+- **Manual trigger:** Available in Actions tab
 
 ## Building for Production
 

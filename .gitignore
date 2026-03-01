@@ -25,3 +25,8 @@ vite.config.ts.timestamp-*
 #MCP
 .opencode
 opencode.json
+
+# Backups
+/backups/
+/logs/
+*.tar.gz
