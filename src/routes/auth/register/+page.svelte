@@ -128,7 +128,7 @@
 				<button
 					type="submit"
 					disabled={loading}
-					class="w-full rounded-full bg-amber-700 py-3 text-sm font-semibold text-white transition hover:bg-amber-600 focus:ring-2 focus:ring-amber-500 focus:outline-none disabled:opacity-50"
+					class="w-full rounded-full bg-amber-700 py-3 text-sm font-semibold text-white transition hover:bg-amber-600 focus:ring-2 focus:ring-amber-500 focus:outline-none disabled:opacity-50 cursor-pointer"
 				>
 					{loading ? 'Registrerer...' : 'Opprett konto'}
 				</button>
