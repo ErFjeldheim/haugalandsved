@@ -25,7 +25,7 @@
 				</p>
 				<p>
 					<strong>Fjeldheim Services ENK (Fjelldata)</strong> er ansvarleg for teknisk drift av nettsida
-					og databasen. Dei fungerer som databehandlar og sørger for at dataa blir lagra trygt.
+					og databasen. Dei fungerer som databehandlar og sørger for at data blir lagra trygt.
 				</p>
 			</section>
 
@@ -61,7 +61,7 @@
 						<strong>Stripe:</strong> Handterer betalingstransaksjonar. Kortdetaljane dine blir aldri lagra
 						hos oss.
 					</li>
-					<li><strong>Fjelldata:</strong> Drifter systema der dataa blir lagra.</li>
+					<li><strong>Fjelldata:</strong> Drifter systema der data blir lagra.</li>
 				</ul>
 			</section>
 
