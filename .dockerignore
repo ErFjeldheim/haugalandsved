@@ -1,5 +1,5 @@
 node_modules
-.svelte-kit
+# .svelte-kit (needed during Docker builds for tsconfig.json generation)
 build
 .env
 .env.*
