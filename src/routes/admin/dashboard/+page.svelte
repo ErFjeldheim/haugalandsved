@@ -165,8 +165,10 @@
 		return 'bg-amber-100 text-amber-700';
 	}
 
-	function confirmRemoveOrder(id: string) {
-		if (!confirm(`Er du sikker på at du vil slette ordre #${id}? Dette kan ikkje angrast.`)) return;
+	function confirmRemoveOrder(event: SubmitEvent, id: string) {
+		if (!confirm(`Er du sikker på at du vil slette ordre #${id}? Dette kan ikkje angrast.`)) {
+			event.preventDefault();
+		}
 	}
 
 	function handleDeleteResult(id: string, result: { type: string }) {
@@ -232,7 +234,7 @@
 									<select id="status-{order.id}" name="status" bind:value={order.status} class="rounded-md border-stone-300 text-sm shadow-sm">{#each orderStatuses as status}<option value={status}>{status}</option>{/each}</select>
 									<button disabled={saving} class="rounded-md bg-stone-900 px-3 py-2 text-sm font-semibold text-white hover:bg-stone-800 disabled:opacity-50">Lagre status</button>
 								</form>
-								<form method="POST" action="?/deleteOrder" use:enhance={() => ({ result }) => handleDeleteResult(order.id, result)} onsubmit={() => confirmRemoveOrder(order.id)} class="mt-2">
+								<form method="POST" action="?/deleteOrder" use:enhance={() => ({ result }) => handleDeleteResult(order.id, result)} onsubmit={(event) => confirmRemoveOrder(event, order.id)} class="mt-2">
 									<input type="hidden" name="id" value={order.id} />
 									<button type="submit" class="rounded-md border border-red-200 px-3 py-2 text-sm font-semibold text-red-700 hover:bg-red-50">Slett ordre</button>
 								</form>
