@@ -13,7 +13,7 @@ function isAdmin(locals: App.Locals) {
 }
 
 function serializeOrder(order: Record<string, any>) {
-	const rawCreated = order.created || order.created_at;
+	const rawCreated = order.ordered_at || order.created || order.created_at;
 	const timestamp = parsePocketBaseDate(rawCreated);
 	return {
 		id: order.id,

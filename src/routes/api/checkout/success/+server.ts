@@ -90,7 +90,8 @@ export const GET = async ({ url }: { url: URL }) => {
             phone: customerPhone,
             address: address,
             zip: zip,
-            city: city
+            city: city,
+            ordered_at: new Date().toISOString()
         });
 
         const MAX_RETRIES = 3;
