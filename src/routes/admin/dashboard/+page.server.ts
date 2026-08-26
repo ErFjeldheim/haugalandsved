@@ -13,12 +13,12 @@ function isAdmin(locals: App.Locals) {
 }
 
 function serializeOrder(order: Record<string, any>) {
+	const rawCreated = order.created || order.created_at;
+	const timestamp = parsePocketBaseDate(rawCreated);
 	return {
 		id: order.id,
-		created: order.created,
-		formattedDate: Number.isNaN(parsePocketBaseDate(order.created).getTime())
-			? 'Ukjend dato'
-			: new Intl.DateTimeFormat('nn-NO', { dateStyle: 'medium', timeStyle: 'short' }).format(parsePocketBaseDate(order.created)),
+		created: rawCreated,
+		formattedDate: Number.isNaN(timestamp.getTime()) ? 'Ukjend dato' : new Intl.DateTimeFormat('nn-NO', { dateStyle: 'medium', timeStyle: 'short' }).format(timestamp),
 		status: order.status || 'Ukjend',
 		quantity: Number(order.quantity || 0),
 		delivery_method: order.delivery_method || '',
