@@ -35,7 +35,8 @@ function serializeOrder(order: Record<string, any>) {
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!isAdmin(locals)) throw redirect(303, '/admin/login');
 	try {
-		const records = await locals.pb.collection('orders').getFullList({ sort: '-created', expand: 'user' });
+		const records = await locals.pb.collection('orders').getFullList({ expand: 'user' });
+		records.sort((a, b) => parsePocketBaseDate(b.created).getTime() - parsePocketBaseDate(a.created).getTime());
 		return { orders: records.map(serializeOrder), statuses };
 	} catch (error) {
 		console.error('Kunne ikkje laste ordrar:', error);
