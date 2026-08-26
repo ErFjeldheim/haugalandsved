@@ -165,9 +165,12 @@
 		return 'bg-amber-100 text-amber-700';
 	}
 
-	function removeOrder(id: string) {
+	function confirmRemoveOrder(id: string) {
 		if (!confirm(`Er du sikker på at du vil slette ordre #${id}? Dette kan ikkje angrast.`)) return;
-		orders = orders.filter((order) => order.id !== id);
+	}
+
+	function handleDeleteResult(id: string, result: { type: string }) {
+		if (result.type === 'success') orders = orders.filter((order) => order.id !== id);
 	}
 </script>
 
@@ -223,15 +226,15 @@
 									</div>
 									<div class="text-left lg:text-right"><p class="text-xs font-medium uppercase tracking-wide text-stone-500">Total</p><p class="text-xl font-bold text-brand-primary">{formatPrice(order.total_price)}</p></div>
 								</div>
-								<form method="POST" action="?/updateStatus" use:enhance class="mt-4 flex items-center gap-3 border-t border-stone-100 pt-4">
+								<form method="POST" action="?/updateStatus" use:enhance class="mt-4 flex flex-wrap items-center gap-3 border-t border-stone-100 pt-4">
 									<input type="hidden" name="id" value={order.id} />
 									<label for="status-{order.id}" class="text-sm font-medium text-stone-700">Status</label>
 									<select id="status-{order.id}" name="status" bind:value={order.status} class="rounded-md border-stone-300 text-sm shadow-sm">{#each orderStatuses as status}<option value={status}>{status}</option>{/each}</select>
 									<button disabled={saving} class="rounded-md bg-stone-900 px-3 py-2 text-sm font-semibold text-white hover:bg-stone-800 disabled:opacity-50">Lagre status</button>
-									<button type="submit" form="delete-{order.id}" class="rounded-md border border-red-200 px-3 py-2 text-sm font-semibold text-red-700 hover:bg-red-50">Slett ordre</button>
 								</form>
-								<form id="delete-{order.id}" method="POST" action="?/deleteOrder" use:enhance onsubmit={() => removeOrder(order.id)}>
+								<form method="POST" action="?/deleteOrder" use:enhance={() => ({ result }) => handleDeleteResult(order.id, result)} onsubmit={() => confirmRemoveOrder(order.id)} class="mt-2">
 									<input type="hidden" name="id" value={order.id} />
+									<button type="submit" class="rounded-md border border-red-200 px-3 py-2 text-sm font-semibold text-red-700 hover:bg-red-50">Slett ordre</button>
 								</form>
 							</article>
 						{/each}
