@@ -2,11 +2,25 @@
 	import { pb } from '$lib/pocketbase';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import { enhance } from '$app/forms';
+
+	let { data, form } = $props();
 
 	let inventoryItems = $state<any[]>([]);
 	let campaigns = $state<any[]>([]);
 	let loading = $state(true);
 	let saving = $state(false);
+	let orders = $state.raw(data.orders ?? []);
+	let orderFilter = $state('Alle');
+	let orderSearch = $state('');
+	const orderStatuses = data.statuses ?? [];
+	const filteredOrders = $derived(
+		orders.filter((order) => {
+			const query = orderSearch.trim().toLowerCase();
+			return (orderFilter === 'Alle' || order.status === orderFilter) &&
+				(!query || [order.id, order.customer_name, order.email, order.city].some((value) => String(value).toLowerCase().includes(query)));
+		})
+	);
 
 	function formatForInput(isoString: string) {
 		if (!isoString) return '';
@@ -135,6 +149,21 @@
 		pb.authStore.clear();
 		goto('/admin/login');
 	}
+
+	function formatPrice(price: number) {
+		return new Intl.NumberFormat('nn-NO').format(price) + ' kr';
+	}
+
+	function deliveryLabel(method: string) {
+		return method === 'pickup' ? 'Hent sjølv' : method === 'express' ? 'Ekspress' : 'Standard';
+	}
+
+	function statusColor(status: string) {
+		if (status === 'Levert') return 'bg-emerald-100 text-emerald-700';
+		if (status === 'Avbrote') return 'bg-red-100 text-red-700';
+		if (status === 'Under handsaming') return 'bg-blue-100 text-blue-700';
+		return 'bg-amber-100 text-amber-700';
+	}
 </script>
 
 <svelte:head>
@@ -157,6 +186,49 @@
 				<span class="loading-spinner text-stone-500">Laster...</span>
 			</div>
 		{:else}
+			<section class="mb-12">
+				<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+					<div>
+						<h1 class="text-2xl font-bold text-stone-900">Ordrehandtering</h1>
+						<p class="mt-1 text-sm text-stone-500">{orders.length} ordre totalt</p>
+					</div>
+					<div class="flex flex-col gap-2 sm:flex-row">
+						<input bind:value={orderSearch} placeholder="Søk etter ordre eller kunde" class="rounded-md border-stone-300 text-sm shadow-sm" />
+						<select bind:value={orderFilter} class="rounded-md border-stone-300 text-sm shadow-sm">
+							<option>Alle</option>
+							{#each orderStatuses as status}<option value={status}>{status}</option>{/each}
+						</select>
+					</div>
+				</div>
+				{#if form?.error}<p class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700">{form.error}</p>{/if}
+				{#if filteredOrders.length === 0}
+					<div class="rounded-lg bg-white p-6 text-center text-stone-500 shadow-sm ring-1 ring-stone-900/5">Ingen ordre samsvarar med søket.</div>
+				{:else}
+					<div class="space-y-4">
+						{#each filteredOrders as order}
+							<article class="rounded-lg bg-white p-5 shadow-sm ring-1 ring-stone-900/5">
+								<div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+									<div>
+										<div class="flex flex-wrap items-center gap-3"><h2 class="font-semibold text-stone-900">#{order.id}</h2><span class={`rounded-full px-2.5 py-1 text-xs font-medium ${statusColor(order.status)}`}>{order.status}</span></div>
+										<p class="mt-1 text-sm text-stone-500">{order.formattedDate} · {order.quantity} stk · {deliveryLabel(order.delivery_method)}</p>
+										<p class="mt-3 font-medium text-stone-900">{order.customer_name || 'Utan namn'}</p>
+										<p class="text-sm text-stone-600">{order.email || 'Ingen e-post'} · {order.phone || 'Ingen telefon'}</p>
+										<p class="text-sm text-stone-600">{order.address || 'Ingen adresse'}{order.city ? `, ${order.zip} ${order.city}` : ''}</p>
+									</div>
+									<div class="text-left lg:text-right"><p class="text-xs font-medium uppercase tracking-wide text-stone-500">Total</p><p class="text-xl font-bold text-brand-primary">{formatPrice(order.total_price)}</p></div>
+								</div>
+								<form method="POST" action="?/updateStatus" use:enhance class="mt-4 flex items-center gap-3 border-t border-stone-100 pt-4">
+									<input type="hidden" name="id" value={order.id} />
+									<label for="status-{order.id}" class="text-sm font-medium text-stone-700">Status</label>
+									<select id="status-{order.id}" name="status" bind:value={order.status} class="rounded-md border-stone-300 text-sm shadow-sm">{#each orderStatuses as status}<option value={status}>{status}</option>{/each}</select>
+									<button disabled={saving} class="rounded-md bg-stone-900 px-3 py-2 text-sm font-semibold text-white hover:bg-stone-800 disabled:opacity-50">Lagre status</button>
+								</form>
+							</article>
+						{/each}
+					</div>
+				{/if}
+			</section>
+
 			<section class="mb-12">
 				<h1 class="mb-6 text-2xl font-bold text-stone-900">Lagerstyring</h1>
 
