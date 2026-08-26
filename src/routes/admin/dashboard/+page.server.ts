@@ -58,5 +58,17 @@ export const actions: Actions = {
 			console.error('Kunne ikkje oppdatere ordre:', error);
 			return fail(500, { error: 'Kunne ikkje oppdatere ordren.' });
 		}
+	},
+	deleteOrder: async ({ request, locals }) => {
+		if (!isAdmin(locals)) throw redirect(303, '/admin/login');
+		const id = String((await request.formData()).get('id') || '');
+		if (!id) return fail(400, { error: 'Ugyldig ordre.' });
+		try {
+			await locals.pb.collection('orders').delete(id);
+			return { success: true, deletedOrderId: id };
+		} catch (error) {
+			console.error('Kunne ikkje slette ordre:', error);
+			return fail(500, { error: 'Kunne ikkje slette ordren.' });
+		}
 	}
 };
