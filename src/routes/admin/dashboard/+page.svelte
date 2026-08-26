@@ -201,6 +201,7 @@
 					</div>
 				</div>
 				{#if form?.error}<p class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700">{form.error}</p>{/if}
+				{#if data.error}<p class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700">{data.error}</p>{/if}
 				{#if filteredOrders.length === 0}
 					<div class="rounded-lg bg-white p-6 text-center text-stone-500 shadow-sm ring-1 ring-stone-900/5">Ingen ordre samsvarar med søket.</div>
 				{:else}

@@ -3,6 +3,11 @@ import { fail, redirect } from '@sveltejs/kit';
 
 const statuses = ['Betalt', 'Under handsaming', 'Levert', 'Avbrote'] as const;
 
+function parsePocketBaseDate(value: string) {
+	const normalized = value?.includes('T') ? value : value?.replace(' ', 'T');
+	return new Date(normalized);
+}
+
 function isAdmin(locals: App.Locals) {
 	return locals.pb.authStore.isValid && locals.pb.authStore.isSuperuser;
 }
@@ -11,7 +16,9 @@ function serializeOrder(order: Record<string, any>) {
 	return {
 		id: order.id,
 		created: order.created,
-		formattedDate: new Intl.DateTimeFormat('nn-NO', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(order.created)),
+		formattedDate: Number.isNaN(parsePocketBaseDate(order.created).getTime())
+			? 'Ukjend dato'
+			: new Intl.DateTimeFormat('nn-NO', { dateStyle: 'medium', timeStyle: 'short' }).format(parsePocketBaseDate(order.created)),
 		status: order.status || 'Ukjend',
 		quantity: Number(order.quantity || 0),
 		delivery_method: order.delivery_method || '',
