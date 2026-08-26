@@ -9,8 +9,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 
     try {
         // Refresh the auth token if valid (keeps session alive)
-        if (event.locals.pb.authStore.isValid) {
-            await event.locals.pb.collection('users').authRefresh();
+		if (event.locals.pb.authStore.isValid && !event.locals.pb.authStore.isSuperuser) {
+			await event.locals.pb.collection('users').authRefresh();
         }
     } catch (_) {
         // Token refresh failed — clear stale auth
