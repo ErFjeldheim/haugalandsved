@@ -117,10 +117,10 @@ export const GET = async ({ url }: { url: URL }) => {
 			}
 		}
 
-		try {
-			if (customerEmail) {
-				const { sendOrderConfirmation, sendAdminNotification } = await import('$lib/server/mail');
+		if (customerEmail) {
+			const { sendOrderConfirmation, sendAdminNotification } = await import('$lib/server/mail');
 
+			try {
 				await sendOrderConfirmation(customerEmail, {
 					id: order.id,
 					quantity: Number(quantity),
@@ -131,7 +131,11 @@ export const GET = async ({ url }: { url: URL }) => {
 					zip: zip || undefined,
 					city: city || undefined
 				});
+			} catch (mailErr) {
+				console.error('Kunne ikkje sende ordrestadfesting:', mailErr);
+			}
 
+			try {
 				await sendAdminNotification({
 					id: order.id,
 					quantity: Number(quantity),
@@ -144,11 +148,11 @@ export const GET = async ({ url }: { url: URL }) => {
 					zip: zip || undefined,
 					city: city || undefined
 				});
-			} else {
-				console.warn('Ingen e-postadresse funnen i Stripe for ordre:', order.id);
+			} catch (mailErr) {
+				console.error('Kunne ikkje sende adminvarsel:', mailErr);
 			}
-		} catch (mailErr) {
-			console.error('Kunne ikkje sende ordrestadfesting:', mailErr);
+		} else {
+			console.warn('Ingen e-postadresse funnen i Stripe for ordre:', order.id);
 		}
 
 		throw redirect(303, '/checkout/success');

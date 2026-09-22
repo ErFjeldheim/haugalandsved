@@ -20,7 +20,7 @@
 		}
 	});
 
-	const STANDARD_DELIVERY_PRICE_PER_PALLET = 300;
+	const STANDARD_DELIVERY_PRICE_PER_PALLET = 490;
 	const EXPRESS_DELIVERY_PRICE_PER_3 = 1000;
 
 	let campaignActive = $derived(
@@ -459,7 +459,10 @@
 												<span class="mt-2 text-xs text-stone-600"
 													>Levering til sone Haugalandet</span
 												>
-												<span class="mt-4 text-sm font-bold text-stone-900">300 kr per palle</span>
+												<span class="mt-1 text-xs text-stone-600"
+													>Veden kan leverast hjå deg med lift-hengar og elektrisk pallegaffel.</span
+												>
+												<span class="mt-4 text-sm font-bold text-stone-900">490 kr per palle</span>
 											</span>
 										</span>
 										<span
@@ -497,6 +500,9 @@
 												>
 												<span class="mt-2 text-xs text-stone-600"
 													>Levering til sone Haugalandet</span
+												>
+												<span class="mt-1 text-xs text-stone-600"
+													>Veden kan leverast hjå deg med lift-hengar og elektrisk pallegaffel.</span
 												>
 												<span class="mt-4 text-sm font-bold text-stone-900"
 													>1000 kr per 3 paller</span
