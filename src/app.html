@@ -1,50 +1,52 @@
 <!doctype html>
 <html lang="nn">
-
-<head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<!-- Google tag (gtag.js) - Lazy loaded for PageSpeed -->
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag() { dataLayer.push(arguments); }
-		window.gtag = gtag;
-
-		(function () {
-			const gtmId = 'AW-17936851983';
-			let gtmLoaded = false;
-
-			function loadGTM() {
-				if (gtmLoaded) return;
-				gtmLoaded = true;
-
-				const script = document.createElement('script');
-				script.async = true;
-				script.src = 'https://www.googletagmanager.com/gtag/js?id=' + gtmId;
-				document.head.appendChild(script);
-
-				gtag('js', new Date());
-				gtag('config', gtmId);
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!-- Google tag (gtag.js) - Lazy loaded for PageSpeed -->
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
 			}
+			window.gtag = gtag;
 
-			// Load on interaction or after a 3.5s delay
-			const interactionEvents = ['mousedown', 'mousemove', 'touchstart', 'scroll', 'keydown'];
-			const idleTimeout = setTimeout(loadGTM, 3500);
+			(function () {
+				const gtmId = 'AW-17936851983';
+				let gtmLoaded = false;
 
-			function onInteraction() {
-				loadGTM();
-				clearTimeout(idleTimeout);
-				interactionEvents.forEach(e => window.removeEventListener(e, onInteraction));
-			}
+				function loadGTM() {
+					if (gtmLoaded) return;
+					gtmLoaded = true;
 
-			interactionEvents.forEach(e => window.addEventListener(e, onInteraction, { passive: true }));
-		})();
-	</script>
-	%sveltekit.head%
-</head>
+					const script = document.createElement('script');
+					script.async = true;
+					script.src = 'https://www.googletagmanager.com/gtag/js?id=' + gtmId;
+					document.head.appendChild(script);
 
-<body data-sveltekit-preload-data="hover">
-	<div style="display: contents">%sveltekit.body%</div>
-</body>
+					gtag('js', new Date());
+					gtag('config', gtmId);
+				}
 
+				// Load on interaction or after a 3.5s delay
+				const interactionEvents = ['mousedown', 'mousemove', 'touchstart', 'scroll', 'keydown'];
+				const idleTimeout = setTimeout(loadGTM, 3500);
+
+				function onInteraction() {
+					loadGTM();
+					clearTimeout(idleTimeout);
+					interactionEvents.forEach((e) => window.removeEventListener(e, onInteraction));
+				}
+
+				interactionEvents.forEach((e) =>
+					window.addEventListener(e, onInteraction, { passive: true })
+				);
+			})();
+		</script>
+		%sveltekit.head%
+	</head>
+
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
 </html>

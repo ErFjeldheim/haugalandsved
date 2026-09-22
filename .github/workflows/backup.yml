@@ -19,7 +19,7 @@ env:
 jobs:
   backup:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -37,15 +37,15 @@ jobs:
             "${{ env.PB_URL }}/api/collections/_superusers/auth-with-password" \
             -H "Content-Type: application/json" \
             -d '{"identity":"${{ secrets.PB_ADMIN_EMAIL }}","password":"${{ secrets.PB_ADMIN_PASSWORD }}"}')
-          
+
           TOKEN=$(echo "$RESPONSE" | jq -r '.token')
-          
+
           if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
             echo "Failed to authenticate with PocketBase"
             echo "Response: $RESPONSE"
             exit 1
           fi
-          
+
           echo "token=$TOKEN" >> $GITHUB_OUTPUT
           echo "Successfully authenticated with PocketBase"
 
@@ -55,16 +55,16 @@ jobs:
           TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
           BACKUP_DIR="backup-${TIMESTAMP}"
           mkdir -p "$BACKUP_DIR"
-          
+
           TOKEN="${{ steps.auth.outputs.token }}"
-          
+
           # Export collection schemas
           curl -s "${{ env.PB_URL }}/api/collections" \
             -H "Authorization: $TOKEN" | jq '.' > "$BACKUP_DIR/_collections.json"
-          
+
           # Export each collection
           COLLECTIONS=("users" "orders" "inventory" "campaigns" "_superusers")
-          
+
           for COLLECTION in "${COLLECTIONS[@]}"; do
             echo "Exporting collection: $COLLECTION"
             
@@ -94,11 +94,11 @@ jobs:
             RECORD_COUNT=$(jq 'length' "$BACKUP_DIR/${COLLECTION}.json")
             echo "Exported $RECORD_COUNT records from '$COLLECTION'"
           done
-          
+
           # Create archive
           ARCHIVE_NAME="haugalandsved-backup-${TIMESTAMP}.tar.gz"
           tar -czf "$ARCHIVE_NAME" "$BACKUP_DIR"
-          
+
           echo "archive_name=$ARCHIVE_NAME" >> $GITHUB_OUTPUT
           echo "backup_dir=$BACKUP_DIR" >> $GITHUB_OUTPUT
           echo "Created archive: $ARCHIVE_NAME ($(du -h "$ARCHIVE_NAME" | cut -f1))"
@@ -109,11 +109,11 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.B2_SECRET_ACCESS_KEY }}
         run: |
           ARCHIVE_NAME="${{ steps.export.outputs.archive_name }}"
-          
+
           aws s3 cp "$ARCHIVE_NAME" \
             "s3://${{ secrets.B2_BUCKET_NAME }}/$ARCHIVE_NAME" \
             --endpoint-url "${{ secrets.B2_ENDPOINT }}"
-          
+
           echo "Uploaded $ARCHIVE_NAME to B2"
 
       - name: Create artifact (7-day retention)
@@ -127,7 +127,7 @@ jobs:
         run: |
           ARCHIVE_NAME="${{ steps.export.outputs.archive_name }}"
           BACKUP_DIR="${{ steps.export.outputs.backup_dir }}"
-          
+
           echo "### 📦 Backup Complete" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Item | Value |" >> $GITHUB_STEP_SUMMARY

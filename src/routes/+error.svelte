@@ -4,13 +4,18 @@
 
 <svelte:head>
 	<title>Sida finst ikkje - Haugalandsved</title>
-	<meta name="description" content="Sida du leitar etter finst ikkje. Gå tilbake til forsida for å finna ved til fyringa di." />
+	<meta
+		name="description"
+		content="Sida du leitar etter finst ikkje. Gå tilbake til forsida for å finna ved til fyringa di."
+	/>
 </svelte:head>
 
 <div class="min-h-screen bg-stone-50 px-4 py-20">
 	<div class="container mx-auto max-w-2xl text-center">
 		<div class="rounded-2xl bg-white p-12 shadow-xl ring-1 ring-stone-900/5">
-			<div class="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-amber-100">
+			<div
+				class="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-amber-100"
+			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
@@ -32,7 +37,8 @@
 			</h1>
 			<p class="mb-2 text-2xl font-semibold text-stone-800">Sida finst ikkje</p>
 			<p class="mb-8 text-stone-600">
-				Det ser ut som du har gått deg vill i skogen. Sida du ser etter finst ikkje, eller ho kan ha blitt flytta.
+				Det ser ut som du har gått deg vill i skogen. Sida du ser etter finst ikkje, eller ho kan ha
+				blitt flytta.
 			</p>
 
 			<div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -67,13 +73,22 @@
 			<div class="mt-12 border-t border-stone-200 pt-8">
 				<p class="mb-4 text-sm text-stone-500">Eller utforsk meir:</p>
 				<nav class="flex flex-wrap justify-center gap-6">
-					<a href="/#om-veden" class="text-sm font-medium text-amber-700 transition hover:text-amber-600">
+					<a
+						href="/#om-veden"
+						class="text-sm font-medium text-amber-700 transition hover:text-amber-600"
+					>
 						Om veden
 					</a>
-					<a href="/#kalkulator" class="text-sm font-medium text-amber-700 transition hover:text-amber-600">
+					<a
+						href="/#kalkulator"
+						class="text-sm font-medium text-amber-700 transition hover:text-amber-600"
+					>
 						Rekn ut pris
 					</a>
-					<a href="/salgsvilkar" class="text-sm font-medium text-amber-700 transition hover:text-amber-600">
+					<a
+						href="/salgsvilkar"
+						class="text-sm font-medium text-amber-700 transition hover:text-amber-600"
+					>
 						Salsvilkår
 					</a>
 				</nav>

@@ -2,28 +2,31 @@ import nodemailer from 'nodemailer';
 import { env } from '$env/dynamic/private';
 
 const transporter = nodemailer.createTransport({
-    host: env.SMTP_HOST || '',
-    port: Number(env.SMTP_PORT) || 587,
-    secure: Number(env.SMTP_PORT) === 465,
-    auth: {
-        user: env.SMTP_USER || '',
-        pass: env.SMTP_PASS || '',
-    },
+	host: env.SMTP_HOST || '',
+	port: Number(env.SMTP_PORT) || 587,
+	secure: Number(env.SMTP_PORT) === 465,
+	auth: {
+		user: env.SMTP_USER || '',
+		pass: env.SMTP_PASS || ''
+	}
 });
 
-export async function sendOrderConfirmation(to: string, orderDetails: {
-    id: string;
-    quantity: number;
-    deliveryMethod: string;
-    totalPrice: number;
-    customerName?: string;
-    address?: string;
-    zip?: string;
-    city?: string;
-}) {
-    const { id, quantity, deliveryMethod, totalPrice, customerName, address, zip, city } = orderDetails;
+export async function sendOrderConfirmation(
+	to: string,
+	orderDetails: {
+		id: string;
+		quantity: number;
+		deliveryMethod: string;
+		totalPrice: number;
+		customerName?: string;
+		address?: string;
+		zip?: string;
+		city?: string;
+	}
+) {
+	const { id, quantity, deliveryMethod, totalPrice, address, zip, city } = orderDetails;
 
-    const html = `
+	const html = `
         <div style="font-family: sans-serif; color: #1c1917; max-width: 600px; margin: 0 auto; border: 1px solid #e7e5e4; border-radius: 12px; overflow: hidden;">
             <div style="background-color: #1c1917; padding: 32px; text-align: center;">
                 <h1 style="color: #fef3c7; margin: 0; font-size: 24px;">Ordrestadfesting</h1>
@@ -36,7 +39,7 @@ export async function sendOrderConfirmation(to: string, orderDetails: {
                     <p style="margin: 8px 0;"><strong>Ordrenummer:</strong> ${id}</p>
                     <p style="margin: 8px 0;"><strong>Produkt:</strong> Blandingsved, 1000L storsekk</p>
                     <p style="margin: 8px 0;"><strong>Tal på:</strong> ${quantity} stk.</p>
-                    <p style="margin: 8px 0;"><strong>Fraktmåte:</strong> ${deliveryMethod === 'pickup' ? 'Hent sjølv' : (deliveryMethod === 'express' ? 'Heimlevering (Ekspress)' : 'Heimlevering (Standard)')}</p>
+                    <p style="margin: 8px 0;"><strong>Fraktmåte:</strong> ${deliveryMethod === 'pickup' ? 'Hent sjølv' : deliveryMethod === 'express' ? 'Heimlevering (Ekspress)' : 'Heimlevering (Standard)'}</p>
                     ${address ? `<p style="margin: 8px 0;"><strong>Leveringsadresse:</strong> ${address}, ${zip} ${city}</p>` : ''}
                     <p style="margin: 16px 0; font-size: 20px; color: #b45309;"><strong>Totalpris: ${totalPrice.toLocaleString('no-NO')} kr</strong></p>
                 </div>
@@ -53,29 +56,40 @@ export async function sendOrderConfirmation(to: string, orderDetails: {
         </div>
     `;
 
-    await transporter.sendMail({
-        from: `"Haugalandsved" <${env.SMTP_FROM}>`,
-        to,
-        subject: `Ordrestadfesting - ${id}`,
-        html,
-    });
+	await transporter.sendMail({
+		from: `"Haugalandsved" <${env.SMTP_FROM}>`,
+		to,
+		subject: `Ordrestadfesting - ${id}`,
+		html
+	});
 }
 
 export async function sendAdminNotification(orderDetails: {
-    id: string;
-    quantity: number;
-    deliveryMethod: string;
-    totalPrice: number;
-    customerEmail: string;
-    customerName?: string;
-    customerPhone?: string;
-    address?: string;
-    zip?: string;
-    city?: string;
+	id: string;
+	quantity: number;
+	deliveryMethod: string;
+	totalPrice: number;
+	customerEmail: string;
+	customerName?: string;
+	customerPhone?: string;
+	address?: string;
+	zip?: string;
+	city?: string;
 }) {
-    const { id, quantity, deliveryMethod, totalPrice, customerEmail, customerName, customerPhone, address, zip, city } = orderDetails;
+	const {
+		id,
+		quantity,
+		deliveryMethod,
+		totalPrice,
+		customerEmail,
+		customerName,
+		customerPhone,
+		address,
+		zip,
+		city
+	} = orderDetails;
 
-    const html = `
+	const html = `
         <div style="font-family: sans-serif; color: #1c1917; max-width: 600px; margin: 0 auto; border: 1px solid #e7e5e4; border-radius: 12px; overflow: hidden;">
             <div style="background-color: #b45309; padding: 24px; text-align: center;">
                 <h1 style="color: #ffffff; margin: 0; font-size: 20px;">Ny bestilling mottatt!</h1>
@@ -89,7 +103,7 @@ export async function sendAdminNotification(orderDetails: {
                     ${customerPhone ? `<p style="margin: 8px 0;"><strong>Telefon:</strong> ${customerPhone}</p>` : ''}
                     ${address ? `<p style="margin: 8px 0;"><strong>Adresse:</strong> ${address}, ${zip} ${city}</p>` : ''}
                     <p style="margin: 8px 0;"><strong>Tal på:</strong> ${quantity} stk. 1000L storsekk</p>
-                    <p style="margin: 8px 0;"><strong>Frakt:</strong> ${deliveryMethod === 'pickup' ? 'Hent sjølv' : (deliveryMethod === 'express' ? 'Heimlevering (Ekspress)' : 'Heimlevering (Standard)')}</p>
+                    <p style="margin: 8px 0;"><strong>Frakt:</strong> ${deliveryMethod === 'pickup' ? 'Hent sjølv' : deliveryMethod === 'express' ? 'Heimlevering (Ekspress)' : 'Heimlevering (Standard)'}</p>
                     <p style="margin: 8px 0;"><strong>Totalpris:</strong> ${totalPrice.toLocaleString('no-NO')} kr</p>
                 </div>
 
@@ -100,10 +114,10 @@ export async function sendAdminNotification(orderDetails: {
         </div>
     `;
 
-    await transporter.sendMail({
-        from: `"Haugalandsved System" <${env.SMTP_FROM}>`,
-        to: [env.ADMIN_EMAIL || 'norleifj@online.no', 'erik@fjelldata.com'],
-        subject: `NY ORDRE - ${id} - ${quantity} stk storsekk`,
-        html,
-    });
+	await transporter.sendMail({
+		from: `"Haugalandsved System" <${env.SMTP_FROM}>`,
+		to: [env.ADMIN_EMAIL || 'norleifj@online.no', 'erik@fjelldata.com'],
+		subject: `NY ORDRE - ${id} - ${quantity} stk storsekk`,
+		html
+	});
 }

@@ -14,7 +14,7 @@
 		try {
 			await pb.collection('users').authWithPassword(email, password);
 			goto('/');
-		} catch (e: any) {
+		} catch {
 			error = 'Feil e-post eller passord';
 		} finally {
 			loading = false;

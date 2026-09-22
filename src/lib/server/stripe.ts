@@ -5,9 +5,9 @@ import { STRIPE_SECRET_KEY as STRIPE_SECRET_KEY_STATIC } from '$env/static/priva
 const secretKey = env.STRIPE_SECRET_KEY || STRIPE_SECRET_KEY_STATIC;
 
 if (!secretKey) {
-    console.error('CRITICAL: STRIPE_SECRET_KEY is missing from environment variables');
+	console.error('CRITICAL: STRIPE_SECRET_KEY is missing from environment variables');
 }
 
 export const stripe = new Stripe(secretKey || '', {
-	apiVersion: '2026-02-25.clover'
+	apiVersion: '2026-08-26.dahlia'
 });

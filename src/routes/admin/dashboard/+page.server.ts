@@ -18,7 +18,11 @@ function serializeOrder(order: Record<string, any>) {
 	return {
 		id: order.id,
 		created: rawCreated,
-		formattedDate: Number.isNaN(timestamp.getTime()) ? 'Ukjend dato' : new Intl.DateTimeFormat('nn-NO', { dateStyle: 'medium', timeStyle: 'short' }).format(timestamp),
+		formattedDate: Number.isNaN(timestamp.getTime())
+			? 'Ukjend dato'
+			: new Intl.DateTimeFormat('nn-NO', { dateStyle: 'medium', timeStyle: 'short' }).format(
+					timestamp
+				),
 		status: order.status || 'Ukjend',
 		quantity: Number(order.quantity || 0),
 		delivery_method: order.delivery_method || '',
@@ -36,7 +40,9 @@ export const load: PageServerLoad = async ({ locals }) => {
 	if (!isAdmin(locals)) throw redirect(303, '/admin/login');
 	try {
 		const records = await locals.pb.collection('orders').getFullList({ expand: 'user' });
-		records.sort((a, b) => parsePocketBaseDate(b.created).getTime() - parsePocketBaseDate(a.created).getTime());
+		records.sort(
+			(a, b) => parsePocketBaseDate(b.created).getTime() - parsePocketBaseDate(a.created).getTime()
+		);
 		return { orders: records.map(serializeOrder), statuses };
 	} catch (error) {
 		console.error('Kunne ikkje laste ordrar:', error);
@@ -50,7 +56,8 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const id = String(data.get('id') || '');
 		const status = String(data.get('status') || '');
-		if (!id || !statuses.includes(status as (typeof statuses)[number])) return fail(400, { error: 'Ugyldig ordrestatus.' });
+		if (!id || !statuses.includes(status as (typeof statuses)[number]))
+			return fail(400, { error: 'Ugyldig ordrestatus.' });
 		try {
 			await locals.pb.collection('orders').update(id, { status });
 			return { success: true };

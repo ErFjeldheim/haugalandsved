@@ -1,5 +1,5 @@
 export async function GET() {
-    const body = `User-agent: *
+	const body = `User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /auth/
@@ -9,10 +9,10 @@ Disallow: /api/
 
 Sitemap: https://haugalandsved.no/sitemap.xml`;
 
-    return new Response(body, {
-        headers: {
-            'Content-Type': 'text/plain',
-            'Cache-Control': 'max-age=0, s-maxage=3600'
-        }
-    });
+	return new Response(body, {
+		headers: {
+			'Content-Type': 'text/plain',
+			'Cache-Control': 'max-age=0, s-maxage=3600'
+		}
+	});
 }

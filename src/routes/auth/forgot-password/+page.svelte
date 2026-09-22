@@ -14,7 +14,7 @@
 		try {
 			await pb.collection('users').requestPasswordReset(email);
 			success = true;
-		} catch (e: any) {
+		} catch {
 			error = 'Kunne ikkje sende e-post for tilbakestilling. Sjekk at adressa er rett.';
 		} finally {
 			loading = false;

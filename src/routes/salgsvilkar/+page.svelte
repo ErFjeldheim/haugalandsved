@@ -11,9 +11,9 @@
 			<section>
 				<h2 class="text-xl font-bold text-stone-900">1. Partane</h2>
 				<p>
-					Seljar er Din Jakt AS, organisasjonsnummer 993278408 (heretter kalla "Seljar",
-					"me" eller "oss"). Kjøpar er den forbrukaren som gjer bestillinga (heretter kalla
-					"Kjøpar", "du" eller "deg").
+					Seljar er Din Jakt AS, organisasjonsnummer 993278408 (heretter kalla "Seljar", "me" eller
+					"oss"). Kjøpar er den forbrukaren som gjer bestillinga (heretter kalla "Kjøpar", "du"
+					eller "deg").
 				</p>
 			</section>
 
@@ -29,9 +29,9 @@
 			<section>
 				<h2 class="text-xl font-bold text-stone-900">3. Prisar og betaling</h2>
 				<p>
-					Alle prisar er oppgitt i norske kroner (NOK). Betaling
-					blir handtert trygt av betalingspartnaren vår <strong>Stripe</strong>. Kjøpesummen blir tredd
-					 frå kontoen til Kjøpar ved bestilling.
+					Alle prisar er oppgitt i norske kroner (NOK). Betaling blir handtert trygt av
+					betalingspartnaren vår <strong>Stripe</strong>. Kjøpesummen blir tredd frå kontoen til
+					Kjøpar ved bestilling.
 				</p>
 			</section>
 
@@ -56,10 +56,10 @@
 			<section>
 				<h2 class="text-xl font-bold text-stone-900">5. Angrerett</h2>
 				<p>
-					I samsvar med angrerettlova har Kjøpar rett til å angra kjøpet innan 14 dagar etter
-					mottak av vara. Kjøpar må gje Seljar melding om bruk av angreretten innan fristen går ut.
-					Ved bruk av angrerett må vara returnerast i same stand som ved mottak. Kostnader ved
-					retur blir borne av Kjøpar.
+					I samsvar med angrerettlova har Kjøpar rett til å angra kjøpet innan 14 dagar etter mottak
+					av vara. Kjøpar må gje Seljar melding om bruk av angreretten innan fristen går ut. Ved
+					bruk av angrerett må vara returnerast i same stand som ved mottak. Kostnader ved retur
+					blir borne av Kjøpar.
 				</p>
 			</section>
 
@@ -75,8 +75,8 @@
 			<section>
 				<h2 class="text-xl font-bold text-stone-900">7. Tvistar</h2>
 				<p>
-					Partane skal forsøka å løysa eventuelle tvistar i minnelegheit. Dersom me ikkje lukkast med dette,
-					kan Kjøpar ta kontakt med Forbrukartilsynet for mekling.
+					Partane skal forsøka å løysa eventuelle tvistar i minnelegheit. Dersom me ikkje lukkast
+					med dette, kan Kjøpar ta kontakt med Forbrukartilsynet for mekling.
 				</p>
 			</section>
 		</div>

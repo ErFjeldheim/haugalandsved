@@ -17,8 +17,13 @@
 	const filteredOrders = $derived(
 		orders.filter((order) => {
 			const query = orderSearch.trim().toLowerCase();
-			return (orderFilter === 'Alle' || order.status === orderFilter) &&
-				(!query || [order.id, order.customer_name, order.email, order.city].some((value) => String(value).toLowerCase().includes(query)));
+			return (
+				(orderFilter === 'Alle' || order.status === orderFilter) &&
+				(!query ||
+					[order.id, order.customer_name, order.email, order.city].some((value) =>
+						String(value).toLowerCase().includes(query)
+					))
+			);
 		})
 	);
 
@@ -40,7 +45,7 @@
 				pb.collection('inventory').getFullList(),
 				pb.collection('campaigns').getFullList({ sort: '-created' })
 			]);
-			
+
 			inventoryItems = invRes;
 			campaigns = campRes.map((c) => ({
 				...c,
@@ -203,40 +208,105 @@
 						<p class="mt-1 text-sm text-stone-500">{orders.length} ordre totalt</p>
 					</div>
 					<div class="flex flex-col gap-2 sm:flex-row">
-						<input bind:value={orderSearch} placeholder="Søk etter ordre eller kunde" class="rounded-md border-stone-300 text-sm shadow-sm" />
+						<input
+							bind:value={orderSearch}
+							placeholder="Søk etter ordre eller kunde"
+							class="rounded-md border-stone-300 text-sm shadow-sm"
+						/>
 						<select bind:value={orderFilter} class="rounded-md border-stone-300 text-sm shadow-sm">
 							<option>Alle</option>
 							{#each orderStatuses as status}<option value={status}>{status}</option>{/each}
 						</select>
 					</div>
 				</div>
-				{#if form?.error}<p class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700">{form.error}</p>{/if}
-				{#if data.error}<p class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700">{data.error}</p>{/if}
+				{#if form?.error}<p class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700">
+						{form.error}
+					</p>{/if}
+				{#if data.error}<p class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700">
+						{data.error}
+					</p>{/if}
 				{#if filteredOrders.length === 0}
-					<div class="rounded-lg bg-white p-6 text-center text-stone-500 shadow-sm ring-1 ring-stone-900/5">Ingen ordre samsvarar med søket.</div>
+					<div
+						class="rounded-lg bg-white p-6 text-center text-stone-500 shadow-sm ring-1 ring-stone-900/5"
+					>
+						Ingen ordre samsvarar med søket.
+					</div>
 				{:else}
 					<div class="space-y-4">
 						{#each filteredOrders as order}
 							<article class="rounded-lg bg-white p-5 shadow-sm ring-1 ring-stone-900/5">
 								<div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
 									<div>
-										<div class="flex flex-wrap items-center gap-3"><h2 class="font-semibold text-stone-900">#{order.id}</h2><span class={`rounded-full px-2.5 py-1 text-xs font-medium ${statusColor(order.status)}`}>{order.status}</span></div>
-										<p class="mt-1 text-sm text-stone-500">{order.formattedDate} · {order.quantity} stk · {deliveryLabel(order.delivery_method)}</p>
-										<p class="mt-3 font-medium text-stone-900">{order.customer_name || 'Utan namn'}</p>
-										<p class="text-sm text-stone-600">{order.email || 'Ingen e-post'} · {order.phone || 'Ingen telefon'}</p>
-										<p class="text-sm text-stone-600">{order.address || 'Ingen adresse'}{order.city ? `, ${order.zip} ${order.city}` : ''}</p>
+										<div class="flex flex-wrap items-center gap-3">
+											<h2 class="font-semibold text-stone-900">#{order.id}</h2>
+											<span
+												class={`rounded-full px-2.5 py-1 text-xs font-medium ${statusColor(order.status)}`}
+												>{order.status}</span
+											>
+										</div>
+										<p class="mt-1 text-sm text-stone-500">
+											{order.formattedDate} · {order.quantity} stk · {deliveryLabel(
+												order.delivery_method
+											)}
+										</p>
+										<p class="mt-3 font-medium text-stone-900">
+											{order.customer_name || 'Utan namn'}
+										</p>
+										<p class="text-sm text-stone-600">
+											{order.email || 'Ingen e-post'} · {order.phone || 'Ingen telefon'}
+										</p>
+										<p class="text-sm text-stone-600">
+											{order.address || 'Ingen adresse'}{order.city
+												? `, ${order.zip} ${order.city}`
+												: ''}
+										</p>
 									</div>
-									<div class="text-left lg:text-right"><p class="text-xs font-medium uppercase tracking-wide text-stone-500">Total</p><p class="text-xl font-bold text-brand-primary">{formatPrice(order.total_price)}</p></div>
+									<div class="text-left lg:text-right">
+										<p class="text-xs font-medium tracking-wide text-stone-500 uppercase">Total</p>
+										<p class="text-xl font-bold text-brand-primary">
+											{formatPrice(order.total_price)}
+										</p>
+									</div>
 								</div>
-								<form method="POST" action="?/updateStatus" use:enhance class="mt-4 flex flex-wrap items-center gap-3 border-t border-stone-100 pt-4">
+								<form
+									method="POST"
+									action="?/updateStatus"
+									use:enhance
+									class="mt-4 flex flex-wrap items-center gap-3 border-t border-stone-100 pt-4"
+								>
 									<input type="hidden" name="id" value={order.id} />
-									<label for="status-{order.id}" class="text-sm font-medium text-stone-700">Status</label>
-									<select id="status-{order.id}" name="status" bind:value={order.status} class="rounded-md border-stone-300 text-sm shadow-sm">{#each orderStatuses as status}<option value={status}>{status}</option>{/each}</select>
-									<button disabled={saving} class="rounded-md bg-stone-900 px-3 py-2 text-sm font-semibold text-white hover:bg-stone-800 disabled:opacity-50">Lagre status</button>
+									<label for="status-{order.id}" class="text-sm font-medium text-stone-700"
+										>Status</label
+									>
+									<select
+										id="status-{order.id}"
+										name="status"
+										bind:value={order.status}
+										class="rounded-md border-stone-300 text-sm shadow-sm"
+										>{#each orderStatuses as status}<option value={status}>{status}</option
+											>{/each}</select
+									>
+									<button
+										disabled={saving}
+										class="rounded-md bg-stone-900 px-3 py-2 text-sm font-semibold text-white hover:bg-stone-800 disabled:opacity-50"
+										>Lagre status</button
+									>
 								</form>
-								<form method="POST" action="?/deleteOrder" use:enhance={() => ({ result }) => handleDeleteResult(order.id, result)} onsubmit={(event) => confirmRemoveOrder(event, order.id)} class="mt-2">
+								<form
+									method="POST"
+									action="?/deleteOrder"
+									use:enhance={() =>
+										({ result }) =>
+											handleDeleteResult(order.id, result)}
+									onsubmit={(event) => confirmRemoveOrder(event, order.id)}
+									class="mt-2"
+								>
 									<input type="hidden" name="id" value={order.id} />
-									<button type="submit" class="rounded-md border border-red-200 px-3 py-2 text-sm font-semibold text-red-700 hover:bg-red-50">Slett ordre</button>
+									<button
+										type="submit"
+										class="rounded-md border border-red-200 px-3 py-2 text-sm font-semibold text-red-700 hover:bg-red-50"
+										>Slett ordre</button
+									>
 								</form>
 							</article>
 						{/each}
@@ -272,7 +342,7 @@
 									<div class="flex flex-col gap-1">
 										<label
 											for="stock-{item.id}"
-											class="text-xs font-medium uppercase text-stone-500">Antall på lager</label
+											class="text-xs font-medium text-stone-500 uppercase">Antall på lager</label
 										>
 										<input
 											type="number"
@@ -284,7 +354,7 @@
 									</div>
 
 									<div class="flex flex-col gap-1">
-										<span class="text-xs font-medium uppercase text-stone-500">Status</span>
+										<span class="text-xs font-medium text-stone-500 uppercase">Status</span>
 										<label class="inline-flex cursor-pointer items-center">
 											<input
 												type="checkbox"
@@ -334,9 +404,7 @@
 							>
 								<div class="flex items-center justify-between">
 									<div class="flex items-center gap-3">
-										<span
-											class={`rounded-full px-2.5 py-0.5 text-xs font-medium ${status.color}`}
-										>
+										<span class={`rounded-full px-2.5 py-0.5 text-xs font-medium ${status.color}`}>
 											{status.text}
 										</span>
 										<span class="text-xs text-stone-400">ID: {campaign.id}</span>
@@ -352,7 +420,10 @@
 
 								<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
 									<div class="flex flex-col gap-1">
-										<label for="label-{campaign.id}" class="text-xs font-medium uppercase text-stone-500">Bannertekst</label>
+										<label
+											for="label-{campaign.id}"
+											class="text-xs font-medium text-stone-500 uppercase">Bannertekst</label
+										>
 										<input
 											id="label-{campaign.id}"
 											type="text"
@@ -361,7 +432,10 @@
 										/>
 									</div>
 									<div class="flex flex-col gap-1">
-										<label for="campaignPrice-{campaign.id}" class="text-xs font-medium uppercase text-stone-500">Kampanjepris</label>
+										<label
+											for="campaignPrice-{campaign.id}"
+											class="text-xs font-medium text-stone-500 uppercase">Kampanjepris</label
+										>
 										<input
 											id="campaignPrice-{campaign.id}"
 											type="number"
@@ -370,7 +444,10 @@
 										/>
 									</div>
 									<div class="flex flex-col gap-1">
-										<label for="standardPrice-{campaign.id}" class="text-xs font-medium uppercase text-stone-500">Standardpris</label>
+										<label
+											for="standardPrice-{campaign.id}"
+											class="text-xs font-medium text-stone-500 uppercase">Standardpris</label
+										>
 										<input
 											id="standardPrice-{campaign.id}"
 											type="number"
@@ -379,7 +456,10 @@
 										/>
 									</div>
 									<div class="flex flex-col gap-1">
-										<label for="endDate-{campaign.id}" class="text-xs font-medium uppercase text-stone-500">Sluttdato</label>
+										<label
+											for="endDate-{campaign.id}"
+											class="text-xs font-medium text-stone-500 uppercase">Sluttdato</label
+										>
 										<input
 											id="endDate-{campaign.id}"
 											type="datetime-local"

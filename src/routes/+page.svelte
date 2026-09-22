@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { pb, currentUser } from '$lib/pocketbase';
+	import { currentUser } from '$lib/pocketbase';
 	import { onMount } from 'svelte';
-	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
 	import 'leaflet/dist/leaflet.css';
 
@@ -53,6 +52,26 @@
 		remainingSpots: count % 3 === 0 ? 0 : 3 - (count % 3),
 		isFull: count % 3 === 0
 	});
+
+	let productJsonLd = $derived(
+		`<script type="application/ld+json">${JSON.stringify({
+			'@context': 'https://schema.org',
+			'@type': 'Product',
+			name: 'Blandingsved, 1000L storsekk',
+			description:
+				'Kortreist blandingsved av furu, bjørk, gran, rogn og selje. Ferdig kappa og kløyvd i 1000L storsekk på europall.',
+			image: 'https://haugalandsved.no/images/enkelt-palle-blandingsved.webp',
+			brand: { '@type': 'Brand', name: 'Haugalandsved' },
+			offers: {
+				'@type': 'Offer',
+				url: 'https://haugalandsved.no/#kalkulator',
+				priceCurrency: 'NOK',
+				price: PRICE_PER_SACK,
+				availability: 'https://schema.org/InStock',
+				seller: { '@type': 'Organization', name: 'Haugalandsved' }
+			}
+		})}</` + 'script>'
+	);
 
 	const woodTypes = [
 		{
@@ -184,15 +203,7 @@
 			},
 			"openingHoursSpecification": {
 				"@type": "OpeningHoursSpecification",
-				"dayOfWeek": [
-					"Monday",
-					"Tuesday",
-					"Wednesday",
-					"Thursday",
-					"Friday",
-					"Saturday",
-					"Sunday"
-				],
+				"dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
 				"opens": "00:00",
 				"closes": "23:59"
 			},
@@ -200,22 +211,8 @@
 		}
 	</script>
 	{#if inventory.isInStock}
-		{@html `<script type="application/ld+json">${JSON.stringify({
-			"@context": "https://schema.org",
-			"@type": "Product",
-			"name": "Blandingsved, 1000L storsekk",
-			"description": "Kortreist blandingsved av furu, bjørk, gran, rogn og selje. Ferdig kappa og kløyvd i 1000L storsekk på europall.",
-			"image": "https://haugalandsved.no/images/enkelt-palle-blandingsved.webp",
-			"brand": { "@type": "Brand", "name": "Haugalandsved" },
-			"offers": {
-				"@type": "Offer",
-				"url": "https://haugalandsved.no/#kalkulator",
-				"priceCurrency": "NOK",
-				"price": PRICE_PER_SACK,
-				"availability": "https://schema.org/InStock",
-				"seller": { "@type": "Organization", "name": "Haugalandsved" }
-			}
-		})}</script>`}
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+		{@html productJsonLd}
 	{/if}
 </svelte:head>
 
@@ -223,7 +220,9 @@
 	<!-- URGENCY BANNER -->
 	{#if campaignActive && inventory.isInStock}
 		<div class="bg-brand-campaign-bg">
-			<div class="container mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-2 px-4 py-3 text-center">
+			<div
+				class="container mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-2 px-4 py-3 text-center"
+			>
 				<p class="text-sm font-bold text-brand-campaign-text">
 					{CAMPAIGN_LABEL} Spar {STANDARD_PRICE - CAMPAIGN_PRICE} kr per sekk
 					<span class="mx-2 text-brand-campaign-sub">|</span>
@@ -245,7 +244,9 @@
 	<section class="relative overflow-hidden bg-stone-900 py-20 text-white lg:py-32">
 		<!-- Abstract background pattern -->
 		<div class="absolute inset-0 opacity-20">
-			<div class="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-brand-primary-hover blur-3xl"></div>
+			<div
+				class="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-brand-primary-hover blur-3xl"
+			></div>
 			<div class="absolute top-1/2 right-0 h-64 w-64 rounded-full bg-orange-900 blur-3xl"></div>
 		</div>
 
@@ -290,7 +291,9 @@
 								>
 									{CAMPAIGN_LABEL}
 								</span>
-								<span class="text-[10px] font-bold text-brand-campaign-sub uppercase tracking-widest">
+								<span
+									class="text-[10px] font-bold tracking-widest text-brand-campaign-sub uppercase"
+								>
 									Gjeld t.o.m. {campaignEndFormatted}
 								</span>
 							</div>
@@ -301,16 +304,20 @@
 						<div class="mb-8 rounded-lg bg-red-50 p-4 ring-1 ring-red-200">
 							<p class="flex items-center gap-2 text-sm font-medium text-red-800">
 								<span class="relative flex h-2.5 w-2.5 shrink-0">
-									<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75"></span>
+									<span
+										class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75"
+									></span>
 									<span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-600"></span>
 								</span>
-								Berre <span class="text-lg font-bold">{inventory.quantity}</span> storsekker att på lager – snart utselt!
+								Berre <span class="text-lg font-bold">{inventory.quantity}</span> storsekker att på lager
+								– snart utselt!
 							</p>
 						</div>
 					{:else}
 						<div class="mb-8 rounded-lg bg-stone-50 p-4 ring-1 ring-stone-900/5">
 							<p class="text-sm font-medium text-stone-600">
-								<span class="text-lg font-bold text-stone-900">{inventory.quantity}</span> storsekker på lager.
+								<span class="text-lg font-bold text-stone-900">{inventory.quantity}</span> storsekker
+								på lager.
 							</p>
 						</div>
 					{/if}
@@ -369,7 +376,11 @@
 								</div>
 								<p class="mt-2 text-sm text-stone-600">
 									Maks {Math.min(9, inventory.quantity)} sekker per bestilling.
-									<a href="#kontakt" class="font-medium text-brand-primary hover:text-brand-primary-hover">Kontakt oss</a> for større mengder.
+									<a
+										href="#kontakt"
+										class="font-medium text-brand-primary hover:text-brand-primary-hover"
+										>Kontakt oss</a
+									> for større mengder.
 								</p>
 							</div>
 
@@ -395,9 +406,15 @@
 										<span class="flex flex-1">
 											<span class="flex flex-col">
 												<span class="block text-sm font-medium text-stone-900">Hent sjølv </span>
-												<span class="mt-1 flex items-center text-xs text-stone-600">Etter avtale</span>
-												<span class="mt-2 text-xs text-stone-600 opacity-0 select-none">Henting frå lager</span>
-												<span class="mt-4 text-sm font-bold text-stone-900">Fjellheimsvegen 66, 5574 Skjold</span>
+												<span class="mt-1 flex items-center text-xs text-stone-600"
+													>Etter avtale</span
+												>
+												<span class="mt-2 text-xs text-stone-600 opacity-0 select-none"
+													>Henting frå lager</span
+												>
+												<span class="mt-4 text-sm font-bold text-stone-900"
+													>Fjellheimsvegen 66, 5574 Skjold</span
+												>
 											</span>
 										</span>
 										<span
@@ -439,10 +456,10 @@
 												<span class="mt-1 flex items-center text-xs text-stone-600"
 													>Innan 14 dagar</span
 												>
-												<span class="mt-2 text-xs text-stone-600">Levering til sone Haugalandet</span>
-												<span class="mt-4 text-sm font-bold text-stone-900"
-													>300 kr per palle</span
+												<span class="mt-2 text-xs text-stone-600"
+													>Levering til sone Haugalandet</span
 												>
+												<span class="mt-4 text-sm font-bold text-stone-900">300 kr per palle</span>
 											</span>
 										</span>
 										<span
@@ -478,7 +495,9 @@
 												<span class="mt-1 flex items-center text-xs text-stone-600"
 													>Innan 48 timar</span
 												>
-												<span class="mt-2 text-xs text-stone-600">Levering til sone Haugalandet</span>
+												<span class="mt-2 text-xs text-stone-600"
+													>Levering til sone Haugalandet</span
+												>
 												<span class="mt-4 text-sm font-bold text-stone-900"
 													>1000 kr per 3 paller</span
 												>
@@ -539,11 +558,13 @@
 								{#if deliveryMethod === 'express' && !trailerSpotInfo.isFull}
 									<div class="mt-2 rounded-lg bg-orange-50 p-3 ring-1 ring-orange-200">
 										<p class="text-xs font-medium text-orange-800">
-											Me har plass til <span class="font-bold">{trailerSpotInfo.remainingSpots}</span> sekk(er) til på hengaren for same fraktpris!
+											Me har plass til <span class="font-bold"
+												>{trailerSpotInfo.remainingSpots}</span
+											> sekk(er) til på hengaren for same fraktpris!
 										</p>
 										<button
 											onclick={() => (count = count + trailerSpotInfo.remainingSpots)}
-											class="mt-2 cursor-pointer text-[10px] font-bold uppercase tracking-wider text-orange-900 underline"
+											class="mt-2 cursor-pointer text-[10px] font-bold tracking-wider text-orange-900 uppercase underline"
 										>
 											Fyll opp hengaren
 										</button>
@@ -557,21 +578,25 @@
 								{/if}
 								<div class="flex items-center justify-between border-t border-stone-200 pt-4">
 									<dt class="text-base font-medium text-stone-900">Total</dt>
-									<dd class="text-2xl font-bold text-brand-primary">{totalCost.toLocaleString()} kr</dd>
+									<dd class="text-2xl font-bold text-brand-primary">
+										{totalCost.toLocaleString()} kr
+									</dd>
 								</div>
 							</dl>
 						</div>
 
 						<div class="mt-8">
 							{#if orderError}
-								<p class="mb-4 text-center text-xs text-red-600" role="alert" aria-live="assertive">{orderError}</p>
+								<p class="mb-4 text-center text-xs text-red-600" role="alert" aria-live="assertive">
+									{orderError}
+								</p>
 							{/if}
 
-						<form action="/checkout" method="POST" bind:this={checkoutForm} class="hidden">
-							<input type="hidden" name="quantity" value={count} />
-							<input type="hidden" name="deliveryMethod" value={deliveryMethod} />
-							<input type="hidden" name="email" value={$currentUser?.email} />
-						</form>
+							<form action="/checkout" method="POST" bind:this={checkoutForm} class="hidden">
+								<input type="hidden" name="quantity" value={count} />
+								<input type="hidden" name="deliveryMethod" value={deliveryMethod} />
+								<input type="hidden" name="email" value={$currentUser?.email} />
+							</form>
 
 							<button
 								onclick={placeOrder}
@@ -581,8 +606,19 @@
 								{#if orderLoading}
 									<span class="inline-flex items-center gap-2">
 										<svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-											<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-											<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+											<circle
+												class="opacity-25"
+												cx="12"
+												cy="12"
+												r="10"
+												stroke="currentColor"
+												stroke-width="4"
+											></circle>
+											<path
+												class="opacity-75"
+												fill="currentColor"
+												d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+											></path>
 										</svg>
 										Handsamar...
 									</span>
@@ -595,26 +631,57 @@
 
 							<div class="mt-4 space-y-2">
 								<div class="flex items-center justify-center gap-2 text-xs text-stone-500">
-									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4 text-green-600">
-										<path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="h-4 w-4 text-green-600"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+										/>
 									</svg>
 									<span>Trygg betaling med Stripe</span>
 								</div>
 								<div class="flex items-center justify-center gap-2 text-xs text-stone-500">
-									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4 text-green-600">
-										<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="h-4 w-4 text-green-600"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+										/>
 									</svg>
 									<span>14 dagars angrerett</span>
 								</div>
 								<div class="flex items-center justify-center gap-2 text-xs text-stone-500">
-									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4 text-green-600">
-										<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0H6.375c-.621 0-1.125-.504-1.125-1.125V14.25m0 0h11.25m0 0V11.625m0 2.625h2.25m0 0V8.25a1.125 1.125 0 00-1.125-1.125h-1.5m2.625 7.875h.375a.375.375 0 00.375-.375V14.25m0 0h-2.625" />
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="h-4 w-4 text-green-600"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0H6.375c-.621 0-1.125-.504-1.125-1.125V14.25m0 0h11.25m0 0V11.625m0 2.625h2.25m0 0V8.25a1.125 1.125 0 00-1.125-1.125h-1.5m2.625 7.875h.375a.375.375 0 00.375-.375V14.25m0 0h-2.625"
+										/>
 									</svg>
 									<span>Lokal levering på Haugalandet</span>
 								</div>
 							</div>
-
-
 						</div>
 					</div>
 				{/if}
@@ -626,7 +693,7 @@
 	<section id="om-veden" class="bg-white py-16 lg:py-24">
 		<div class="container mx-auto px-4">
 			<div class="mx-auto max-w-2xl text-center">
-				<h2 class="text-pretty text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">
+				<h2 class="text-3xl font-bold tracking-tight text-pretty text-stone-900 sm:text-4xl">
 					Kvalitet i kvar sekk
 				</h2>
 				<p class="mt-4 text-lg leading-8 text-stone-600">
@@ -679,8 +746,8 @@
 				<div class="mx-auto max-w-2xl text-center">
 					<h3 class="text-2xl font-bold text-stone-900">Kva inneheld blandinga?</h3>
 					<p class="mt-4 text-stone-600">
-						Blandingsveden vår inneheld ein god miks av ulike treslag for optimal
-						forbrenning. Storsekker kan også innehalda rogn og selje.
+						Blandingsveden vår inneheld ein god miks av ulike treslag for optimal forbrenning.
+						Storsekker kan også innehalda rogn og selje.
 					</p>
 				</div>
 				<div class="mt-16 sm:mt-20 lg:mt-24">
@@ -733,43 +800,88 @@
 				<div class="mt-24 grid grid-cols-1 gap-12 lg:grid-cols-2">
 					<div class="rounded-2xl bg-stone-50 p-8 ring-1 ring-stone-900/5 lg:p-10">
 						<div class="flex items-center gap-4">
-							<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-amber-900">
-								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-									<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+							<div
+								class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-amber-900"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									class="h-6 w-6"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+									/>
 								</svg>
 							</div>
 							<h3 class="text-xl font-bold text-stone-900">Lagra i 2 år</h3>
 						</div>
-						<p class="mt-6 text-stone-600 leading-relaxed">
-							Me har ved som har vore lagra tørt innandørs i over 2 år. Dette sikrar ein stabil og god tørrgrad. 
-							Veden er resultatet av rydding i skogen og langs gardsvegen for å gjera det fint og ryddig rundt oss.
+						<p class="mt-6 leading-relaxed text-stone-600">
+							Me har ved som har vore lagra tørt innandørs i over 2 år. Dette sikrar ein stabil og
+							god tørrgrad. Veden er resultatet av rydding i skogen og langs gardsvegen for å gjera
+							det fint og ryddig rundt oss.
 						</p>
-						<p class="mt-4 text-stone-600 leading-relaxed">
-							<strong class="text-stone-900">Visste du?</strong> All ved har om lag same brennverdi rekna i tørrstoff pr. kg. Granveden er noko lettare, og har difor litt større volum pr. kg enn tyngre treslag som bjørk.
+						<p class="mt-4 leading-relaxed text-stone-600">
+							<strong class="text-stone-900">Visste du?</strong> All ved har om lag same brennverdi rekna
+							i tørrstoff pr. kg. Granveden er noko lettare, og har difor litt større volum pr. kg enn
+							tyngre treslag som bjørk.
 						</p>
 					</div>
 
 					<div class="rounded-2xl bg-amber-50 p-8 ring-1 ring-amber-900/5 lg:p-10">
 						<div class="flex items-center gap-4">
-							<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-200 text-amber-900">
-								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-									<path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
-									<path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-3.333-2.328 3.75 3.75 0 003.11 6.249z" />
+							<div
+								class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-200 text-amber-900"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									class="h-6 w-6"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"
+									/>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-3.333-2.328 3.75 3.75 0 003.11 6.249z"
+									/>
 								</svg>
 							</div>
 							<h3 class="text-xl font-bold text-stone-900">Tips for betre fyring</h3>
 						</div>
 						<ul class="mt-6 space-y-4">
 							<li class="flex gap-3 text-stone-600">
-								<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-200 text-xs font-bold text-amber-900">1</span>
+								<span
+									class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-200 text-xs font-bold text-amber-900"
+									>1</span
+								>
 								<span>Syt for god trekk for å få komplett forbrenning og minimalt med aske.</span>
 							</li>
 							<li class="flex gap-3 text-stone-600">
-								<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-200 text-xs font-bold text-amber-900">2</span>
-								<span>Reguler varmen med <strong class="text-stone-900">mengda ved</strong> meir enn med trekken.</span>
+								<span
+									class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-200 text-xs font-bold text-amber-900"
+									>2</span
+								>
+								<span
+									>Reguler varmen med <strong class="text-stone-900">mengda ved</strong> meir enn med
+									trekken.</span
+								>
 							</li>
 							<li class="flex gap-3 text-stone-600">
-								<span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-200 text-xs font-bold text-amber-900">3</span>
+								<span
+									class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-200 text-xs font-bold text-amber-900"
+									>3</span
+								>
 								<span>Godt oppkløyvd ved gjev ein reinare og betre forbrenning i omnen din.</span>
 							</li>
 						</ul>
@@ -788,8 +900,8 @@
 					<div>
 						<h2 class="text-3xl font-bold tracking-tight text-stone-900">Kontakt oss</h2>
 						<p class="mt-4 text-stone-600">
-							Lurer du på noko om levering, vedkvalitet eller ønsker du å bestille større mengder? Ta
-							gjerne kontakt med oss.
+							Lurer du på noko om levering, vedkvalitet eller ønsker du å bestille større mengder?
+							Ta gjerne kontakt med oss.
 						</p>
 
 						<div class="mt-8 space-y-6">
@@ -880,7 +992,12 @@
 						<div
 							class="mt-4 overflow-hidden rounded-lg bg-stone-200 shadow-inner ring-1 ring-stone-900/10"
 						>
-							<div bind:this={mapElement} role="img" aria-label="Kart som viser plasseringa til Haugalandsved i Skjold, Vindafjord" class="z-0 aspect-video w-full"></div>
+							<div
+								bind:this={mapElement}
+								role="img"
+								aria-label="Kart som viser plasseringa til Haugalandsved i Skjold, Vindafjord"
+								class="z-0 aspect-video w-full"
+							></div>
 						</div>
 					</div>
 				</div>
@@ -891,7 +1008,7 @@
 	<!-- CALL TO ACTION (Footer-like) -->
 	<section class="bg-orange-900 py-16 text-center text-white">
 		<div class="container mx-auto px-4">
-			<h2 class="text-pretty text-3xl font-bold tracking-tight sm:text-4xl">Klar for vinteren?</h2>
+			<h2 class="text-3xl font-bold tracking-tight text-pretty sm:text-4xl">Klar for vinteren?</h2>
 			<p class="mx-auto mt-6 max-w-xl text-lg text-orange-100">
 				Sikre deg tørr og fin ved i dag. Me leverer raskt og effektivt.
 			</p>
