@@ -5,7 +5,7 @@ import PocketBase from 'pocketbase';
 import { env as publicEnv } from '$env/dynamic/public';
 
 const DEFAULT_STANDARD_PRICE = 1490;
-const STANDARD_DELIVERY_PRICE_PER_PALLET = 490;
+const STANDARD_DELIVERY_PRICE_PER_PALLET = 390;
 const EXPRESS_DELIVERY_PRICE_PER_3 = 1000;
 const MAX_QUANTITY = 9;
 

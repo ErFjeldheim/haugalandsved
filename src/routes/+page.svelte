@@ -20,7 +20,7 @@
 		}
 	});
 
-	const STANDARD_DELIVERY_PRICE_PER_PALLET = 490;
+	const STANDARD_DELIVERY_PRICE_PER_PALLET = 390;
 	const EXPRESS_DELIVERY_PRICE_PER_3 = 1000;
 
 	let campaignActive = $derived(
@@ -463,7 +463,7 @@
 													>Med lift-hengar og elektrisk pallegaffel kan me plassera pallane rett i
 													garasjen din.</span
 												>
-												<span class="mt-4 text-sm font-bold text-stone-900">490 kr per palle</span>
+												<span class="mt-4 text-sm font-bold text-stone-900">390 kr per palle</span>
 											</span>
 										</span>
 										<span
