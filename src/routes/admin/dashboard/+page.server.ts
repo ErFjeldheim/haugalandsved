@@ -12,8 +12,12 @@ function isAdmin(locals: App.Locals) {
 	return locals.pb.authStore.isValid && locals.pb.authStore.isSuperuser;
 }
 
+function orderDateValue(order: Record<string, any>) {
+	return order.ordered_at || order.created || order.created_at;
+}
+
 function serializeOrder(order: Record<string, any>) {
-	const rawCreated = order.ordered_at || order.created || order.created_at;
+	const rawCreated = orderDateValue(order);
 	const timestamp = parsePocketBaseDate(rawCreated);
 	return {
 		id: order.id,
@@ -41,7 +45,9 @@ export const load: PageServerLoad = async ({ locals }) => {
 	try {
 		const records = await locals.pb.collection('orders').getFullList({ expand: 'user' });
 		records.sort(
-			(a, b) => parsePocketBaseDate(b.created).getTime() - parsePocketBaseDate(a.created).getTime()
+			(a, b) =>
+				parsePocketBaseDate(orderDateValue(b)).getTime() -
+				parsePocketBaseDate(orderDateValue(a)).getTime()
 		);
 		return { orders: records.map(serializeOrder), statuses };
 	} catch (error) {
