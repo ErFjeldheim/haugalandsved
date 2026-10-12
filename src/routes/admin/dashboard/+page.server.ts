@@ -22,6 +22,7 @@ function serializeOrder(order: Record<string, any>) {
 	return {
 		id: order.id,
 		created: rawCreated,
+		timestamp: Number.isNaN(timestamp.getTime()) ? null : timestamp.getTime(),
 		formattedDate: Number.isNaN(timestamp.getTime())
 			? 'Ukjend dato'
 			: new Intl.DateTimeFormat('nn-NO', { dateStyle: 'medium', timeStyle: 'short' }).format(
@@ -44,11 +45,16 @@ export const load: PageServerLoad = async ({ locals }) => {
 	if (!isAdmin(locals)) throw redirect(303, '/admin/login');
 	try {
 		const records = await locals.pb.collection('orders').getFullList({ expand: 'user' });
-		records.sort(
-			(a, b) =>
-				parsePocketBaseDate(orderDateValue(b)).getTime() -
-				parsePocketBaseDate(orderDateValue(a)).getTime()
-		);
+		records.sort((a, b) => {
+			const timeA = parsePocketBaseDate(orderDateValue(a)).getTime();
+			const timeB = parsePocketBaseDate(orderDateValue(b)).getTime();
+			const unknownA = Number.isNaN(timeA);
+			const unknownB = Number.isNaN(timeB);
+			if (unknownA && unknownB) return 0;
+			if (unknownA) return 1;
+			if (unknownB) return -1;
+			return timeB - timeA;
+		});
 		return { orders: records.map(serializeOrder), statuses };
 	} catch (error) {
 		console.error('Kunne ikkje laste ordrar:', error);

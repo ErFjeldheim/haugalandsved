@@ -12,19 +12,27 @@
 	let saving = $state(false);
 	let orders = $state.raw(data.orders ?? []);
 	let orderFilter = $state('Alle');
+	let orderSort = $state<'newest' | 'oldest'>('newest');
 	let orderSearch = $state('');
 	const orderStatuses = data.statuses ?? [];
 	const filteredOrders = $derived(
-		orders.filter((order) => {
-			const query = orderSearch.trim().toLowerCase();
-			return (
-				(orderFilter === 'Alle' || order.status === orderFilter) &&
-				(!query ||
-					[order.id, order.customer_name, order.email, order.city].some((value) =>
-						String(value).toLowerCase().includes(query)
-					))
-			);
-		})
+		orders
+			.filter((order) => {
+				const query = orderSearch.trim().toLowerCase();
+				return (
+					(orderFilter === 'Alle' || order.status === orderFilter) &&
+					(!query ||
+						[order.id, order.customer_name, order.email, order.city].some((value) =>
+							String(value).toLowerCase().includes(query)
+						))
+				);
+			})
+			.sort((a, b) => {
+				if (a.timestamp === null && b.timestamp === null) return 0;
+				if (a.timestamp === null) return 1;
+				if (b.timestamp === null) return -1;
+				return orderSort === 'newest' ? b.timestamp - a.timestamp : a.timestamp - b.timestamp;
+			})
 	);
 
 	function formatForInput(isoString: string) {
@@ -216,6 +224,14 @@
 						<select bind:value={orderFilter} class="rounded-md border-stone-300 text-sm shadow-sm">
 							<option>Alle</option>
 							{#each orderStatuses as status}<option value={status}>{status}</option>{/each}
+						</select>
+						<select
+							bind:value={orderSort}
+							aria-label="Sorter ordre"
+							class="rounded-md border-stone-300 text-sm shadow-sm"
+						>
+							<option value="newest">Nyeste dato</option>
+							<option value="oldest">Eldste dato</option>
 						</select>
 					</div>
 				</div>
