@@ -309,8 +309,12 @@
 									></span>
 									<span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-600"></span>
 								</span>
-								Berre <span class="text-lg font-bold">{inventory.quantity}</span> storsekker att på lager
-								– snart utselt!
+								{#if inventory.quantity === 0}
+									<span class="text-lg font-bold">Utselt hos Haugalandsved</span>
+								{:else}
+									Berre <span class="text-lg font-bold">{inventory.quantity}</span> storsekker att på
+									lager – snart utselt!
+								{/if}
 							</p>
 						</div>
 					{:else}
