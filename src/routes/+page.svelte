@@ -342,10 +342,13 @@
 									/>
 								</svg>
 							</div>
-							<h3 class="text-lg font-bold text-red-900">Utselt</h3>
+							<h3 class="text-lg font-bold text-red-900">Ynskjer du meir ved?</h3>
 							<p class="mt-2 text-sm text-red-700">
-								Me er diverre tomme for storsekker for augeblikket. Følg med her for oppdateringar
-								om når me får inn meir ved!
+								Ta kontakt med Lars Henry Dagsland, tlf eller SMS,
+								<a href="tel:47645692" class="font-semibold underline hover:text-red-900"
+									>47645692</a
+								>
+								for å avtala vidare. Han er ein av våre gode naboar.
 							</p>
 						</div>
 					{:else}
