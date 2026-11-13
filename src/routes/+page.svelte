@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { currentUser } from '$lib/pocketbase';
+	import { currentUser } from '#lib/pocketbase.ts';
 	import { onMount } from 'svelte';
-	import { browser } from '$app/environment';
+	import { browser } from '$app/env';
 	import 'leaflet/dist/leaflet.css';
 
 	let { data } = $props();
@@ -168,13 +168,17 @@
 		name="description"
 		content="Kjøp kortreist blandingsved av høg kvalitet frå Haugalandet. Levering rett heim eller hent sjølv."
 	/>
+
 	<meta property="og:title" content="Haugalandsved - Kortreist kvalitet" />
+
 	<meta
 		property="og:description"
 		content="Kjøp kortreist blandingsved av høg kvalitet frå Haugalandet. Levering rett heim eller hent sjølv."
 	/>
 	<meta property="og:type" content="website" />
+
 	<meta property="og:url" content="https://haugalandsved.no" />
+
 	<meta
 		property="og:image"
 		content="https://haugalandsved.no/images/flere-paller-blandingsved.webp"
@@ -256,6 +260,7 @@
 			>
 				Varme frå Haugalandet
 			</h1>
+
 			<p class="mx-auto mb-10 max-w-2xl text-lg text-stone-300 sm:text-xl">
 				Kortreist blandingsved i 1000L storsekker. Furu, bjørk, gran, rogn og selje – ferdig kappa
 				og kløyvd, klar til å varme heimen din.
@@ -264,12 +269,12 @@
 				<a
 					href="#kalkulator"
 					class="rounded-full bg-brand-primary px-8 py-4 text-lg font-semibold text-white transition hover:bg-brand-primary-hover hover:shadow-lg hover:shadow-brand-primary/20 focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-stone-900 focus:outline-none"
+					>Bestill nå</a
 				>
-					Bestill nå
-				</a>
-				<a href="#om-veden" class="text-sm font-medium text-stone-400 transition hover:text-white">
-					Les meir om veden &rarr;
-				</a>
+
+				<a href="#om-veden" class="text-sm font-medium text-stone-400 transition hover:text-white"
+					>Les meir om veden →</a
+				>
 			</div>
 		</div>
 	</section>
@@ -343,7 +348,7 @@
 										stroke-linecap="round"
 										stroke-linejoin="round"
 										d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
-									/>
+									></path>
 								</svg>
 							</div>
 							<h3 class="text-lg font-bold text-red-900">Ynskjer du meir ved?</h3>
@@ -658,7 +663,7 @@
 											stroke-linecap="round"
 											stroke-linejoin="round"
 											d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-										/>
+										></path>
 									</svg>
 									<span>Trygg betaling med Stripe</span>
 								</div>
@@ -675,7 +680,7 @@
 											stroke-linecap="round"
 											stroke-linejoin="round"
 											d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-										/>
+										></path>
 									</svg>
 									<span>14 dagars angrerett</span>
 								</div>
@@ -692,7 +697,7 @@
 											stroke-linecap="round"
 											stroke-linejoin="round"
 											d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0H6.375c-.621 0-1.125-.504-1.125-1.125V14.25m0 0h11.25m0 0V11.625m0 2.625h2.25m0 0V8.25a1.125 1.125 0 00-1.125-1.125h-1.5m2.625 7.875h.375a.375.375 0 00.375-.375V14.25m0 0h-2.625"
-										/>
+										></path>
 									</svg>
 									<span>Lokal levering på Haugalandet</span>
 								</div>
@@ -795,7 +800,7 @@
 													stroke-linecap="round"
 													stroke-linejoin="round"
 													d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-												/>
+												></path>
 											</svg>
 										</div>
 									{/if}
@@ -830,7 +835,7 @@
 										stroke-linecap="round"
 										stroke-linejoin="round"
 										d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-									/>
+									></path>
 								</svg>
 							</div>
 							<h3 class="text-xl font-bold text-stone-900">Lagra i 2 år</h3>
@@ -864,12 +869,12 @@
 										stroke-linecap="round"
 										stroke-linejoin="round"
 										d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"
-									/>
+									></path>
 									<path
 										stroke-linecap="round"
 										stroke-linejoin="round"
 										d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-3.333-2.328 3.75 3.75 0 003.11 6.249z"
-									/>
+									></path>
 								</svg>
 							</div>
 							<h3 class="text-xl font-bold text-stone-900">Tips for betre fyring</h3>
@@ -936,7 +941,7 @@
 											stroke-linecap="round"
 											stroke-linejoin="round"
 											d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"
-										/>
+										></path>
 									</svg>
 								</div>
 								<div>
@@ -961,7 +966,7 @@
 											stroke-linecap="round"
 											stroke-linejoin="round"
 											d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
-										/>
+										></path>
 									</svg>
 								</div>
 								<div>
@@ -1001,7 +1006,7 @@
 									stroke-linecap="round"
 									stroke-linejoin="round"
 									d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
-								/>
+								></path>
 							</svg>
 						</a>
 						<div

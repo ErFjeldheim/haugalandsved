@@ -1,8 +1,8 @@
 import { error, redirect } from '@sveltejs/kit';
-import { stripe } from '$lib/server/stripe';
+import { stripe } from '#lib/server/stripe.ts';
 import PocketBase from 'pocketbase';
-import { env } from '$env/dynamic/private';
-import { env as publicEnv } from '$env/dynamic/public';
+import { PB_ADMIN_EMAIL, PB_ADMIN_PASSWORD } from '$app/env/private';
+import { PUBLIC_PB_URL } from '$app/env/public';
 
 const INVENTORY_ID = '6svgilvrehzayhb';
 
@@ -11,11 +11,11 @@ const INVENTORY_ID = '6svgilvrehzayhb';
  * PB SDK 0.23+ brukar `_superusers`-samlinga i staden for utdatert `pb.admins`.
  */
 async function getAdminPb(): Promise<PocketBase> {
-	const pb = new PocketBase(publicEnv.PUBLIC_PB_URL);
-	if (!env.PB_ADMIN_EMAIL || !env.PB_ADMIN_PASSWORD) {
+	const pb = new PocketBase(PUBLIC_PB_URL);
+	if (!PB_ADMIN_EMAIL || !PB_ADMIN_PASSWORD) {
 		throw new Error('PB_ADMIN_EMAIL eller PB_ADMIN_PASSWORD manglar i miljøvariablar');
 	}
-	await pb.collection('_superusers').authWithPassword(env.PB_ADMIN_EMAIL, env.PB_ADMIN_PASSWORD);
+	await pb.collection('_superusers').authWithPassword(PB_ADMIN_EMAIL, PB_ADMIN_PASSWORD);
 	return pb;
 }
 
@@ -89,9 +89,9 @@ export const GET = async ({ url }: { url: URL }) => {
 			status: 'Betalt',
 			customer_name: customerName,
 			phone: customerPhone,
-			address: address,
-			zip: zip,
-			city: city,
+			address,
+			zip,
+			city,
 			ordered_at: new Date().toISOString()
 		});
 
@@ -118,7 +118,7 @@ export const GET = async ({ url }: { url: URL }) => {
 		}
 
 		if (customerEmail) {
-			const { sendOrderConfirmation, sendAdminNotification } = await import('$lib/server/mail');
+			const { sendOrderConfirmation, sendAdminNotification } = await import('#lib/server/mail.ts');
 
 			try {
 				await sendOrderConfirmation(customerEmail, {
@@ -141,7 +141,7 @@ export const GET = async ({ url }: { url: URL }) => {
 					quantity: Number(quantity),
 					deliveryMethod: String(deliveryMethod),
 					totalPrice: Number(totalPrice),
-					customerEmail: customerEmail,
+					customerEmail,
 					customerName: customerName || undefined,
 					customerPhone: customerPhone || undefined,
 					address: address || undefined,

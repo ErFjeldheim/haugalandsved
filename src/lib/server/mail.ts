@@ -1,24 +1,38 @@
 import nodemailer from 'nodemailer';
-import { env } from '$env/dynamic/private';
+import {
+	ADMIN_EMAIL,
+	SMTP_FROM,
+	SMTP_HOST,
+	SMTP_PASS,
+	SMTP_PORT,
+	SMTP_USER
+} from '$app/env/private';
 
 function getTransporter() {
-	const missing = ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS', 'SMTP_FROM'].filter(
-		(key) => !env[key as keyof typeof env]
-	);
+	const missing = (
+		[
+			['SMTP_HOST', SMTP_HOST],
+			['SMTP_USER', SMTP_USER],
+			['SMTP_PASS', SMTP_PASS],
+			['SMTP_FROM', SMTP_FROM]
+		] as const
+	)
+		.filter(([, value]) => !value)
+		.map(([key]) => key);
 
 	if (missing.length > 0) {
 		throw new Error(`SMTP configuration missing: ${missing.join(', ')}`);
 	}
 
-	const port = Number(env.SMTP_PORT) || 587;
+	const port = Number(SMTP_PORT) || 587;
 
 	return nodemailer.createTransport({
-		host: env.SMTP_HOST,
+		host: SMTP_HOST,
 		port,
 		secure: port === 465,
 		auth: {
-			user: env.SMTP_USER,
-			pass: env.SMTP_PASS
+			user: SMTP_USER,
+			pass: SMTP_PASS
 		}
 	});
 }
@@ -69,7 +83,7 @@ export async function sendOrderConfirmation(
     `;
 
 	await getTransporter().sendMail({
-		from: `"Haugalandsved" <${env.SMTP_FROM}>`,
+		from: `"Haugalandsved" <${SMTP_FROM}>`,
 		to,
 		subject: `Ordrestadfesting - ${id}`,
 		html
@@ -127,8 +141,8 @@ export async function sendAdminNotification(orderDetails: {
     `;
 
 	await getTransporter().sendMail({
-		from: `"Haugalandsved System" <${env.SMTP_FROM}>`,
-		to: [env.ADMIN_EMAIL || 'norleifj@online.no', 'erik@fjelldata.com'],
+		from: `"Haugalandsved System" <${SMTP_FROM}>`,
+		to: [ADMIN_EMAIL || 'norleifj@online.no', 'erik@fjelldata.com'],
 		subject: `NY ORDRE - ${id} - ${quantity} stk storsekk`,
 		html
 	});

@@ -1,8 +1,8 @@
 import type { Actions } from './$types';
 import { error, redirect } from '@sveltejs/kit';
-import { stripe } from '$lib/server/stripe';
+import { stripe } from '#lib/server/stripe.ts';
 import PocketBase from 'pocketbase';
-import { env as publicEnv } from '$env/dynamic/public';
+import { PUBLIC_PB_URL } from '$app/env/public';
 
 const DEFAULT_STANDARD_PRICE = 1490;
 const STANDARD_DELIVERY_PRICE_PER_PALLET = 390;
@@ -56,7 +56,7 @@ export const actions: Actions = {
 			throw error(400, 'Ugyldig leveringsmetode');
 		}
 
-		const pb = new PocketBase(publicEnv.PUBLIC_PB_URL);
+		const pb = new PocketBase(PUBLIC_PB_URL);
 		try {
 			const inventory = await pb.collection('inventory').getOne('6svgilvrehzayhb');
 			if (!inventory.isInStock || inventory.quantity_available < quantity) {
@@ -101,7 +101,7 @@ export const actions: Actions = {
 							},
 							unit_amount: pricePerSack * 100
 						},
-						quantity: quantity
+						quantity
 					},
 					...(deliveryMethod !== 'pickup'
 						? [
@@ -142,6 +142,6 @@ export const actions: Actions = {
 			throw error(500, 'Noko gjekk gale med betalinga');
 		}
 
-		throw redirect(303, checkoutUrl);
+		throw redirect(303, checkoutUrl, { external: true });
 	}
 };

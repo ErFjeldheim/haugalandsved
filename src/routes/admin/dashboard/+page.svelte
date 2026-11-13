@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { pb } from '$lib/pocketbase';
+	import { pb } from '#lib/pocketbase.ts';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { enhance } from '$app/forms';

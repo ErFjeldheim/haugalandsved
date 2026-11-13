@@ -1,13 +1,10 @@
 import Stripe from 'stripe';
-import { env } from '$env/dynamic/private';
-import { STRIPE_SECRET_KEY as STRIPE_SECRET_KEY_STATIC } from '$env/static/private';
+import { STRIPE_SECRET_KEY } from '$app/env/private';
 
-const secretKey = env.STRIPE_SECRET_KEY || STRIPE_SECRET_KEY_STATIC;
-
-if (!secretKey) {
+if (!STRIPE_SECRET_KEY) {
 	console.error('CRITICAL: STRIPE_SECRET_KEY is missing from environment variables');
 }
 
-export const stripe = new Stripe(secretKey || '', {
+export const stripe = new Stripe(STRIPE_SECRET_KEY || '', {
 	apiVersion: '2026-08-26.dahlia'
 });

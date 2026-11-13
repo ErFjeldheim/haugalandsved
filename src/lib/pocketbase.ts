@@ -1,9 +1,9 @@
 import PocketBase from 'pocketbase';
 import { writable } from 'svelte/store';
-import { env } from '$env/dynamic/public';
-import { browser } from '$app/environment';
+import { PUBLIC_PB_URL } from '$app/env/public';
+import { browser } from '$app/env';
 
-export const pb = new PocketBase(env.PUBLIC_PB_URL);
+export const pb = new PocketBase(PUBLIC_PB_URL);
 
 export const currentUser = writable(pb.authStore.record);
 

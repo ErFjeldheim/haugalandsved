@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { pb } from '$lib/pocketbase';
+	import { pb } from '#lib/pocketbase.ts';
 
 	let email = $state('');
 	let error = $state('');

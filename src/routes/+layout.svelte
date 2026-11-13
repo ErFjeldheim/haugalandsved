@@ -1,6 +1,6 @@
 <script lang="ts">
 	import './globals.css';
-	import { currentUser, pb } from '$lib/pocketbase';
+	import { currentUser, pb } from '#lib/pocketbase.ts';
 	import { goto } from '$app/navigation';
 
 	let { children } = $props();
